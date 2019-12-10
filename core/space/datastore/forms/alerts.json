@@ -133,6 +133,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "radio",
@@ -169,6 +170,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -194,6 +196,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -219,6 +222,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "datetime"
@@ -243,6 +247,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -256,6 +261,7 @@
           "enabled": true,
           "renderType": "submit-page",
           "renderAttributes": {
+
           }
         },
         {
@@ -266,6 +272,7 @@
           "visible": false,
           "omitWhenHidden": false,
           "renderAttributes": {
+
           },
           "elements": [
             {
@@ -288,6 +295,7 @@
 
               ],
               "renderAttributes": {
+
               },
               "dataType": "string",
               "renderType": "dropdown",

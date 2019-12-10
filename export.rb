@@ -4,31 +4,20 @@
 #
 # {
 #   "core" => {
-#     "api" => "http://localhost:8080/kinetic/app/api/v1",
-#     "agent_api" => "http://localhost:8080/kinetic/foo/app/components/agent/app/api/v1",
-#     "proxy_url" => "http://localhost:8080/kinetic/foo/app/components",
-#     "server" => "http://localhost:8080/kinetic",
+#     "api" => "https://foo.web-server/app/api/v1",
+#     "agent_api" => "https://foo.web-server/app/components/agent/app/api/v1",
+#     "proxy_url" => "https://foo.web-server/app/components",
+#     "server" => "https://web-server",
 #     "space_slug" => "foo",
 #     "space_name" => "Foo",
 #     "service_user_username" => "service_user_username",
 #     "service_user_password" => "secret",
-#     "task_api_v1" => "http://localhost:8080/kinetic/foo/app/components/task/app/api/v1",
-#     "task_api_v2" => "http://localhost:8080/kinetic/foo/app/components/task/app/api/v2"
-#   },
-#   "task" => {
-#     "api" => "http://localhost:8080/kinetic-task/app/api/v1",
-#     "api_v2" => "http://localhost:8080/kinetic-task/app/api/v2",
-#     "component_type" => "task",
-#     "server" => "http://localhost:8080/kinetic-task",
-#     "space_slug" => "foo",
-#     "signature_secret" => "1234asdf5678jkl;"
+#     "task_api_v1" => "https://foo.web-server/app/components/task/app/api/v1",
+#     "task_api_v2" => "https://foo.web-server/app/components/task/app/api/v2"
 #   },
 #   "http_options" => {
 #     "log_level" => "info",
-#     "gateway_retry_limit" => 5,
-#     "gateway_retry_delay" => 1.0,
-#     "ssl_ca_file" => "/etc/ca.crt",
-#     "ssl_verify_mode" => "none"
+#     "log_output" => "stderr"
 #   }
 # }
 
@@ -207,7 +196,7 @@ logger.info "Removing files and folders from the existing \"#{template_name}\" t
 FileUtils.rm_rf Dir.glob("#{task_path}/*")
 
 task_sdk = KineticSdk::Task.new({
-  app_server_url: vars["task"]["server"],
+  app_server_url: "#{vars["core"]["proxy_url"]}/task",
   username: vars["core"]["service_user_username"],
   password: vars["core"]["service_user_password"],
   options: http_options.merge({ export_directory: "#{task_path}" })

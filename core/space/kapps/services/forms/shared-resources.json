@@ -68,6 +68,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -93,6 +94,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -118,6 +120,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "string",
           "renderType": "text",
@@ -143,6 +146,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "json",
           "renderType": "checkbox",
@@ -172,6 +176,7 @@
 
           ],
           "renderAttributes": {
+
           },
           "dataType": "json",
           "renderType": "checkbox",

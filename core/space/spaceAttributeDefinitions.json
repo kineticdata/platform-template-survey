@@ -111,21 +111,6 @@
   },
   {
     "allowsMultiple": false,
-    "description": "Name or address and port of the task server if not 80 or 443. (ex. kinops.io)",
-    "name": "Task Server Host"
-  },
-  {
-    "allowsMultiple": false,
-    "description": "http or https",
-    "name": "Task Server Scheme"
-  },
-  {
-    "allowsMultiple": false,
-    "description": "Url of this spaces workflow engine",
-    "name": "Task Server Url"
-  },
-  {
-    "allowsMultiple": false,
     "description": "Name of the source for this space in the workflow engine",
     "name": "Task Source Name"
   },

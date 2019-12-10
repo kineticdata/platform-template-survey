@@ -122,27 +122,9 @@
       ]
     },
     {
-      "name": "Task Server Host",
-      "values": [
-        "space-template.kinops.io"
-      ]
-    },
-    {
-      "name": "Task Server Scheme",
-      "values": [
-        "https"
-      ]
-    },
-    {
       "name": "Task Server Space Slug",
       "values": [
         "space-template"
-      ]
-    },
-    {
-      "name": "Task Server Url",
-      "values": [
-        "https://space-template.kinops.io/kinetic-task"
       ]
     },
     {
@@ -171,12 +153,16 @@
   "enabledLocales": [
     "en"
   ],
-  "filestore": {
-    "filehubUrl": "https://kinops.io/kinetic-filehub",
-    "slug": "ce-space-template"
-  },
   "loginPage": null,
   "name": "Space Template",
+  "platformComponents": {
+    "agents": [
+
+    ],
+    "task": {
+      "url": "https://space-template.kinops.io/kinetic-task"
+    }
+  },
   "resetPasswordPage": null,
   "securityPolicies": [
     {
@@ -215,9 +201,6 @@
       "endpoint": "User Modification",
       "name": "Admins"
     }
-  ],
-  "serviceEndpoints": [
-
   ],
   "sessionInactiveLimitInSeconds": 2592000,
   "sharedBundleBase": "hydrogen-v1",

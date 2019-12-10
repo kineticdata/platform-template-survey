@@ -13,6 +13,7 @@
   ],
   "mappings": [
     {
+      "agentSlug": "system",
       "attributes": [
         {
           "name": "Display Name",
@@ -63,8 +64,7 @@
       "name": "By Email",
       "parameters": [
         {
-          "name": "Email",
-          "notes": null
+          "name": "Email"
         }
       ],
       "resultType": "Multiple"
@@ -73,8 +73,7 @@
       "name": "By Username",
       "parameters": [
         {
-          "name": "Username",
-          "notes": null
+          "name": "Username"
         }
       ],
       "resultType": "Multiple"
@@ -83,8 +82,7 @@
       "name": "By Username Single",
       "parameters": [
         {
-          "name": "Username",
-          "notes": null
+          "name": "Username"
         }
       ],
       "resultType": "Single"
