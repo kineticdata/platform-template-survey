@@ -1,0 +1,53 @@
+{
+  "name": "Attribute Definitions",
+  "description": "Functions for interacting with Kinetic Attribute Definitions",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_category_attribute_definition_create_v1",
+    "routine_kinetic_category_attribute_definition_delete_v1",
+    "routine_kinetic_category_attribute_definition_retrieve_v1",
+    "routine_kinetic_category_attribute_definition_update_v1",
+    "routine_kinetic_category_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_datastore_form_attribute_definition_create_v1",
+    "routine_kinetic_datastore_form_attribute_definition_delete_v1",
+    "routine_kinetic_datastore_form_attribute_definition_retrieve_v1",
+    "routine_kinetic_datastore_form_attribute_definition_update_v1",
+    "routine_kinetic_datastore_form_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_form_attribute_definition_create_v1",
+    "routine_kinetic_form_attribute_definition_delete_v1",
+    "routine_kinetic_form_attribute_definition_retrieve_v1",
+    "routine_kinetic_form_attribute_definition_update_v1",
+    "routine_kinetic_form_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_kapp_attribute_definition_create_v1",
+    "routine_kinetic_kapp_attribute_definition_delete_v1",
+    "routine_kinetic_kapp_attribute_definition_retrieve_v1",
+    "routine_kinetic_kapp_attribute_definition_update_v1",
+    "routine_kinetic_kapp_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_space_attribute_definition_create_v1",
+    "routine_kinetic_space_attribute_definition_delete_v1",
+    "routine_kinetic_space_attribute_definition_retrieve_v1",
+    "routine_kinetic_space_attribute_definition_update_v1",
+    "routine_kinetic_space_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_team_attribute_definition_create_v1",
+    "routine_kinetic_team_attribute_definition_delete_v1",
+    "routine_kinetic_team_attribute_definition_retrieve_v1",
+    "routine_kinetic_team_attribute_definition_update_v1",
+    "routine_kinetic_team_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_user_attribute_definition_create_v1",
+    "routine_kinetic_user_attribute_definition_delete_v1",
+    "routine_kinetic_user_attribute_definition_retrieve_v1",
+    "routine_kinetic_user_attribute_definition_update_v1",
+    "routine_kinetic_user_attribute_definitions_retrieve_list_v1",
+    "routine_kinetic_user_profile_attribute_definition_create_v1",
+    "routine_kinetic_user_profile_attribute_definition_delete_v1",
+    "routine_kinetic_user_profile_attribute_definition_retrieve_v1",
+    "routine_kinetic_user_profile_attribute_definition_update_v1",
+    "routine_kinetic_user_profile_attribute_definitions_retrieve_list_v1"
+  ]
+}

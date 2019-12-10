@@ -1,0 +1,299 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Forms</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>21</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="550" y="-55">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Has Custom Workflow" type="Complete" value="@form_attributes.has_key?('Custom Submission Workflow') &amp;&amp; !@form_attributes['Custom Submission Workflow'].nil? &amp;&amp; !@form_attributes['Custom Submission Workflow'].empty?">system_noop_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_retrieve_list_v1" id="routine_kinetic_workflow_retrieve_list_v1_5" name="Retrieve Existing Form Workflow" x="396" y="185">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source" label="Source" menu="" required="true" tooltip="Name of the source to retrieve workflow processes for">&lt;%=@source['Name']%&gt;</parameter>
+                    <parameter id="Group" label="Group" menu="" required="true" tooltip="Name of the source group to retrieve workflow processes for">&lt;%="Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']}"%&gt;</parameter>
+                    <parameter id="Names" label="Names" menu="" required="false" tooltip="Names of workflow processes to retrieve (comma-separated, leave blank to retrieve all workflow processes)"></parameter>
+                    <parameter id="Limit" label="Limit" menu="" required="false" tooltip="Maximum number of workflow processes to return (default 1000)"></parameter>
+                    <parameter id="Offset" label="Offset" menu="" required="false" tooltip="The offset to start if there are more results than the specified limit (default 0)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_6" name="Has Custom Workflow" x="550" y="82">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_workflow_retrieve_list_v1_5</task>
+                    <task label="" type="Complete" value="">routine_kinetic_workflow_retrieve_list_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_retrieve_list_v1" id="routine_kinetic_workflow_retrieve_list_v1_7" name="Retrieve Kapp Workflow" x="671" y="198">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source" label="Source" menu="" required="true" tooltip="Name of the source to retrieve workflow processes for">&lt;%=@source['Name']%&gt;</parameter>
+                    <parameter id="Group" label="Group" menu="" required="true" tooltip="Name of the source group to retrieve workflow processes for">&lt;%="Submissions &gt; #{@kapp['Slug']}"%&gt;</parameter>
+                    <parameter id="Names" label="Names" menu="" required="false" tooltip="Names of workflow processes to retrieve (comma-separated, leave blank to retrieve all workflow processes)"></parameter>
+                    <parameter id="Limit" label="Limit" menu="" required="false" tooltip="Maximum number of workflow processes to return (default 1000)"></parameter>
+                    <parameter id="Offset" label="Offset" menu="" required="false" tooltip="The offset to start if there are more results than the specified limit (default 0)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_9" name="Lookups - Continue" x="529" y="286">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_21</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_13" name="Create Trees - Head" x="385" y="407">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;%=
+needed_workflows = JSON.parse(@results['Trees Needed']['output'])['new']
+trees_xml = "&lt;trees&gt;\n"
+trees_xml &lt;&lt; needed_workflows.collect{|name| "\t&lt;tree&gt;#{name}&lt;/tree&gt;\n"}.to_s
+trees_xml &lt;&lt; "&lt;/trees&gt;"
+trees_xml%&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//trees/tree</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks."></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_workflow_create_v1_14</task>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_create_v1" id="routine_kinetic_workflow_create_v1_14" name="Create New Tree" x="245" y="528">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Structure" label="Structure" menu="" required="true" tooltip="The workflow XML document. This is the content of the tree/routine export file.">&lt;tree schema_version="1.0"&gt;
+  &lt;sourceName&gt;Source Name&lt;/sourceName&gt;
+  &lt;sourceGroup&gt;Source Group&lt;/sourceGroup&gt;
+  &lt;type&gt;Tree&lt;/type&gt;
+  &lt;status&gt;Active&lt;/status&gt;
+  &lt;taskTree schema_version="1.0" version="" builder_version=""&gt;
+    &lt;name&gt;Name&lt;/name&gt;
+    &lt;author/&gt;
+    &lt;notes/&gt;
+    &lt;lastID&gt;1&lt;/lastID&gt;
+    &lt;request&gt;
+      &lt;task definition_id="system_start_v1" id="start" name="Start" x="31" y="31"&gt;
+        &lt;version&gt;1&lt;/version&gt;
+        &lt;configured&gt;true&lt;/configured&gt;
+        &lt;defers&gt;false&lt;/defers&gt;
+        &lt;deferrable&gt;false&lt;/deferrable&gt;
+        &lt;visible&gt;false&lt;/visible&gt;
+        &lt;parameters/&gt;
+        &lt;messages/&gt;
+        &lt;dependents&gt;
+          &lt;task type="Complete" label="" value=""&gt;routine_kinetic_finish_v1_1&lt;/task&gt;
+        &lt;/dependents&gt;
+      &lt;/task&gt;
+
+      &lt;task name="Finish" id="routine_kinetic_finish_v1_1" definition_id="routine_kinetic_finish_v1" x="319" y="22"&gt;
+        &lt;version&gt;1&lt;/version&gt;
+        &lt;configured&gt;true&lt;/configured&gt;
+        &lt;defers&gt;false&lt;/defers&gt;
+        &lt;deferrable&gt;true&lt;/deferrable&gt;
+        &lt;visible&gt;false&lt;/visible&gt;
+        &lt;parameters&gt;
+          &lt;parameter id="Run Id" label="Run Id" required="false" tooltip="The Id of the completed run" menu=""&gt;&amp;lt;%=@run['Id']%&amp;gt;&lt;/parameter&gt;
+        &lt;/parameters&gt;
+        &lt;messages&gt;
+          &lt;message type="Create"/&gt;
+          &lt;message type="Update"/&gt;
+          &lt;message type="Complete"/&gt;
+        &lt;/messages&gt;
+        &lt;dependents/&gt;
+      &lt;/task&gt;
+    &lt;/request&gt;
+  &lt;/taskTree&gt;
+&lt;/tree&gt;</parameter>
+                    <parameter id="Source" label="Source" menu="" required="false" tooltip="Override to the value set in structure. Use '-' for a global routine.">&lt;%=@source['Name']%&gt;</parameter>
+                    <parameter id="Group" label="Group" menu="" required="false" tooltip="Override to the value set in structure. Use '-' for any routine.">&lt;%="Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']}"%&gt;</parameter>
+                    <parameter id="Name" label="Name" menu="" required="false" tooltip="Override to the value set in the structure. The workflow (tree/routine) name.">&lt;%=@results['Create Trees - Head']['Value'].capitalize%&gt;</parameter>
+                    <parameter id="Definition Id" label="Definition Id" menu="" required="false" tooltip="Override to the value set in the structure."></parameter>
+                    <parameter id="Notes" label="Notes" menu="" required="false" tooltip="Override to the value set in the structure."></parameter>
+                    <parameter id="Owner Email" label="Owner Email" menu="" required="false" tooltip="Override to the value set in the structure."></parameter>
+                    <parameter id="Status" label="Status" menu="" required="false" tooltip="Override to the value set in the structure.">Active</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Override to the value set in the structure.">Tree</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_clone_v1" id="routine_kinetic_workflow_clone_v1_16" name="Clone Kapp Tree" x="693" y="429">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="From - Source" label="From - Source" menu="" required="true" tooltip="The source to clone the workflow(s) from. Use '-' for a global routine.">&lt;%=@source['Name']%&gt;</parameter>
+                    <parameter id="From - Group" label="From - Group" menu="" required="true" tooltip="The source group to clone the workflow(s) from. Use '-' for any routine.">&lt;%="Submissions &gt; #{@kapp['Slug']}"%&gt;</parameter>
+                    <parameter id="From - Names JSON" label="From - Names JSON" menu="" required="true" tooltip="A JSON list of the workflow (tree/routine) names to clone. (ie. [&quot;Created&quot;, &quot;Submitted&quot;]).">&lt;%=JSON.parse(@results['Trees Needed']['output'])['clone'].to_json%&gt;</parameter>
+                    <parameter id="From - Local Routines JSON" label="From - Local Routines JSON" menu="" required="false" tooltip="A JSON list of the local routines clone. (ie. [&quot;My Local Routine&quot;])."></parameter>
+                    <parameter id="To - Source" label="To - Source" menu="" required="true" tooltip="The source to clone the workflow(s) to. Use '-' for a global routine.">&lt;%=@source['Name']%&gt;</parameter>
+                    <parameter id="To - Group" label="To - Group" menu="" required="true" tooltip="The source group to clone the workflow(s) to. Use '-' for any routine.">&lt;%="Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']}"%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_18</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_17" name="Create Trees - Tail" x="386" y="528">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_18</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_18" name="Trees Created - Continue" x="694" y="519">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_19" name="Finish" x="829" y="530">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_21" name="Trees Needed" x="530" y="381">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+existing_form_workflows = JSON.parse(@results['Retrieve Existing Form Workflow']['Workflow List JSON']).collect{|tree| tree['name']}
+kapp_workflows = JSON.parse(@results['Retrieve Kapp Workflow']['Workflow List JSON']).collect{|tree| tree['name']}
+required_workflows = @form_attributes['Custom Submission Workflow']
+clone = required_workflows.select{|name| !existing_form_workflows.include?(name) &amp;&amp; kapp_workflows.include?(name)}
+new = required_workflows.select{|name| !existing_form_workflows.include?(name) &amp;&amp; !kapp_workflows.include?(name)}
+{
+  'clone' =&gt; clone,
+  'new' =&gt; new
+}.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="New Trees" type="Complete" value="JSON.parse(@results['Trees Needed']['output'])['new'].size &gt; 0">system_loop_head_v1_13</task>
+                    <task label="Clone Trees" type="Complete" value="JSON.parse(@results['Trees Needed']['output'])['clone'].size &gt; 0">routine_kinetic_workflow_clone_v1_16</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

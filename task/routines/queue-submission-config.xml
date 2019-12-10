@@ -1,0 +1,234 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_queue_submission_config_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Queue Submission Config</name>
+        <author></author>
+        <notes></notes>
+        <lastID>6</lastID>
+        <taskDefinition id="routine_kinetic_queue_submission_config_v1" name="Queue Submission Config" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Source Data" label="Source Data" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Current Assigned Individual" tooltip="The Individual currently assigned to the queue submission"></result>
+                <result name="Current Assigned Team" tooltip="The team currently assigned to the queue submission"></result>
+                <result name="Notes for Customer" tooltip="The Notes for Customer of the queue submission"></result>
+                <result name="Notification Template Name - Create" tooltip="The notification template to use when a submission is created"></result>
+                <result name="Notification Template Name - Complete" tooltip="The notification template to use when a submission is completed"></result>
+                <result name="Resolution" tooltip="The Resolution of the queue submission"></result>
+                <result name="Queue Submission Url" tooltip="The URL to the current submission in queue"></result>
+                <result name="Web Server Url" tooltip="The web server url configured for the system (ie. https://:space.kinops.io)"></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="22" y="43">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_5" name="Finish" x="450" y="44">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_6" name="Return Config" x="222" y="44">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Current Assigned Individual" label="Current Assigned Individual" menu="" required="false" tooltip="The Individual currently assigned to the queue submission">&lt;%=
+key = "Assigned Individual"
+JSON.parse(@inputs['Source Data'])['values'][key]%&gt;</parameter>
+                    <parameter id="Current Assigned Team" label="Current Assigned Team" menu="" required="false" tooltip="The team currently assigned to the queue submission">&lt;%=
+key = "Assigned Team"
+JSON.parse(@inputs['Source Data'])['values'][key]%&gt;</parameter>
+                    <parameter id="Notes for Customer" label="Notes for Customer" menu="" required="false" tooltip="The Notes for Customer of the queue submission">&lt;%=
+key = "Notes for Customer"
+JSON.parse(@inputs['Source Data'])['values'][key]%&gt;</parameter>
+                    <parameter id="Notification Template Name - Create" label="Notification Template Name - Create" menu="" required="false" tooltip="The notification template to use when a submission is created">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Notification Template Name - Create'
+default_value = 'Task Created XYZ'
+
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Notification Template Name - Complete" label="Notification Template Name - Complete" menu="" required="false" tooltip="The notification template to use when a submission is completed">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Notification Template Name - Complete'
+default_value = 'Task Completed - Ad-hoc Task'
+
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Resolution" label="Resolution" menu="" required="false" tooltip="The Resolution of the queue submission">&lt;%= 
+data = JSON.parse(@inputs['Source Data'])
+resolution_text = ''
+
+# Special Handling for Approvals
+if data['values'].has_key? 'Decision'
+  resolution_text &lt;&lt; "#{data['values']['Decision']} by #{data['values']['Assigned Individual']}"
+  if data['values']['Decision'] == 'Denied'
+    resolution_text &lt;&lt; "\n\nCancellation reason: #{data['values']['Cancellation Reason']}"
+  end
+else
+  resolution_text &lt;&lt; "Completed by #{data['values']['Assigned Individual']}"
+  if data['values']['Status'] == "Cancelled"
+    resolution_text &lt;&lt; "\n\nCancellation reason: #{data['values']['Cancellation Reason']}"
+  end
+end
+# Add notes for customer
+if !data['values']['Notes for Customer'].to_s.empty?
+  resolution_text &lt;&lt; "\n\nAdditional comments: #{data['values']['Notes for Customer']}"
+end
+
+resolution_text%&gt;</parameter>
+                    <parameter id="Queue Submission Url" label="Queue Submission Url" menu="" required="false" tooltip="The URL to the current submission in queue">&lt;%=
+# Configure Key and Default Value
+#
+data = JSON.parse(@inputs['Source Data'])
+key = 'Web Server Url'
+default_value = "https://#{data['space']['slug']}.kinops.io"
+
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+# Return the value
+web_server_url = most_significant_value(data, key, default_value)
+
+"#{web_server_url}/submissions/#{data['submission']['id']}"%&gt;</parameter>
+                    <parameter id="Web Server Url" label="Web Server Url" menu="" required="false" tooltip="The web server url configured for the system (ie. https://:space.kinops.io)">&lt;%=
+# Configure Key and Default Value
+#
+data = JSON.parse(@inputs['Source Data'])
+key = 'Web Server Url'
+default_value = "https://#{data['space']['slug']}.kinops.io"
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+# Return the value
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_5</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

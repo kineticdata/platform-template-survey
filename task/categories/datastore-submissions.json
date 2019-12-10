@@ -1,0 +1,23 @@
+{
+  "name": "Datastore Submissions",
+  "description": "Functions for interacting with Kinetic Datastore Submissions",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_datastore_submission_activities_retrieve_list_v1",
+    "routine_kinetic_datastore_submission_activity_create_v1",
+    "routine_kinetic_datastore_submission_activity_delete_v1",
+    "routine_kinetic_datastore_submission_activity_retrieve_v1",
+    "routine_kinetic_datastore_submission_activity_update_v1",
+    "routine_kinetic_datastore_submission_create_v1",
+    "routine_kinetic_datastore_submission_delete_v1",
+    "routine_kinetic_datastore_submission_retrieve_v1",
+    "routine_kinetic_datastore_submission_update_v1",
+    "routine_kinetic_datastore_submissions_retrieve_list_v1"
+  ]
+}

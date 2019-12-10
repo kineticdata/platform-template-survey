@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Form developers are Users who are able to create and modify forms within the system.",
+  "name": "Role::Form Developer",
+  "slug": "a10712bdd1db1e1f4a7fa6c2bafcc099"
+}

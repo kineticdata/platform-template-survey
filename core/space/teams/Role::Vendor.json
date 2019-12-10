@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Users with this role are identified as vendors and given vendor permissions.",
+  "name": "Role::Vendor",
+  "slug": "5242233604a7ec1d42a3789831c09562"
+}

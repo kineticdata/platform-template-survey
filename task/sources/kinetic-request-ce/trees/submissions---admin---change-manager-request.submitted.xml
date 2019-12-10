@@ -1,0 +1,208 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > admin > change-manager-request</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Submitted</name>
+        <author></author>
+        <notes></notes>
+        <lastID>41</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="198" y="21">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_admin_kapp_submission_config_v1_33</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_18" name="Junction" x="563" y="348">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_status_v1_41</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_admin_kapp_submission_config_v1" id="routine_kinetic_admin_kapp_submission_config_v1_33" name="Get Config" x="201" y="89">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_status_v1_40</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_34" name="Retrieve Team" x="208" y="286">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%= @values['Team Name']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Team Doesn't Exist" type="Complete" value="@results['Retrieve Team']['Exists'].to_s.downcase != &quot;true&quot;">system_junction_v1_18</task>
+                    <task label="Team Exists" type="Complete" value="@results['Retrieve Team']['Exists'].to_s.downcase == &quot;true&quot;">routine_kinetic_solutions_service_portal_submission_approval_v1_35</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_approval_v1" id="routine_kinetic_solutions_service_portal_submission_approval_v1_35" name="Approval" x="746" y="116">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Approver" label="Approver" menu="" required="true" tooltip="Options are &quot;Manager&quot;, a username, or a team name">&lt;%= @values['Team Name']%&gt;</parameter>
+                    <parameter id="Approval Form Slug" label="Approval Form Slug" menu="" required="true" tooltip="The Slug of the Queue form to create an approval in">&lt;%=@results['Get Config']['Approval Form Slug']%&gt;</parameter>
+                    <parameter id="Details" label="Details" menu="" required="true" tooltip="A description of what is being approved ">&lt;%=@results['Get Config']['Fulfillment Details']%&gt;</parameter>
+                    <parameter id="Originating Submission Id" label="Originating Submission Id" menu="" required="true" tooltip="The Id of the originating submission">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Service Days Due" label="Service Days Due" menu="" required="true" tooltip="Number of Days until the submission is due to be completed">&lt;%=@results['Get Config']['Service Days Due']%&gt;</parameter>
+                    <parameter id="Queue Kapp Slug" label="Queue Kapp Slug" menu="" required="true" tooltip="The Slug of the Kapp in which this approval should be created">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Summary" label="Summary" menu="" required="true" tooltip="A summary of what is being approved">&lt;%= @values['Requested By']%&gt; has asked to have their manager changed to &lt;%= @values['Manager Name']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Denied" type="Complete" value="@results['Approval']['Decision'] != &quot;Approved&quot;">system_junction_v1_18</task>
+                    <task label="Approved" type="Complete" value="@results['Approval']['Decision'] == &quot;Approved&quot;">routine_kinetic_user_update_v1_38</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_36" name="Close Submission" x="560" y="520">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state">Closed</parameter>
+                    <parameter id="Updated - Current Page" label="Updated - Current Page" menu="" required="false" tooltip="The submissions current page"></parameter>
+                    <parameter id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_37</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_37" name="Finish" x="559" y="615">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_update_v1" id="routine_kinetic_user_update_v1_38" name="Update User" x="948" y="329">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Current Username" label="Current Username" menu="" required="true" tooltip="The User's current username">&lt;%= @submission['Submitted By']%&gt;</parameter>
+                    <parameter id="Updated - Username" label="Updated - Username" menu="" required="false" tooltip="The updated username - may be omitted"></parameter>
+                    <parameter id="Updated - Email" label="Updated - Email" menu="" required="false" tooltip="The updated email address - may be omitted"></parameter>
+                    <parameter id="Updated - Display Name" label="Updated - Display Name" menu="" required="false" tooltip="The updated name that is displayed for the user"></parameter>
+                    <parameter id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="Include only attributes that need to be updated">&lt;%={
+"Manager" =&gt; [@values['Manager Name']]
+}.to_json%&gt;</parameter>
+                    <parameter id="Updated - Profile Attributes Map JSON" label="Updated - Profile Attributes Map JSON" menu="" required="false" tooltip="Include only profile attributes that need to be updated"></parameter>
+                    <parameter id="Updated - Is Space Admin" label="Updated - Is Space Admin" menu="" required="false" tooltip="(True | False) Allows or disallows the user from being a super administrator"></parameter>
+                    <parameter id="Updated - Is Enabled" label="Updated - Is Enabled" menu="" required="false" tooltip="(True | False) Allows or disallows the user from being a super administrator"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_18</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_40" name="Status - Submitted" x="200" y="166">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Submitted</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_team_retrieve_v1_34</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_41" name="Status - Completed" x="561" y="417">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">&lt;%=@results['Approval']['Decision'] == "Denied" ? "Denied" : "Completed"%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_36</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

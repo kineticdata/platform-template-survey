@@ -1,0 +1,128 @@
+[
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-truck"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "1"
+        ]
+      }
+    ],
+    "name": "Facilities",
+    "slug": "facilities"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-money"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "2"
+        ]
+      }
+    ],
+    "name": "Finance",
+    "slug": "finance"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Hidden",
+        "values": [
+          "true"
+        ]
+      },
+      {
+        "name": "Label",
+        "values": [
+          "Popular Services"
+        ]
+      }
+    ],
+    "name": "Home Page Services",
+    "slug": "home-page-services"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-clipboard"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "3"
+        ]
+      }
+    ],
+    "name": "Human Resources",
+    "slug": "human-resources"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-desktop"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "4"
+        ]
+      }
+    ],
+    "name": "Information Technology",
+    "slug": "information-technology"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-gavel"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "5"
+        ]
+      }
+    ],
+    "name": "Legal",
+    "slug": "legal"
+  },
+  {
+    "attributes": [
+      {
+        "name": "Icon",
+        "values": [
+          "fa-film"
+        ]
+      },
+      {
+        "name": "Sort Order",
+        "values": [
+          "6"
+        ]
+      }
+    ],
+    "name": "Marketing",
+    "slug": "marketing"
+  }
+]

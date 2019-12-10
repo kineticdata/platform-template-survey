@@ -1,0 +1,6 @@
+{
+  "name": "Localhost Only",
+  "rule": "['127.0.0.1'].include?(@request.remote_addr)",
+  "message": "Access is allowed only from localhost.",
+  "type": "API Access"
+}

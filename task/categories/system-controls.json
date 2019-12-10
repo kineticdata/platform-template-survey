@@ -1,0 +1,26 @@
+{
+  "name": "System Controls",
+  "description": "Handlers that are integrated into the Kinetic Task application that assist with process flow, development, testing, and other power usage.",
+  "type": "Integrated",
+  "handlers": [
+    "system_join_v1",
+    "system_junction_v1",
+    "system_loop_head_v1",
+    "system_loop_tail_v1",
+    "system_noop_v1",
+    "system_start_v1",
+    "system_tree_call_v1",
+    "system_tree_return_v1",
+    "system_wait_v1",
+    "utilities_create_trigger_v1",
+    "utilities_defer_v1",
+    "utilities_echo_v1",
+    "utilities_eval_v1"
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+
+  ]
+}

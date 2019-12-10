@@ -1,0 +1,12 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "Stores which columns are rendered within the datastore console",
+    "name": "Datastore Configuration"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "If set to true / yes, this form will be hidden for the settings/datastore list view",
+    "name": "Datastore Hidden"
+  }
+]

@@ -1,0 +1,46 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Datastore Submissions > robot-definitions</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Saved</name>
+        <author>matthew.howe@kineticdata.com</author>
+        <notes></notes>
+        <lastID>10</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_robot_execution_v2_10</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_robot_execution_v2" id="routine_kinetic_robot_execution_v2_10" name="Initiate execution v2" x="292.29998779296875" y="113.41667175292969">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="space slug" label="space slug" menu="" required="true" tooltip="Space slug of the submission">&lt;%= @space['Slug']%&gt;</parameter>
+                    <parameter id="submission id" label="submission id" menu="" required="true" tooltip="Submission Id of the robot schedule record">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="start time" label="start time" menu="" required="true" tooltip="The time from which the next schedule should be determined.  Usually the current time, unless this is for a new schedule.">&lt;%= @values['Start Date']%&gt;</parameter>
+                    <parameter id="schedule update time" label="schedule update time" menu="" required="true" tooltip="Schedule update time (for the initial routine call), or current time (for subsequent calls).">&lt;%= @submission['Updated At']%&gt;</parameter>
+                    <parameter id="Initial Run" label="Initial Run" menu="" required="true" tooltip="Set to false when this routine calls itself; any other value when called the first time (when a submission is submitted or modified)">True</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

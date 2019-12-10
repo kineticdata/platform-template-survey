@@ -1,0 +1,6 @@
+{
+  "name": "Allow All",
+  "rule": "true",
+  "message": "Allowed by default.",
+  "type": "System Default"
+}

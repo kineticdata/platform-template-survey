@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Users with this role have access to modify workflow in the task engine.",
+  "name": "Role::Task Developer",
+  "slug": "c7ea5ad701c07ef002071a570a8be0c1"
+}

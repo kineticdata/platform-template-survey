@@ -1,0 +1,9 @@
+{
+  "authStrategy": {},
+  "event": "Membership Change",
+  "filter": "team('name') === 'Role::Employee'",
+  "name": "Employee Membership Change",
+  "type": "Team",
+  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Teams/Employee%20Membership%20Change",
+  "attributes": null
+}

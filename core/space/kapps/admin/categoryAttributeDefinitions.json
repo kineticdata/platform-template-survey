@@ -1,0 +1,17 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this category",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Parent"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Sort Order"
+  }
+]

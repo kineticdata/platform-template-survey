@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-gavel"
+      ]
+    }
+  ],
+  "description": "",
+  "name": "Legal",
+  "slug": "a10a9bcd450087de1ce1f80b35f44883"
+}

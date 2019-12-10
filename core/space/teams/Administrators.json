@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-wrench"
+      ]
+    }
+  ],
+  "description": "The administrators team is a collection of users who manage the kinops System. \n\nThe Administrators team is responsible for\n- Handling workflow errors\n- New user registration requests\n- Suggesting a new service\n- Requesting an alert",
+  "name": "Administrators",
+  "slug": "c1ec1d62eafad32ca16fe4df49b9ca2f"
+}

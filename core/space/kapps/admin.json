@@ -1,0 +1,171 @@
+{
+  "afterLogoutPath": null,
+  "attributes": [
+    {
+      "name": "Bundle Package",
+      "values": [
+        "space"
+      ]
+    },
+    {
+      "name": "Description",
+      "values": [
+        "Configure and manage system functions"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-gear"
+      ]
+    },
+    {
+      "name": "Kapp Configuration Status",
+      "values": [
+        "true"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Complete",
+      "values": [
+        "Service Completed"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Create",
+      "values": [
+        "Service Submitted"
+      ]
+    },
+    {
+      "name": "Statuses - Active",
+      "values": [
+        "Active"
+      ]
+    },
+    {
+      "name": "Statuses - Inactive",
+      "values": [
+        "Inactive"
+      ]
+    }
+  ],
+  "bundlePath": "admin",
+  "defaultFormConfirmationPage": null,
+  "defaultFormDisplayPage": null,
+  "defaultSubmissionLabelExpression": "",
+  "displayType": "Display Page",
+  "displayValue": null,
+  "fields": [
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k3",
+      "name": "Assigned Individual"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k1",
+      "name": "Assigned Team"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k6",
+      "name": "Deferral Token"
+    },
+    {
+      "dataType": "date",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k5",
+      "name": "Due Date"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k7",
+      "name": "Requested By"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k9",
+      "name": "Requested For"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k11",
+      "name": "Status"
+    }
+  ],
+  "formTypes": [
+    {
+      "name": "Console"
+    },
+    {
+      "name": "Content"
+    },
+    {
+      "name": "Datastore"
+    },
+    {
+      "name": "Service"
+    },
+    {
+      "name": "Subconsole"
+    },
+    {
+      "name": "Template"
+    },
+    {
+      "name": "Utility"
+    }
+  ],
+  "loginPage": null,
+  "name": "System Forms",
+  "resetPasswordPage": null,
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Authenticated Users"
+    },
+    {
+      "endpoint": "Form Creation",
+      "name": "Data Admins"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Default Form Display",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Default Form Modification",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Default Submission Access",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Default Submission Modification",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Submission Support",
+      "name": "Submission Support"
+    }
+  ],
+  "slug": "admin"
+}

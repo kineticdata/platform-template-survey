@@ -1,0 +1,9 @@
+{
+  "authStrategy": {},
+  "event": "Deleted",
+  "filter": "kapp('attribute:Custom Form Workflow').indexOf('Deleted') === -1",
+  "name": "Form Deleted - Space Default",
+  "type": "Form",
+  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Forms/Deleted",
+  "attributes": null
+}

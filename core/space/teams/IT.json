@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-desktop"
+      ]
+    }
+  ],
+  "description": "",
+  "name": "IT",
+  "slug": "cd32106bcb6de321930cf34574ea388c"
+}

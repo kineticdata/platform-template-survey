@@ -1,0 +1,19 @@
+{
+  "name": "_Handlers",
+  "description": "Handlers in the system",
+  "type": "Stored",
+  "handlers": [
+    "kinetic_core_api_v1",
+    "kinetic_discussions_api_v1",
+    "kinetic_request_ce_notification_template_send_v3",
+    "kinetic_request_ce_submission_update_observers_v1",
+    "kinetic_task_api_v1",
+    "kinetic_task_api_v2"
+  ],
+  "policyRules": [
+    "Admins"
+  ],
+  "trees": [
+
+  ]
+}

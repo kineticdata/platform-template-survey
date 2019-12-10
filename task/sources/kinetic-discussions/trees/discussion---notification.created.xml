@@ -1,0 +1,235 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Discussions</sourceName>
+    <sourceGroup>Discussion > Notification</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>19</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utility_message_formatter_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="utility_message_formatter_v1" id="utility_message_formatter_v1_17" name="Build Notification Variables" x="187" y="110">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
+                    <parameter id="input" label="Input" menu="" required="false" tooltip="Input">&lt;%
+
+# styles
+msg_container_style = "border-bottom:1px solid #ccc;"
+msg_style = "margin:0.5em 0;"
+parent_msg_style = "border-left:3px solid #777;padding:0 1em;margin:0.5em 0;"
+user_mention_style = "color:#006fdd;"
+team_mention_style = "color:#006fdd;"
+
+# variables
+tz = @recipient['timezone']
+web_server_url = @space_attributes['Web Server Url'].gsub('spaceSlug', @space['Slug'])
+
+
+summary_html = &lt;&lt;~SUMMARY
+&lt;p&gt;
+  The &lt;strong&gt;#{@discussion['title']}&lt;/strong&gt; discussion you are participating in the &lt;em&gt;#{@space['Name']}&lt;/em&gt; kinops space has activity that you may want to follow-up with:
+&lt;/p&gt;
+SUMMARY
+
+msgs_html = '&lt;div&gt;'
+@messages.each do |msg|
+  msgs_html &lt;&lt; "&lt;div style='#{msg_container_style}'&gt;"
+
+  parent = msg['parent']
+  has_parent = !parent.nil? &amp;&amp; !parent['content'].nil? &amp;&amp; parent['content'].size &gt; 0
+
+  # determine the message timestamp
+  if tz.nil?
+    created_at = "${appearance('#{msg['createdAt']} ${format('Month DD, YYYY (no time)')}')}"
+  else
+    t = ::TZInfo::Timezone.get(tz).to_local(Time.parse(msg['createdAt']))
+    created_at = "${appearance('#{t.iso8601} ${format('MM-DD-YY h:mm (12 hour am/pm)')}')} (#{t.zone})"
+  end
+
+  # begin the message
+  stringified_msg = &lt;&lt;~MSG
+  &lt;div style='#{msg_style}'&gt;
+    &lt;div&gt;
+      &lt;span&gt;
+        #{has_parent ? "Replied by:&amp;nbsp;" : ""}
+        &lt;strong&gt;#{::Kinetic::Commons.escape(msg['createdBy']['displayName'])}&lt;/strong&gt;
+      &lt;/span&gt;
+      &lt;span&gt;#{created_at}&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+  MSG
+
+  # process the message content
+  msg['content'].each do |content|
+    if content['type'] == 'text'
+      stringified_msg &lt;&lt; ::Kinetic::Commons.escape(content['value'])
+    elsif content['type'] == 'attachment'
+      stringified_msg &lt;&lt; &lt;&lt;~LINK
+        &lt;p&gt;
+        Attached file: &lt;strong&gt;#{content['value']['filename']}&lt;/strong&gt; &lt;em&gt;(#{::Kinetic::Commons.human_bytes(content['value']['size'])})&lt;/em&gt;
+        &lt;/p&gt;
+      LINK
+    elsif content['type'] == 'team'
+      stringified_msg &lt;&lt; "&lt;span style='#{team_mention_style}'&gt;&amp;nbsp;#{content['value']['name']}&amp;nbsp;&lt;/span&gt;"
+    elsif content['type'] == 'user'
+      stringified_msg &lt;&lt; "&lt;span style='#{user_mention_style}'&gt;&amp;nbsp;#{content['value']['displayName']}&amp;nbsp;&lt;/span&gt;"
+    elsif content['type'] == 'unknownTeam'
+    elsif content['type'] == 'unknownUser'
+    end
+  end
+
+  # close the message
+  stringified_msg &lt;&lt; &lt;&lt;~MSG
+    &lt;/div&gt;
+  &lt;/div&gt;
+  MSG
+
+  msgs_html &lt;&lt; "#{::Kinetic::Commons.md_to_html(stringified_msg, :input =&gt; 'GFM')}"
+  msgs_html &lt;&lt; "&lt;/div&gt;"
+
+  if has_parent
+    # determine the parent message timestamp
+    if tz.nil?
+      created_at = "${appearance('#{parent['createdAt']} ${format('Month DD, YYYY (no time)')}')}"
+    else
+      t = ::TZInfo::Timezone.get(tz).to_local(Time.parse(parent['createdAt']))
+      created_at = "${appearance('#{t.iso8601} ${format('MM-DD-YY h:mm (12 hour am/pm)')}')} (#{t.zone})"
+    end
+
+    # begin the parent message
+    stringified_msg = &lt;&lt;~PARENT
+    &lt;div style='#{parent_msg_style}'&gt;
+      &lt;div&gt;
+        &lt;span&gt;
+          &lt;strong&gt;#{::Kinetic::Commons.escape(parent['createdBy']['displayName'])}&lt;/strong&gt;
+        &lt;/span&gt;
+        &lt;span&gt;#{created_at}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+    PARENT
+
+    # process the parent message content
+    parent['content'].each do |content|
+      if content['type'] == 'text'
+        stringified_msg &lt;&lt; ::Kinetic::Commons.escape(content['value'])
+      elsif content['type'] == 'attachment'
+        stringified_msg &lt;&lt; &lt;&lt;~LINK
+          &lt;p&gt;
+          Attached file: &lt;strong&gt;#{content['value']['filename']}&lt;/strong&gt; &lt;em&gt;(#{::Kinetic::Commons.human_bytes(content['value']['size'])})&lt;/em&gt;
+          &lt;/p&gt;
+        LINK
+      elsif content['type'] == 'team'
+        stringified_msg &lt;&lt; "&lt;span style='#{team_mention_style}'&gt;&amp;nbsp;#{content['value']['name']}&amp;nbsp;&lt;/span&gt;"
+      elsif content['type'] == 'user'
+        stringified_msg &lt;&lt; "&lt;span style='#{user_mention_style}'&gt;&amp;nbsp;#{content['value']['displayName']}&amp;nbsp;&lt;/span&gt;"
+      elsif content['type'] == 'unknownTeam'
+      elsif content['type'] == 'unknownUser'
+      end
+    end
+
+    # close the parent message
+    stringified_msg &lt;&lt; &lt;&lt;~PARENT
+      &lt;/div&gt;
+    &lt;/div&gt;
+    PARENT
+
+    msgs_html &lt;&lt; "#{::Kinetic::Commons.md_to_html(stringified_msg, :input =&gt; 'GFM')}"
+  end
+end
+
+if @messages_count_remaining.to_i &gt; 0
+  text = @messages_count_remaining.to_i == 1 ?
+    "There is 1 additional message." :
+    "There are #{@messages_count_remaining.to_i} additional messages."
+  msgs_html &lt;&lt; "&lt;div style='margin-top:1em;'&gt;&lt;strong&gt;#{text}&lt;/strong&gt;&lt;/div&gt;"
+end
+msgs_html &lt;&lt; "&lt;/div&gt;"
+
+
+body_html = &lt;&lt;~BODY
+  #{summary_html}
+  &lt;hr style="margin-bottom:2em;"/&gt;
+  #{msgs_html}
+BODY
+%&gt;
+
+&lt;%= {
+  "Space Name" =&gt; @space['Name'],
+  "Discussion Title" =&gt; @discussion['title'],
+  "To" =&gt; @recipient['email'],
+  "Subject" =&gt; "You have new activity in kinops #{@discussion['title']}",
+  "Summary" =&gt; summary_html,
+  "Body" =&gt; body_html,
+  "Button Label" =&gt; "Read Discussion",
+  "Button Url" =&gt; "#{web_server_url}/#/discussions/#{@discussion['id']}"
+}.to_json %&gt;
+</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_18</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_18" name="Send Email" x="187" y="231">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%=JSON.parse(@results['Build Notification Variables']['Output'])['To']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Discussion Unread Messages</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=@results['Build Notification Variables']['Output']%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @space_attributes['Admin Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_19" name="Finish" x="183.6875" y="295.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

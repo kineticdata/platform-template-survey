@@ -1,0 +1,9 @@
+{
+  "authStrategy": {},
+  "event": "Invitation Created",
+  "filter": "",
+  "name": "Discussion Invitation Created",
+  "type": "Discussion",
+  "url": "/app/api/v1/run-tree/Kinetic%20Discussions/Discussion%20%3E%20Invitation/Created",
+  "attributes": null
+}

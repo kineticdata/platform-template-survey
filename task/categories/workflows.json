@@ -1,0 +1,22 @@
+{
+  "name": "Workflows",
+  "description": "Functions for interacting with Kinetic Workflows",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_workflow_clone_v1",
+    "routine_kinetic_workflow_create_v1",
+    "routine_kinetic_workflow_delete_v1",
+    "routine_kinetic_workflow_rename_v1",
+    "routine_kinetic_workflow_retrieve_list_v1",
+    "routine_kinetic_workflow_retrieve_v1",
+    "routine_kinetic_workflow_run_create_v1",
+    "routine_kinetic_workflow_run_delete_v1",
+    "routine_kinetic_workflow_update_v1"
+  ]
+}

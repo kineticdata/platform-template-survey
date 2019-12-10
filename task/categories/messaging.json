@@ -1,0 +1,15 @@
+{
+  "name": "Messaging",
+  "description": "Handlers used for messaging: Email, SMS, etc...",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+    "Form Developers",
+    "Task Developers"
+  ],
+  "trees": [
+    "routine_kinetic_email_template_notification_send_v1"
+  ]
+}

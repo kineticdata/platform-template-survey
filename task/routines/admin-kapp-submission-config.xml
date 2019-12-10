@@ -1,0 +1,476 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_admin_kapp_submission_config_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Admin Kapp Submission Config</name>
+        <author></author>
+        <notes></notes>
+        <lastID>4</lastID>
+        <taskDefinition id="routine_kinetic_admin_kapp_submission_config_v1" name="Admin Kapp Submission Config" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Source Data" label="Source Data" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Approval Form Slug" tooltip="Form Slug used for service approval"></result>
+                <result name="Approver" tooltip="Service Approver"></result>
+                <result name="Service Days Due" tooltip="Number of days service request should be completed by"></result>
+                <result name="Task Assignee Team" tooltip="Team to assign fulfillment to"></result>
+                <result name="Task Assignee Individual" tooltip="Individual to assign fulfillment to"></result>
+                <result name="Task Form Slug" tooltip="Form Slug used for fulfillment"></result>
+                <result name="Fulfillment Details" tooltip="Details about the request (using answer values)"></result>
+                <result name="Fulfillment Summary" tooltip="Summary to place on fulfillment records"></result>
+                <result name="Notification Template Name - Create" tooltip="The notification template to use when a submission is created"></result>
+                <result name="Notification Template Name - Complete" tooltip="The notification template to use when a submission is completed"></result>
+                <result name="Queue Kapp Slug" tooltip="Slug of the Queue Kapp"></result>
+                <result name="Submitter" tooltip="Dynamically build the submitter based on Requested By/ Requested For / submitter"></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="22" y="43">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_3" name="Return Config" x="243" y="40">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Approval Form Slug" label="Approval Form Slug" menu="" required="false" tooltip="Form Slug used for service approval">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Approval Form Slug'
+default_value = 'approval'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Approver" label="Approver" menu="" required="false" tooltip="Service Approver">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Approver'
+default_value = ''
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Service Days Due" label="Service Days Due" menu="" required="false" tooltip="Number of days service request should be completed by">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Service Days Due'
+default_value = '7'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Task Assignee Team" label="Task Assignee Team" menu="" required="false" tooltip="Team to assign fulfillment to">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Task Assignee Team'
+default_value = 'default'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Task Assignee Individual" label="Task Assignee Individual" menu="" required="false" tooltip="Individual to assign fulfillment to">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Task Assignee Individual'
+default_value = ''
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Task Form Slug" label="Task Form Slug" menu="" required="false" tooltip="Form Slug used for fulfillment">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Task Form Slug'
+default_value = 'work-order'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Fulfillment Details" label="Fulfillment Details" menu="" required="false" tooltip="Details about the request (using answer values)">&lt;%=
+# Parse Source Data values
+data = JSON.parse(@inputs['Source Data'])['values']
+# Loop over each value and remove nil's and join arrays
+result = {}
+
+# Requested For
+if data['Requested For Display Name'].nil?
+  result['Requested For'] = data['Requested For']
+else
+  result['Requested For'] = "#{data['Requested For Display Name']} (#{data['Requested For']})"
+end
+
+# Requested By
+if data['Requested By'] != data['Requested For']
+  if data['Requested By Display Name'].nil?
+    result['Requested By'] = data['Requested By']
+  else
+    result['Requested By'] = "#{data['Requested By Display Name']} (#{data['Requested By']})"
+  end
+end
+
+# Define omitted fields
+ommitted_fields = [
+  'Requested By',
+  'Requested By Display Name',
+  'Requested For',
+  'Requested For Display Name',
+  'Status',
+  'Discussion Id',
+  'Observing Teams',
+  'Observing Individuals'
+]
+
+# Add each of the remaining fields
+data.each do |k, v|
+  # If the key is for an omitted field or the value is blank
+  if ommitted_fields.include?(k) || v.nil? || v == ''
+    next
+  # If the field is for a complex type (IE list)
+  elsif v.is_a?(Array)
+    unless v.empty?
+      # Check to see if it's a Hash (Attachments)
+      if v[0].is_a?(Hash)
+        output = ''
+        v.each_with_index do |val, index|
+          next unless val.key?('contentType')
+          output &lt;&lt; if index == v.size - 1
+                      "Attachment Name: #{val['name']} (#{val['contentType']})"
+                    else
+                      "Attachment Name: #{val['name']} (#{val['contentType']})\n"
+                    end
+        end
+        result[k] = output
+      else
+        result[k] = v.join(', ')
+      end
+      end
+  # If the field is for a date/time
+  elsif v =~ /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00$/
+    result[k] = DateTime.parse(v).strftime('%c')
+  # If the field is for a date
+  elsif v =~ /^\d\d\d\d-\d\d-\d\d$/
+    result[k] = DateTime.parse(v).strftime('%D')
+  # If the field is for a time
+  elsif v =~ /^\d\d:\d\d$/
+    result[k] = DateTime.parse(v).strftime('%r')
+  # If the field is a normal field
+  else
+    result[k] = v
+  end
+end
+
+table = ''
+result.keys.each do |key|
+  table &lt;&lt; "#{key}: #{result[key]}\n"
+end
+table%&gt;</parameter>
+                    <parameter id="Fulfillment Summary" label="Fulfillment Summary" menu="" required="false" tooltip="Summary to place on fulfillment records">&lt;%=
+data = JSON.parse(@inputs['Source Data'])
+submitter = data['submission']['submittedBy']
+if data['values'].has_key?('Requested For Display Name') &amp;&amp; !data['values']['Requested For Display Name'].nil?
+   submitter = data['values']['Requested For Display Name']
+elsif data['values'].has_key?('Requested By') &amp;&amp; !data['values'].nil?
+   submitter = data['values']['Requested By Display Name']
+end
+
+"#{data['form']['name']} has been requested by #{submitter}" %&gt;</parameter>
+                    <parameter id="Notification Template Name - Create" label="Notification Template Name - Create" menu="" required="false" tooltip="The notification template to use when a submission is created">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Notification Template Name - Create'
+default_value = 'Service Submitted'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Notification Template Name - Complete" label="Notification Template Name - Complete" menu="" required="false" tooltip="The notification template to use when a submission is completed">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Notification Template Name - Complete'
+default_value = 'Service Completed'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Queue Kapp Slug" label="Queue Kapp Slug" menu="" required="false" tooltip="Slug of the Queue Kapp">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Queue Kapp Slug'
+default_value = 'queue'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+def most_significant_value(data, key, default=nil, allow_multiple=false)
+  cascaded_values = 
+    data['space']['attributes'].merge(
+      data['kapp']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+        data['form']['attributes']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}.merge(
+          data['values']){|k,v1,v2| first_non_nil(v1,v2,allow_multiple)}
+  cascaded_values[key] || default
+end
+
+def first_non_nil(v1, v2, allow_multiple=false)
+  prepare_value(v2, allow_multiple) || prepare_value(v1, allow_multiple)
+end
+
+def prepare_value(value, allow_multiple)
+  if value.is_a?(Array)
+    values = value.select {|v| !v.to_s.strip.empty?}
+    val = allow_multiple ? (values.empty? ? nil : values) : values.first
+  else
+    value
+  end
+end
+
+# Return the value
+data = JSON.parse(@inputs['Source Data'])
+most_significant_value(data, key, default_value)%&gt;</parameter>
+                    <parameter id="Submitter" label="Submitter" menu="" required="false" tooltip="Dynamically build the submitter based on Requested By/ Requested For / submitter">&lt;%=
+data = JSON.parse(@inputs['Source Data'])
+submitter = data['submission']['submittedBy']
+if data['values'].has_key?('Requested For') &amp;&amp; !data['values'].nil?
+   submitter = data['values']['Requested For']
+elsif data['values'].has_key?('Requested By') &amp;&amp; !data['values'].nil?
+   submitter = data['values']['Requested By']
+end
+submitter %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_4" name="Finish" x="462.6875" y="36.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

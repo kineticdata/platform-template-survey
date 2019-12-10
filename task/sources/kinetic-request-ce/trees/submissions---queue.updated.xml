@@ -1,0 +1,214 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > queue</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Updated</name>
+        <author></author>
+        <notes></notes>
+        <lastID>10</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="594" y="22">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_submission_config_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_submission_config_v1" id="routine_kinetic_queue_submission_config_v1_1" name="Get Config" x="591" y="109">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Deferral and Open" type="Complete" value="!@values['Deferral Token'].to_s.empty? &amp;&amp; @submission['Core State'] == &quot;Draft&quot;">utilities_create_trigger_v1_2</task>
+                    <task label="Has Parent and Assignment Change" type="Complete" value="!@submission['Parent Id'].to_s.empty? &amp;&amp; (@values['Assigned Individual'] != @values_previous['Assigned Individual'] || @values['Assigned Team'] != @values_previous['Assigned Team'])">routine_kinetic_submission_update_observers_v1_3</task>
+                    <task label="Assignment Changed" type="Complete" value=" (@values['Assigned Individual'] != @values_previous['Assigned Individual'] || @values['Assigned Team'] != @values_previous['Assigned Team'])">routine_kinetic_submission_retrieve_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_create_trigger_v1" id="utilities_create_trigger_v1_2" name="Update Parent Activity Record" x="848" y="79">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="action_type" label="Action Type" menu="Update,Complete" required="true" tooltip="">Update</parameter>
+                    <parameter id="deferral_token" label="Deferral Token" menu="" required="true" tooltip="">&lt;%= @values['Deferral Token']%&gt;</parameter>
+                    <parameter id="deferred_variables" label="Deferred Results" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="message" label="Message" menu="" required="false" tooltip="">Activity Update</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_observers_v1" id="routine_kinetic_submission_update_observers_v1_3" name="Update Parent Observers" x="595" y="243">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to update">&lt;%= @submission['Parent Id']%&gt;</parameter>
+                    <parameter id="Observing Teams" label="Observing Teams" menu="" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission">&lt;%= @values['Assigned Team']%&gt;</parameter>
+                    <parameter id="Observing Individuals" label="Observing Individuals" menu="" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission">&lt;%= (@values['Assigned Team'].to_s.empty? &amp;&amp; !@values['Assigned Individual'].to_s.empty?) ? [@values['Assigned Individual']].to_json : nil%&gt;</parameter>
+                    <parameter id="Replace Existing" label="Replace Existing" menu="" required="false" tooltip="true or false if existing observers should be replaced">false</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_4" name="Get Submission Children" x="357" y="97">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_head_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_5" name="Children Loop Head" x="164" y="219">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;children&gt;&lt;%=JSON.parse(@results['Get Submission Children']['Children JSON']).collect {|child| "&lt;child&gt;#{child['id']}&lt;/child&gt;"}.join%&gt;&lt;/children&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">/children/child</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">childId</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_6</task>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_6" name="Get Child Submission" x="385" y="219">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Child Open" type="Complete" value="@results['Get Child Submission']['Core State'] != 'Closed'">routine_kinetic_submission_update_observers_v1_7</task>
+                    <task label="Child Closed" type="Complete" value="@results['Get Child Submission']['Core State'] == 'Closed'">system_junction_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_observers_v1" id="routine_kinetic_submission_update_observers_v1_7" name="Update Child Observers" x="312" y="325">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to update">&lt;%= @childId %&gt;</parameter>
+                    <parameter id="Observing Teams" label="Observing Teams" menu="" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission">&lt;%= @values['Assigned Team']%&gt;</parameter>
+                    <parameter id="Observing Individuals" label="Observing Individuals" menu="" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission">&lt;%= (@values['Assigned Team'].to_s.empty? &amp;&amp; !@values['Assigned Individual'].to_s.empty?) ? [@values['Assigned Individual']].to_json : nil%&gt;</parameter>
+                    <parameter id="Replace Existing" label="Replace Existing" menu="" required="false" tooltip="true or false if existing observers should be replaced">false</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_8" name="Children Updated - Proceed" x="370" y="429">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_9" name="Children Loop Tail" x="178" y="484">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_10</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_10" name="Finish" x="179" y="605">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

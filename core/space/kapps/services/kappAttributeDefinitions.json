@@ -1,0 +1,102 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "The form which approvals should be created in (if not defined on form or space)",
+    "name": "Approval Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Options are: Team Name, Individual Name or manager. If this is set, all forms in this kapp will get approvals sent to the value set here unless specified in a form.",
+    "name": "Approver"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The name of the package that this Kapp should use for display",
+    "name": "Bundle Package"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "If the Kapp has custom workflow that should be executed when a form is Created, Updated, Deleted...etc)",
+    "name": "Custom Form Workflow"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Description of what users do within this Kapp",
+    "name": "Description"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this kapp",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Font Awesome icon to display in Kapp Links",
+    "name": "Icon"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Defines whether the Kapp is configured. Value is automatically managed by the Setup Wizard. DO NOT MODIFY.",
+    "name": "Kapp Configuration Status"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the Notification Template to use when submissions in this Kapp Completed",
+    "name": "Notification Template Name - Complete"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the Notification Template to use when submissions in this Kapp are Submitted",
+    "name": "Notification Template Name - Create"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Team that owns and manages services in this kapp (overridden by form attributes)",
+    "name": "Owning Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "This attribute controls when searches made from this kapp are recorded. Options are All (all searches will be recorded) / None (Only record when no results found) / Off (never record search history)",
+    "name": "Record Search History"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Number of days until service is expected to be fulfilled for forms in this Kapp - This attribute is overridden if set at the form level",
+    "name": "Service Days Due"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Slug of the form that exposes shared bridged resources (typically shared-resources)",
+    "name": "Shared Bridged Resource Form Slug"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Active",
+    "name": "Statuses - Active"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Cancelled",
+    "name": "Statuses - Cancelled"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Inactive",
+    "name": "Statuses - Inactive"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "User to assign tasks to",
+    "name": "Task Assignee Individual"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Team to assign tasks to if not defined in a form or space",
+    "name": "Task Assignee Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The form to use when creating a task item. (If set here, all forms in this kapp, unless specified at the form level will have tasks created in the form set here)",
+    "name": "Task Form Slug"
+  }
+]

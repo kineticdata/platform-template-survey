@@ -1,0 +1,34 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_finish_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree schema_version="1.0" version="">
+        <name>Finish Process</name>
+        <author></author>
+        <notes></notes>
+        <lastID>0</lastID>
+        <taskDefinition id="routine_kinetic_finish_v1" name="Finish Process" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Run Id" label="Run Id" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

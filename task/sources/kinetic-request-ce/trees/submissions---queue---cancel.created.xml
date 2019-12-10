@@ -1,0 +1,180 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > queue > cancel</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>24</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="482" y="-56">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_submission_config_v1_14</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_observers_v1" id="routine_kinetic_submission_update_observers_v1_12" name="Set Parent Assignees as Observers" x="671" y="187">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to update">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Observing Teams" label="Observing Teams" menu="" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission">&lt;%=
+key = "Assigned Team"
+JSON.parse(@results['Retrieve Parent']['Values JSON'])[key]%&gt;</parameter>
+                    <parameter id="Observing Individuals" label="Observing Individuals" menu="" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission">&lt;%=
+key = "Assigned Individual"
+JSON.parse(@results['Retrieve Parent']['Values JSON'])[key]%&gt;</parameter>
+                    <parameter id="Replace Existing" label="Replace Existing" menu="" required="false" tooltip="true or false if existing observers should be replaced">false</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_20</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_submission_config_v1" id="routine_kinetic_queue_submission_config_v1_14" name="Get Config" x="482" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Origin" type="Complete" value="!@submission['Origin Id'].to_s.empty?">routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19</task>
+                    <task label="Has Parent" type="Complete" value="!@submission['Parent Id'].to_s.empty?">routine_kinetic_submission_retrieve_v1_21</task>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19" name="Relate to Origin Discussion" x="292" y="198">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Origin Submission Id" label="Origin Submission Id" menu="" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission">&lt;%= @submission['Origin Id']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_20" name="Notify Assignees" x="666" y="331">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= parent_values = JSON.parse(@results['Retrieve Parent']['Values JSON'])
+parent_values.nil? ? parent_values['Assigned Individual'] : parent_values['Assigned Team'] %&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%=@results['Get Config']['Notification Template Name - Create']%&gt;</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=
+target = ""
+parent_values = JSON.parse(@results['Retrieve Parent']['Values JSON'])
+assignedTeam = parent_values.has_key?('Assigned Team') ? parent_values['Assigned Team'] : nil
+assignedIndividual = parent_values.has_key?('Assigned Individual') ? parent_values['Assigned Individual'] : nil
+
+if assignedTeam.nil? &amp;&amp; !assignedIndividual.nil?
+ target = assignedIndividual
+elsif assignedIndividual.nil?
+ target = assignedTeam
+else
+ target = "#{assignedTeam} &gt; #{assignedIndividual}"
+end
+
+{
+      "Target" =&gt; target,
+      "Cancellation Reason" =&gt; @values['Details']
+    }.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Parent Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_21" name="Retrieve Parent" x="666" y="104">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @submission['Parent Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_observers_v1_12</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_23" name="Work Complete - Continue" x="481" y="385">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_24</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_24" name="Finish" x="481" y="495">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

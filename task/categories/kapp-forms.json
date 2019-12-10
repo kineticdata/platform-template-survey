@@ -1,0 +1,18 @@
+{
+  "name": "Kapp Forms",
+  "description": "Functions for interacting with Kinetic Kapp Forms",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_form_create_v1",
+    "routine_kinetic_form_delete_v1",
+    "routine_kinetic_form_retrieve_v1",
+    "routine_kinetic_form_update_v1",
+    "routine_kinetic_forms_retrieve_list_v1"
+  ]
+}

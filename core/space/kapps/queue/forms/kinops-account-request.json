@@ -1,0 +1,807 @@
+{
+  "anonymous": false,
+  "attributes": [
+    {
+      "name": "Notification Template Name - Create",
+      "values": [
+        "Approval Created"
+      ]
+    },
+    {
+      "name": "Owning Team",
+      "values": [
+        "Administrators"
+      ]
+    }
+  ],
+  "bridgedResources": [
+
+  ],
+  "categorizations": [
+
+  ],
+  "customHeadContent": "",
+  "description": "Used for Approving kinops account requests.",
+  "name": "kinops Account Request",
+  "notes": null,
+  "pages": [
+    {
+      "advanceCondition": "values('Status') === 'Complete' || values('Status') === 'Cancelled'",
+      "displayCondition": null,
+      "displayPage": null,
+      "elements": [
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Form",
+          "title": null,
+          "visible": true,
+          "omitWhenHidden": null,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "field",
+              "name": "Decision",
+              "label": "Decision",
+              "key": "f7",
+              "defaultValue": "",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": "values('Status') !== 'Pending'",
+              "requiredMessage": "A decision must be provided",
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+                {
+                  "name": "Set Status Pending",
+                  "type": "Change",
+                  "action": "Set Fields",
+                  "mappings": [
+                    {
+                      "field": "Status",
+                      "value": "Pending",
+                      "visible": null
+                    }
+                  ],
+                  "runIf": "values('Decision') === 'Pending'"
+                },
+                {
+                  "name": "Set Status Cancelled",
+                  "type": "Change",
+                  "action": "Set Fields",
+                  "mappings": [
+                    {
+                      "field": "Status",
+                      "value": "Cancelled",
+                      "visible": null
+                    }
+                  ],
+                  "runIf": "values('Decision') === 'Denied'"
+                },
+                {
+                  "name": "Set Status Complete",
+                  "type": "Change",
+                  "action": "Set Fields",
+                  "mappings": [
+                    {
+                      "field": "Status",
+                      "value": "Complete",
+                      "visible": null
+                    }
+                  ],
+                  "runIf": "values('Decision') === 'Approved'"
+                }
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "radio",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+                {
+                  "label": "Approved",
+                  "value": "Approved"
+                },
+                {
+                  "label": "Denied",
+                  "value": "Denied"
+                },
+                {
+                  "label": "Pending",
+                  "value": "Pending"
+                }
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Pending Reason",
+              "label": "Pending Reason",
+              "key": "f922",
+              "defaultValue": "",
+              "defaultResourceName": null,
+              "visible": "values('Status') === 'Pending'",
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": true,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Denial Reason",
+              "label": "Denial Reason",
+              "key": "f8",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": "values('Decision') === \"Denied\"",
+              "enabled": true,
+              "required": "values('Decision') === \"Denied\"",
+              "requiredMessage": "Please enter a reason for denying the approval",
+              "omitWhenHidden": true,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Notes for Customer",
+              "label": "Notes (sent to requester upon completion)",
+              "key": "f9",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 3
+            },
+            {
+              "type": "section",
+              "renderType": null,
+              "name": "New User Details",
+              "title": null,
+              "visible": "values('Decision') === \"Approved\"",
+              "omitWhenHidden": false,
+              "renderAttributes": {
+              },
+              "elements": [
+                {
+                  "type": "content",
+                  "renderType": "html",
+                  "name": "Teams and Roles",
+                  "text": "<p>Please select the teams and roles that should be applied to this user</p>\n<hr>\n<div class=\"row\">\n  <div class=\"col-md-6\">\n    <h4>Teams</h4>\n    <div id=\"teamsCheckbox\"></div>\n  </div>\n  <div class=\"col-md-6\">\n    <h4>Roles</h4>\n    <div id=\"rolesCheckbox\"></div>\n  </div>\n</div>\n<hr>",
+                  "visible": true,
+                  "renderAttributes": {
+                  }
+                },
+                {
+                  "type": "field",
+                  "name": "Space Admin",
+                  "label": "Make User Space Admin?",
+                  "key": "f919",
+                  "defaultValue": "false",
+                  "defaultResourceName": null,
+                  "visible": true,
+                  "enabled": true,
+                  "required": false,
+                  "requiredMessage": null,
+                  "omitWhenHidden": null,
+                  "pattern": null,
+                  "constraints": [
+
+                  ],
+                  "events": [
+
+                  ],
+                  "renderAttributes": {
+                  },
+                  "dataType": "string",
+                  "renderType": "radio",
+                  "choicesResourceName": null,
+                  "choicesRunIf": null,
+                  "choices": [
+                    {
+                      "label": "Yes",
+                      "value": "true"
+                    },
+                    {
+                      "label": "No",
+                      "value": "false"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Hidden Account Request Fields",
+          "title": null,
+          "visible": false,
+          "omitWhenHidden": false,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "field",
+              "name": "Memberships",
+              "label": "Memberships",
+              "key": "f918",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Hidden Metadata",
+          "title": "",
+          "visible": false,
+          "omitWhenHidden": false,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "field",
+              "name": "Status",
+              "label": "Status",
+              "key": "f901",
+              "defaultValue": "Open",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": true,
+              "requiredMessage": "A valid status must be set.",
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "radio",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+                {
+                  "label": "Open",
+                  "value": "Open"
+                },
+                {
+                  "label": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "label": "Complete",
+                  "value": "Complete"
+                },
+                {
+                  "label": "Cancelled",
+                  "value": "Cancelled"
+                }
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Assigned Individual",
+              "label": "Assigned Individual",
+              "key": "f912",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Assigned Individual Display Name",
+              "label": "Assigned Individual Display Name",
+              "key": "f913",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Assigned Team",
+              "label": "Assigned Team",
+              "key": "f910",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Assigned Team Display Name",
+              "label": "Assigned Team Display Name",
+              "key": "f911",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Deferral Token",
+              "label": "Deferral Token",
+              "key": "f914",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Discussion Id",
+              "label": "Discussion Id",
+              "key": "f902",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Observing Individuals",
+              "label": "Observing Individuals",
+              "key": "f905",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "json",
+              "renderType": "checkbox",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Observing Teams",
+              "label": "Observing Teams",
+              "key": "f904",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "json",
+              "renderType": "checkbox",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Summary",
+              "label": "Summary",
+              "key": "f2",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Due Date",
+              "label": "Due Date",
+              "key": "f920",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "datetime"
+            },
+            {
+              "type": "field",
+              "name": "Details",
+              "label": "Details",
+              "key": "f1",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 2
+            },
+            {
+              "type": "field",
+              "name": "System Input",
+              "label": "System Input",
+              "key": "f3",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Originating Id",
+              "label": "Originating Id",
+              "key": "f4",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Originating System",
+              "label": "Originating System",
+              "key": "f5",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Originating Url",
+              "label": "Originating Url",
+              "key": "f6",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Resolution",
+              "label": "Resolution Text",
+              "key": "f917",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": false,
+              "enabled": false,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": false,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Scheduled Date",
+              "label": "Scheduled Date",
+              "key": "f923",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "datetime"
+            }
+          ]
+        }
+      ],
+      "events": [
+        {
+          "name": "Build Teams and Roles Checkboxes",
+          "type": "Load",
+          "action": "Custom",
+          "code": "var rolesElement = $('#rolesCheckbox')\nvar teamsElement = $('#teamsCheckbox')\n\nK.api(\"GET\",\"app/api/v1/teams\",{\n\tsuccess: function(data){\n\t\tteams = data.teams;\n\t\t_.each(teams, function(team){\n\t\t\tvar memberships = K('field[Memberships]').value();\n\t\t\tvar checked = \"\";\n\t\t\tif (!_.isEmpty(memberships)){\n\t\t\t\tmemberships = JSON.parse(memberships)\n\t\t\t\t_.includes(memberships, team.name) ? checked = \"checked\" : \"\";\n\t\t\t}\n\t\t\tif (team.name.startsWith('Role::')){\n\t\t\t\tvar label = (team.name).substring((team.name).lastIndexOf(\"::\") + 2)\n\t\t\t\t$('<div class=\"checkbox\"><label><input ' + checked + ' class=\"roleCheckbox\" type=\"checkbox\" value=\"' + team.name + '\">' + label + '</label></div>').appendTo(rolesElement);\n\t\t\t} else if (!team.name.startsWith('Role')){\n\t\t\t\t$('<div class=\"checkbox\"><label><input ' + checked + ' class=\"teamCheckbox\" type=\"checkbox\" value=\"' + team.name + '\">' + team.name + '</label></div>').appendTo(teamsElement);\n\t\t\t}\n\t\t});\n\t\t// If membership field is populated, assume it's a review request and disable all checkbox inputs\n\t\tvar memberships = K('field[Memberships]').value();\n\t\tif (!_.isEmpty(memberships)){\n\t\t\t$('#rolesCheckbox input, #teamsCheckbox input').attr('disabled','disabled');\n\t\t}\n\t}\n});",
+          "runIf": ""
+        },
+        {
+          "name": "Save Roles and Teams Checkbox Questions",
+          "type": "Submit",
+          "action": "Custom",
+          "code": "// Set Memberships Question on Submit\nvar memberships = [];\n$('.roleCheckbox, .teamCheckbox').each(function(){\n\tvar val = $(this).val();\n\tif (this.checked){\n\t\tmemberships.push(val);\n\t}\n})\nK('field[Memberships]').value(JSON.stringify(memberships));"
+        }
+      ],
+      "name": "Page One",
+      "renderType": "submittable",
+      "type": "page"
+    }
+  ],
+  "securityPolicies": [
+
+  ],
+  "slug": "kinops-account-request",
+  "status": "Active",
+  "submissionLabelExpression": "${values('Summary')}",
+  "type": "Automated"
+}

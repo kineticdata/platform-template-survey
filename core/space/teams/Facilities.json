@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-truck"
+      ]
+    }
+  ],
+  "description": "",
+  "name": "Facilities",
+  "slug": "a226e46f37e55af902b2f1608a6aca06"
+}

@@ -1,0 +1,200 @@
+{
+  "anonymous": false,
+  "attributes": [
+
+  ],
+  "bridgedResources": [
+    {
+      "model": "Person",
+      "name": "Person - By Email",
+      "order": [
+
+      ],
+      "parameters": [
+        {
+          "mapping": "${values('Email')}",
+          "name": "Email"
+        }
+      ],
+      "qualification": "By Email",
+      "status": "Active"
+    },
+    {
+      "model": "Person",
+      "name": "Person - By Username",
+      "order": [
+
+      ],
+      "parameters": [
+        {
+          "mapping": "${values('Username')}",
+          "name": "Username"
+        }
+      ],
+      "qualification": "By Username",
+      "status": "Active"
+    }
+  ],
+  "categorizations": [
+
+  ],
+  "customHeadContent": null,
+  "description": "Form that holds fields for bridge searching and other resources that are shared across forms.",
+  "name": "Shared Resources",
+  "notes": null,
+  "pages": [
+    {
+      "advanceCondition": null,
+      "displayCondition": null,
+      "displayPage": null,
+      "elements": [
+        {
+          "type": "field",
+          "name": "Username",
+          "label": "Username",
+          "key": "f1",
+          "defaultValue": "${identity('username')}",
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": false,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "field",
+          "name": "Email",
+          "label": "Email",
+          "key": "f2",
+          "defaultValue": "${identity('email')}",
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": false,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "field",
+          "name": "Discussion Id",
+          "label": "Discussion Id",
+          "key": "f902",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": false,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "field",
+          "name": "Observing Teams",
+          "label": "Observing Teams",
+          "key": "f904",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": false,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "json",
+          "renderType": "checkbox",
+          "choicesResourceName": null,
+          "choicesRunIf": null,
+          "choices": [
+
+          ]
+        },
+        {
+          "type": "field",
+          "name": "Observing Individuals",
+          "label": "Observing Individuals",
+          "key": "f905",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": false,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "json",
+          "renderType": "checkbox",
+          "choicesResourceName": null,
+          "choicesRunIf": null,
+          "choices": [
+
+          ]
+        }
+      ],
+      "events": [
+
+      ],
+      "name": "Shared Resources",
+      "renderType": "submittable",
+      "type": "page"
+    }
+  ],
+  "securityPolicies": [
+
+  ],
+  "slug": "shared-resources",
+  "status": "Active",
+  "submissionLabelExpression": null,
+  "type": "Utility"
+}

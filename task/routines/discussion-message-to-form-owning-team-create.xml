@@ -1,0 +1,562 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_discussion_message_to_form_owning_team_create_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Discussion Message to Form Owning Team Create</name>
+        <author></author>
+        <notes></notes>
+        <lastID>92</lastID>
+        <taskDefinition id="routine_kinetic_discussion_message_to_form_owning_team_create_v1" name="Discussion Message to Form Owning Team Create" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Kapp Slug" label="Kapp Slug" required="true" tooltip="Slug of the kapp the form exists in or DATASTORE"></parameter>
+                <parameter id="Form Slug" label="Form Slug" required="true" tooltip="Slug of the form to add a discussion message to"></parameter>
+                <parameter id="Message" label="Message" required="true" tooltip="Discussion Message to create for the given submission"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="-330" y="-500">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_space_retrieve_v1_74</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_10" name="Return" x="594" y="-339">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_80</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_44" name="Return - No Discussion Server" x="-115" y="-358">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_90</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_47" name="Existing Discussion Id" x="0" y="-187">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+# Parse Forms Discussions
+discussions = JSON.parse(@results['Find Form Discussions']['Discussions List JSON'])
+# Create variable to set origin discussion
+discussion_id = nil
+# Find Discussion id in form attribute
+form_attributes = @results.has_key?('Retrieve Datastore Form') ? JSON.parse(@results['Retrieve Datastore Form']['Attributes Map JSON']) : JSON.parse(@results['Retrieve Form']['Attributes Map JSON'])
+form_attribtue_discussion_id = form_attributes.has_key?('Discussion Id') ? form_attributes['Discussion Id'] : nil
+# Handle Multiple Attributes
+if form_attribtue_discussion_id.kind_of?(Array)
+  form_attribtue_discussion_id = form_attribtue_discussion_id[0]
+end
+# Test if form attribute value exists as related discussion
+if !form_attribtue_discussion_id.nil? &amp;&amp; discussions.any? {|d| d['id'] == form_attribtue_discussion_id}
+  discussion_id = form_attribtue_discussion_id
+end
+
+# If form didn't have valid Discussion Id Value
+if discussion_id.nil?
+  discussion_id = discussions[0]['id']
+end
+discussion_id %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Valid Discussion" type="Complete" value="@results['Existing Discussion Id']['output'].to_s.empty?">system_tree_return_v1_52</task>
+                    <task label="Valid Discussion Found" type="Complete" value="!@results['Existing Discussion Id']['output'].to_s.empty?">system_join_v1_53</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_48" name="Discussion Id" x="440" y="-45">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%= @results.has_key?('Create Discussion') ? @results['Create Discussion']['Id'] : @results['Existing Discussion Id']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_message_create_v1_84</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_52" name="Return - No Valid Discussion Found" x="131" y="-67">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_53" name="Discussion Located" x="310" y="-45">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_48</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_62" name="Join Form" x="-339" y="21">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_78</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_63" name="Relation Type" x="-330" y="-275">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@inputs['Kapp Slug'].to_s.empty? ? 'Datastore Form' : 'Form'%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_70</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_70" name="Relation Key" x="-325" y="-185">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@results['Relation Type']['output'] == "Datastore Form" ? @inputs['Form Slug'] : "#{@inputs['Kapp Slug']}/#{@inputs['Form Slug']}"%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Is Datastore" type="Complete" value="@results['Relation Type']['output'] == &quot;Datastore Form&quot;">routine_kinetic_datastore_form_retrieve_v1_76</task>
+                    <task label="Not Datastore" type="Complete" value="@results['Relation Type']['output'] == &quot;Form&quot;">routine_kinetic_form_retrieve_v1_77</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_73" name="Join Invites" x="727" y="-240">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_10</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_space_retrieve_v1" id="routine_kinetic_space_retrieve_v1_74" name="Retrieve Space" x="-330" y="-439">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_75" name="Discussion Server Url" x="-330" y="-363">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@results['Retrieve Space']['Attributes Map JSON']%&gt;
+
+&lt;%= attributes = JSON.parse(@results['Retrieve Space']['Attributes Map JSON'])%&gt;
+attributes.has_key? 'Discussion Server Url' ? attributes['Discussion Server Url'][0] : nil %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Discussion Server" type="Complete" value="@results['Discussion Server Url']['output'].to_s.empty?">system_tree_return_v1_44</task>
+                    <task label="Has Discussion Server" type="Complete" value="!@results['Discussion Server Url']['output'].to_s.empty?">utilities_echo_v1_63</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_form_retrieve_v1" id="routine_kinetic_datastore_form_retrieve_v1_76" name="Retrieve Datastore Form" x="-212" y="-110">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Slug" label="Slug" menu="" required="true" tooltip="The Datastore Forms slug">&lt;%=@inputs['Form Slug']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_62</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_77" name="Retrieve Form" x="-454" y="-109">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%=@inputs['Kapp Slug']%&gt;</parameter>
+                    <parameter id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%=@inputs['Form Slug']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_62</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_78" name="Owning Team" x="-165" y="12">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+# Configure Key and Default Value
+#
+key = 'Owning Team'
+default_value = 'Default'
+
+# Finds the most significant, cascaded, non-nil value for a given key.
+#
+# If a value does not exist in any parts of the data, then the default value
+# will be returned.  Order of significance is determined by the following order:
+#   - Form Attributes
+#   - Space Attributes
+# @param data {Hash} map of key / values sent from the Kinetic Request CE source
+# @param key {String} name of the key to find the value for
+# @param default {String} default value if a matching key doesn't exist
+# @return value {String} or default if no value is found
+#
+def most_significant_value(data, key, default=nil)
+  cascasded_values = data['space'].merge(data['form'])
+  cascasded_values[key].empty? ? default : cascasded_values[key]
+end
+
+# Return the value
+form_attributes = @results.has_key?('Retrieve Datastore Form') ? JSON.parse(@results['Retrieve Datastore Form']['Attributes Map JSON']) : JSON.parse(@results['Retrieve Form']['Attributes Map JSON'])
+data = {
+ 'space' =&gt; JSON.parse(@results['Retrieve Space']['Attributes Map JSON']),
+ 'form' =&gt; form_attributes
+}
+value = most_significant_value(data, key, default_value)
+value.kind_of?(Array) ? value[0] : value
+%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_discussions_retrieve_list_v1_81</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_79" name="Get Team Members" x="594" y="-132">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%=@results['Owning Team']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Invalid Team" type="Complete" value="@results['Get Team Members']['Exists'].to_s.downcase != &quot;true&quot; || JSON.parse(@results['Get Team Members']['Memberships JSON']).size == 0">system_join_v1_73</task>
+                    <task label="Valid Team" type="Complete" value="@results['Get Team Members']['Exists'].to_s.downcase == &quot;true&quot; &amp;&amp; JSON.parse(@results['Get Team Members']['Memberships JSON']).size &gt; 0">system_loop_head_v1_85</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_80" name="Finish" x="461" y="-344">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_discussions_retrieve_list_v1" id="routine_kinetic_discussions_retrieve_list_v1_81" name="Find Form Discussions" x="11" y="0">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="false" tooltip="username of the user (if used, related item (type/key) cannot be used)"></parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of related item (if used, username cannot be used)">&lt;%=@results['Relation Type']['output']%&gt;</parameter>
+                    <parameter id="Key" label="Key" menu="" required="false" tooltip="Key of related item (related if type is used)">&lt;%=@results['Relation Key']['output']%&gt;</parameter>
+                    <parameter id="Archived" label="Archived" menu="" required="false" tooltip="True to search for archived discussions"></parameter>
+                    <parameter id="Title" label="Title" menu="" required="false" tooltip="Title of discussions to search"></parameter>
+                    <parameter id="Start" label="Start" menu="" required="false" tooltip="Start of date range for the last discussion message"></parameter>
+                    <parameter id="End" label="End" menu="" required="false" tooltip="End of date range for the last discussion message"></parameter>
+                    <parameter id="Limit" label="Limit" menu="" required="false" tooltip="Limit to the number of discussions to return"></parameter>
+                    <parameter id="Page Token" label="Page Token" menu="" required="false" tooltip="Token for the start of the next page of results (blank for first page)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Discussions" type="Complete" value="@results['Find Form Discussions']['Count'].to_i &gt; 0">utilities_echo_v1_47</task>
+                    <task label="No Discussions" type="Complete" value="@results['Find Form Discussions']['Count'].to_i == 0">routine_kinetic_discussion_create_v1_92</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_message_create_v1" id="routine_kinetic_message_create_v1_84" name="Add Message to Discussion" x="594" y="-22">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Discussion Id']['output']%&gt;</parameter>
+                    <parameter id="Message JSON" label="Message JSON" menu="" required="true" tooltip="Message in JSON specific format to support tokenizing options. e.g. [{&quot;type&quot;:&quot;text&quot;,&quot;value&quot;:&quot;Johnny Five, still alive!&quot;}]">&lt;%=[{"type" =&gt; "text","value" =&gt; @inputs['Message']}].to_json%&gt;
+
+</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_team_retrieve_v1_79</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_85" name="Members Loop Head" x="384" y="-166">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;users&gt;&lt;%= JSON.parse(@results['Get Team Members']['Memberships JSON']).collect {|member| "&lt;user&gt;#{member['user']['username']}&lt;/user&gt;"}.join%&gt;&lt;/users&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//users/user</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks."></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_86</task>
+                    <task label="" type="Complete" value="">routine_kinetic_participant_create_v1_89</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_86" name="Members Loop Tail" x="373" y="-308">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_73</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_related_item_create_v1" id="routine_kinetic_related_item_create_v1_88" name="Relate Discussion to Form" x="176" y="66">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Create Discussion']['Id']%&gt;</parameter>
+                    <parameter id="Key" label="Key" menu="" required="true" tooltip="Unique identifier for the related item">&lt;%=@results['Relation Key']['output']%&gt;</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of related item relationship (name or label)">&lt;%=@results['Relation Type']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_53</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_participant_create_v1" id="routine_kinetic_participant_create_v1_89" name="Invite Member" x="528" y="-243">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Discussion Id']['output']%&gt;</parameter>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="Username of an existing User">&lt;%=@results['Members Loop Head']['Value']%&gt;</parameter>
+                    <parameter id="Muted" label="Muted" menu="" required="false" tooltip="(true | false) When muted, notifications for this discussion are not sent to the user"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_86</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_90" name="Finish - No Discussion Server" x="59.6875" y="-361.3125">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_discussion_create_v1" id="routine_kinetic_discussion_create_v1_92" name="Create Discussion" x="23" y="147">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Title" label="Title" menu="" required="true" tooltip="The title of the discussion">&lt;%= "Form Owners Discussion #{@results.has_key?('Retrieve Form') ? @results['Retrieve Form']['Name'] : @results['Retrieve Datastore Form']['Name']}"%&gt;</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="The description of the discussion">&lt;%= "Form Owners Discussion #{@results.has_key?('Retrieve Form') ? @results['Retrieve Form']['Name'] : @results['Retrieve Datastore Form']['Name']}"%&gt;</parameter>
+                    <parameter id="Is Archived" label="Is Archived" menu="" required="false" tooltip="Archived discussions do not allow new messages"></parameter>
+                    <parameter id="Is Private" label="Is Private" menu="" required="false" tooltip="Private discussions only allow explicitly invited users to view"></parameter>
+                    <parameter id="Join Policy Name" label="Join Policy Name" menu="" required="false" tooltip="The name of the security policy for allowing users to join"></parameter>
+                    <parameter id="Owning Users" label="Owning Users" menu="" required="false" tooltip="A comma separated list of usernames allowed to manage the discussion"></parameter>
+                    <parameter id="Owning Teams" label="Owning Teams" menu="" required="false" tooltip="A comma separated list of team names allowed to manage the discussion">&lt;%=@results['Owning Team']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_related_item_create_v1_88</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

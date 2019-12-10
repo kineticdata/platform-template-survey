@@ -1,0 +1,242 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_service_portal_submission_approval_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Service Portal Submission Approval</name>
+        <author></author>
+        <notes></notes>
+        <lastID>105</lastID>
+        <taskDefinition id="routine_kinetic_solutions_service_portal_submission_approval_v1" name="Service Portal Submission Approval" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Approver" label="Approver" required="true" tooltip="Options are &quot;Manager&quot;, a username, or a team name"></parameter>
+                <parameter id="Approval Form Slug" label="Approval Form Slug" required="true" tooltip="The Slug of the Queue form to create an approval in"></parameter>
+                <parameter id="Details" label="Details" required="true" tooltip="A description of what is being approved "></parameter>
+                <parameter id="Originating Submission Id" label="Originating Submission Id" required="true" tooltip="The Id of the originating submission">&lt;%= @submission['Id']%&gt;</parameter>
+                <parameter id="Service Days Due" label="Service Days Due" required="true" tooltip="Number of Days until the submission is due to be completed"></parameter>
+                <parameter id="Queue Kapp Slug" label="Queue Kapp Slug" required="true" tooltip="The Slug of the Kapp in which this approval should be created"></parameter>
+                <parameter id="Summary" label="Summary" required="true" tooltip="A summary of what is being approved"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Decision" tooltip="The approvers decision (typically “Approved” or “Denied”)"></result>
+                <result name="Denial Reason" tooltip="The reason given for why an approval was denied"></result>
+                <result name="Notes for Customer" tooltip="Any additional comments the approver provided"></result>
+                <result name="Approver Id" tooltip="The Id of the approver who completed the approval"></result>
+                <result name="Approval Submission Id" tooltip="The Id of the approval submission"></result>
+                <result name="Fields JSON" tooltip="A JSON map of questions that were answered on the approval record"></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="638" y="58">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Manager" type="Complete" value="@inputs['Approver'].downcase == &quot;manager&quot;">routine_kinetic_submission_retrieve_v1_97</task>
+                    <task label="Not Manager" type="Complete" value="@inputs['Approver'].downcase != &quot;manager&quot;">routine_kinetic_team_retrieve_v1_100</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_97" name="Retrieve Origin Submission" x="803" y="145">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@inputs['Originating Submission Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_user_retrieve_v1_98</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_98" name="Retrieve Created By User" x="803" y="256">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%=@results['Retrieve Origin Submission']['Submitted By']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_99</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_99" name="Manager Username from User Attribute" x="803" y="352">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+output = "Default"
+attributes = JSON.parse(@results['Retrieve Created By User']['Attributes Map JSON'])
+if(attributes.has_key? 'Manager' &amp;&amp; !attributes['Manager'].empty?)
+  output = attributes['Manager'][0]
+end
+outupt%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_102</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_100" name="Find Team" x="440" y="153">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%=@inputs['Approver']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_102</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_task_create_v1" id="routine_kinetic_queue_task_create_v1_101" name="Create Approval" x="440" y="473">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="Slug of the Queue Kapp">&lt;%=@inputs['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Task Form Slug" label="Task Form Slug" menu="" required="true" tooltip="Slug of the form the task is created for">&lt;%=@inputs['Approval Form Slug']%&gt;</parameter>
+                    <parameter id="Summary" label="Summary" menu="" required="true" tooltip="A summary of what is to be worked on ">&lt;%=@inputs['Summary']%&gt;</parameter>
+                    <parameter id="Details" label="Details" menu="" required="true" tooltip="A description of what is to be worked on ">&lt;%=@inputs['Details']%&gt;</parameter>
+                    <parameter id="Days Due" label="Days Due" menu="" required="true" tooltip="Number of days from now the task is to be completed by">&lt;%=@inputs['Service Days Due']%&gt;</parameter>
+                    <parameter id="Assignee Team" label="Assignee Team" menu="" required="true" tooltip="Name of the team to assign work to (ex. &quot;Test::Test::Test&quot;)">&lt;%=@results.has_key?('Find Team') &amp;&amp; @results['Find Team']['Exists'].to_s == 'true' ? @results['Find Team']['Name'] : nil%&gt;</parameter>
+                    <parameter id="Assignee Id" label="Assignee Id" menu="" required="false" tooltip="Id of the person the task will be assigned to">&lt;%=@results.has_key?('Manager Username from User Attribute') ? @results['Manager Username from User Attribute']['output'] : @inputs['Approver']%&gt;</parameter>
+                    <parameter id="Originating System" label="Originating System" menu="" required="true" tooltip="Source of the parent record (e.g. Kinetic Core, Salesforce ..etc)">Kinetic Core</parameter>
+                    <parameter id="Originating Id" label="Originating Id" menu="" required="true" tooltip="Id of the originating systems record">&lt;%=@inputs['Originating Submission Id']%&gt;</parameter>
+                    <parameter id="System Input" label="System Input" menu="" required="false" tooltip="Structured data that can be leveraged by the queue task form"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_103</task>
+                    <task label="Has Id" type="Update" value="@trigger['Message'].to_s.start_with?(&quot;TASK_ID:&quot;)">utilities_create_trigger_v1_105</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_102" name="Approval Type - Continue" x="440" y="361">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_task_create_v1_101</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_103" name="Return" x="440" y="560">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Decision" label="Decision" menu="" required="false" tooltip="The approvers decision (typically “Approved” or “Denied”)">&lt;%=
+## Configure Key
+key = "Decision"
+JSON.parse(@results['Create Approval']['Fields JSON'])[key]%&gt;</parameter>
+                    <parameter id="Denial Reason" label="Denial Reason" menu="" required="false" tooltip="The reason given for why an approval was denied">&lt;%=
+## Configure Key
+key = "Denial Reason"
+JSON.parse(@results['Create Approval']['Fields JSON'])[key]%&gt;</parameter>
+                    <parameter id="Notes for Customer" label="Notes for Customer" menu="" required="false" tooltip="Any additional comments the approver provided">&lt;%=
+## Configure Key
+key = "Notes for Customer"
+JSON.parse(@results['Create Approval']['Fields JSON'])[key]%&gt;</parameter>
+                    <parameter id="Approver Id" label="Approver Id" menu="" required="false" tooltip="The Id of the approver who completed the approval">&lt;%=@results['Create Approval']['Assignee Id']%&gt;</parameter>
+                    <parameter id="Approval Submission Id" label="Approval Submission Id" menu="" required="false" tooltip="The Id of the approval submission">&lt;%=@results['Create Approval']['Task Submission Id']%&gt;</parameter>
+                    <parameter id="Fields JSON" label="Fields JSON" menu="" required="false" tooltip="A JSON map of questions that were answered on the approval record">&lt;%=@results['Create Approval']['Fields JSON']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_104</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_104" name="Finish" x="440" y="640">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_create_trigger_v1" id="utilities_create_trigger_v1_105" name="Send Task Id to Parent Tree" x="643" y="462">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="action_type" label="Action Type" menu="Update,Complete" required="true" tooltip="">Update</parameter>
+                    <parameter id="deferral_token" label="Deferral Token" menu="" required="true" tooltip="">&lt;%=@run['Token']%&gt;</parameter>
+                    <parameter id="deferred_variables" label="Deferred Results" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="message" label="Message" menu="" required="false" tooltip="">&lt;%=@trigger['Message']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

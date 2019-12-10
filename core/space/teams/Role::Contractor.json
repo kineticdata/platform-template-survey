@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Users with this role are identified as contractors and given contractor permissions.",
+  "name": "Role::Contractor",
+  "slug": "5fa0e498a983ca51aac09a7751b5bf8b"
+}

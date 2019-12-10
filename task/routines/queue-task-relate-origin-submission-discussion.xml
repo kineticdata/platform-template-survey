@@ -1,0 +1,235 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_queue_task_relate_origin_submission_discussion_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Queue Task Relate Origin Submission Discussion</name>
+        <author></author>
+        <notes></notes>
+        <lastID>13</lastID>
+        <taskDefinition id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" name="Queue Task Relate Origin Submission Discussion" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Origin Submission Id" label="Origin Submission Id" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission"></parameter>
+                <parameter id="Related Submission Id" label="Related Submission Id" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="261" y="131">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_discussions_retrieve_list_v1_11</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Discussion Id" x="992" y="165">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+# Parse Origins Discussions
+origin_discussions = JSON.parse(@results['Find Origin Submission Discussions']['Discussions List JSON'])
+# Create variable to set origin discussion
+origin_discussion_id = nil
+if @results.has_key? 'Retrieve Origin Submission'
+  origin_values = JSON.parse(@results['Retrieve Origin Submission']['Values JSON'])
+  if origin_values.has_key? 'Discussion Id' &amp;&amp; origin_discussions.any? {|d| d['id'] == origin_values['Discussion Id']}
+    origin_discussion_id = origin_values['Discussion Id']
+  end
+end
+
+# If Submission didn't have valid Discussion Id Value
+if origin_discussion_id.nil?
+  origin_discussion_id = origin_discussions[0]['id']
+end
+origin_discussion_id %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Valid Discussion" type="Complete" value="@results['Discussion Id']['output'].to_s.empty?">system_tree_return_v1_6</task>
+                    <task label="Valid Discussion Found" type="Complete" value="!@results['Discussion Id']['output'].to_s.empty?">routine_kinetic_related_item_create_v1_13</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_4" name="Has Discussion NoOp" x="594" y="111">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="One Discussion" type="Complete" value="@results['Find Origin Submission Discussions']['Count'].to_i  == 1">system_join_v1_5</task>
+                    <task label="Multiple Discussions Found" type="Complete" value="@results['Find Origin Submission Discussions']['Count'].to_i  &gt;= 1">routine_kinetic_submission_retrieve_v1_12</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_5" name="Join Discussion Id" x="803" y="154">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_6" name="Return No Relationship Created" x="990" y="275">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_7" name="Return" x="1319" y="175">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_9" name="Return No Origin Discussion" x="407" y="264">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Developer Notes" x="266.6875" y="48.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">This tree will look at the given origin submission and see if it has any discussions.
+
+If it has discussions, it will attempt to relate the discussion set on the submissions "Discussion Id" field.
+
+If no Discussion Id is present on the Origin Submission Values, it will use the first discussion that was related to the origin submission</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_discussions_retrieve_list_v1" id="routine_kinetic_discussions_retrieve_list_v1_11" name="Find Origin Submission Discussions" x="407" y="109">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="false" tooltip="username of the user (if used, related item (type/key) cannot be used)"></parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of related item (if used, username cannot be used)">Submission</parameter>
+                    <parameter id="Key" label="Key" menu="" required="false" tooltip="Key of related item (related if type is used)">&lt;%=@inputs['Origin Submission Id']%&gt;</parameter>
+                    <parameter id="Archived" label="Archived" menu="" required="false" tooltip="True to search for archived discussions"></parameter>
+                    <parameter id="Title" label="Title" menu="" required="false" tooltip="Title of discussions to search"></parameter>
+                    <parameter id="Start" label="Start" menu="" required="false" tooltip="Start of date range for the last discussion message"></parameter>
+                    <parameter id="End" label="End" menu="" required="false" tooltip="End of date range for the last discussion message"></parameter>
+                    <parameter id="Limit" label="Limit" menu="" required="false" tooltip="Limit to the number of discussions to return">5</parameter>
+                    <parameter id="Page Token" label="Page Token" menu="" required="false" tooltip="Token for the start of the next page of results (blank for first page)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Discussions" type="Complete" value="@results['Find Origin Submission Discussions']['Count'].to_i == 0">system_tree_return_v1_9</task>
+                    <task label="Has Discussion" type="Complete" value="@results['Find Origin Submission Discussions']['Count'].to_i &gt; 0">system_noop_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_12" name="Retrieve Origin Submission" x="606" y="302">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@inputs['Origin Submission Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_related_item_create_v1" id="routine_kinetic_related_item_create_v1_13" name="Relate Child to Origin Discussion" x="1177" y="154">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Discussion Id']['output']%&gt;</parameter>
+                    <parameter id="Key" label="Key" menu="" required="true" tooltip="Unique identifier for the related item">&lt;%=@inputs['Related Submission Id']%&gt;</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of related item relationship (name or label)">Submission</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_7</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

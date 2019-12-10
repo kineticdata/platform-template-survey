@@ -1,0 +1,4 @@
+{"coreState":"Draft","currentPage":"Datastore","label":"Month DD, YYYY (no time)","values":{"Name":"Month DD, YYYY (no time)","Format":"%b %d, %Y","Status":"active"}}
+{"coreState":"Draft","currentPage":"Datastore","label":"MM-DD-YY (no time)","values":{"Name":"MM-DD-YY (no time)","Format":"%m-%e-%y","Status":"active"}}
+{"coreState":"Draft","currentPage":"Datastore","label":"MM-DD-YY hh:mm (24 hour)","values":{"Name":"MM-DD-YY hh:mm (24 hour)","Format":"%m-%e-%y %H:%M","Status":"active"}}
+{"coreState":"Draft","currentPage":"Datastore","label":"MM-DD-YY h:mm (12 hour am/pm)","values":{"Name":"MM-DD-YY h:mm (12 hour am/pm)","Format":"%m-%e-%y %l:%M %p","Status":"active"}}

@@ -1,0 +1,16 @@
+{
+  "name": "Service Portal",
+  "description": "Functions that interact with Kinetic Service Portal",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_solutions_service_portal_submission_approval_v1",
+    "routine_kinetic_solutions_service_portal_submission_config_v1",
+    "routine_kinetic_solutions_service_portal_submission_sla_v1"
+  ]
+}

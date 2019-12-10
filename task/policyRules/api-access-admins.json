@@ -1,0 +1,6 @@
+{
+  "name": "Admins",
+  "rule": "@identity.get_property('spaceAdmin') == 'true'",
+  "message": "Must be a space admin",
+  "type": "API Access"
+}

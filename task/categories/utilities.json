@@ -1,0 +1,24 @@
+{
+  "name": "Utilities",
+  "description": "Holds misc helpful utilities",
+  "type": "Stored",
+  "handlers": [
+    "utility_csv_to_xml_v1",
+    "utility_json_to_xml_v1",
+    "utility_message_formatter_v1"
+  ],
+  "policyRules": [
+    "Task Developers"
+  ],
+  "trees": [
+    "routine_handler_failure_error_process_v1",
+    "routine_kinetic_admin_kapp_submission_config_v1",
+    "routine_kinetic_finish_v1",
+    "routine_kinetic_queue_assignment_validate_v1",
+    "routine_kinetic_solutions_service_portal_submission_approval_v1",
+    "routine_kinetic_solutions_service_portal_submission_sla_v1",
+    "routine_kinetic_submission_update_observers_v1",
+    "routine_kinetic_submission_update_status_v1",
+    "routine_kinetic_utility_submission_refetch_source_data_v1"
+  ]
+}

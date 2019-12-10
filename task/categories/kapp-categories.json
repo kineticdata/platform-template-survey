@@ -1,0 +1,18 @@
+{
+  "name": "Kapp Categories",
+  "description": "Functions for interacting with Kinetic Kapp Categories",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_categories_retrieve_list_v1",
+    "routine_kinetic_category_create_v1",
+    "routine_kinetic_category_delete_v1",
+    "routine_kinetic_category_retrieve_v1",
+    "routine_kinetic_category_update_v1"
+  ]
+}

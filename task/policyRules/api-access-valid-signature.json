@@ -1,0 +1,6 @@
+{
+  "name": "Valid Signature",
+  "rule": "@auth.validate_signature()",
+  "message": "The request signature is invalid",
+  "type": "API Access"
+}

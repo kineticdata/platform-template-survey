@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    }
+  ],
+  "description": "The Default Team is assigned Queue Tasks when a team has no members, or when forms have no Assigned Team set.",
+  "name": "Default",
+  "slug": "7a1920d61156abc05a60135aefe8bc67"
+}

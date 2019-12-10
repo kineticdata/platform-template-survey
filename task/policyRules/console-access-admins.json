@@ -1,0 +1,40 @@
+{
+  "name": "Admins",
+  "rule": "@identity.get_property('spaceAdmin') == 'true'",
+  "message": "Must be a space admin.",
+  "type": "Console Access",
+  "consolePolicyRules": [
+    {
+      "name": "Access Keys",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "ApiV2",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Console Access",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Groups",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Policy Rules",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Setup",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Sources",
+      "policyRule": "Admins"
+    },
+    {
+      "name": "Users",
+      "policyRule": "Admins"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Teams",
+  "description": "Functions for interacting with Kinetic Teams",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_team_create_v1",
+    "routine_kinetic_team_delete_v1",
+    "routine_kinetic_team_membership_create_v1",
+    "routine_kinetic_team_membership_delete_v1",
+    "routine_kinetic_team_retrieve_v1",
+    "routine_kinetic_team_update_v1",
+    "routine_kinetic_teams_retrieve_list_v1"
+  ]
+}

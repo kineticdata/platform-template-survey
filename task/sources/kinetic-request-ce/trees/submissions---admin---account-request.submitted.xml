@@ -1,0 +1,287 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > admin > account-request</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Submitted</name>
+        <author></author>
+        <notes></notes>
+        <lastID>48</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="447" y="-28">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_admin_kapp_submission_config_v1_43</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_23" name="Junction" x="718" y="503">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_47</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_32" name="Member Head" x="446" y="507">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;% memberships = JSON.parse(@results['Approval Task']['Fields JSON'])['Memberships']
+membershipsJSON = JSON.parse(memberships) %&gt;
+&lt;teams&gt;&lt;%= membershipsJSON.collect {|team| "&lt;team&gt;#{team}&lt;/team&gt;"}.join %&gt;&lt;/teams&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//teams/team</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks."></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_33</task>
+                    <task label="" type="Complete" value="">routine_kinetic_team_membership_create_v1_48</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_33" name="Member Tail" x="549" y="618">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_40" name="Status - Submitted" x="451" y="89">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Submitted</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_user_retrieve_v1_41</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_41" name="Check if User Exists" x="446" y="164">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%= @values['Email']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Account Exists" type="Complete" value="@results['Check if User Exists']['Exists'].to_s.downcase == &quot;true&quot;">routine_kinetic_email_template_notification_send_v1_42</task>
+                    <task label="Doesn't Exist" type="Complete" value="@results['Check if User Exists']['Exists'].to_s.downcase == &quot;false&quot;">routine_kinetic_solutions_service_portal_submission_approval_v1_44</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_42" name="Send Account Already Exists" x="924" y="150">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @values['Email']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Account Already Exists</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%= 
+{
+  "Login Link" =&gt; "#{@space_attributes['Web Server Url']}"
+}.to_json %&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_admin_kapp_submission_config_v1" id="routine_kinetic_admin_kapp_submission_config_v1_43" name="Get Config" x="451" y="34">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_status_v1_40</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_approval_v1" id="routine_kinetic_solutions_service_portal_submission_approval_v1_44" name="Approval Task" x="456" y="289">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Approver" label="Approver" menu="" required="true" tooltip="Options are &quot;Manager&quot;, a username, or a team name">&lt;%=@results['Get Config']['Approver']%&gt;</parameter>
+                    <parameter id="Approval Form Slug" label="Approval Form Slug" menu="" required="true" tooltip="The Slug of the Queue form to create an approval in">&lt;%=@results['Get Config']['Approval Form Slug']%&gt;</parameter>
+                    <parameter id="Details" label="Details" menu="" required="true" tooltip="A description of what is being approved ">&lt;%= @values['First Name']%&gt; &lt;%= @values['Last Name']%&gt; requested a kinops Account. </parameter>
+                    <parameter id="Originating Submission Id" label="Originating Submission Id" menu="" required="true" tooltip="The Id of the originating submission">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Service Days Due" label="Service Days Due" menu="" required="true" tooltip="Number of Days until the submission is due to be completed">&lt;%=@results['Get Config']['Service Days Due']%&gt;</parameter>
+                    <parameter id="Queue Kapp Slug" label="Queue Kapp Slug" menu="" required="true" tooltip="The Slug of the Kapp in which this approval should be created">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Summary" label="Summary" menu="" required="true" tooltip="A summary of what is being approved">kinops User Account Request for: &lt;%= @values['First Name']%&gt; &lt;%= @values['Last Name']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Denied" type="Complete" value="@results['Approval Task']['Decision'].downcase == &quot;denied&quot;">routine_kinetic_email_template_notification_send_v1_45</task>
+                    <task label="Approved" type="Complete" value="@results['Approval Task']['Decision'].downcase != &quot;denied&quot;">routine_kinetic_user_create_v1_46</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_45" name="Account Request Denied" x="718" y="318">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @values['Email']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Account Request Denied</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+"Denial Reason" =&gt; @results['Approval Task']['Denial Reason']
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_create_v1" id="routine_kinetic_user_create_v1_46" name="Create User" x="451" y="407">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The value the User will use to login to the application">&lt;%= @values['Email']%&gt;</parameter>
+                    <parameter id="Email" label="Email" menu="" required="true" tooltip="The email address to send notifications to the user">&lt;%= @values['Email']%&gt;</parameter>
+                    <parameter id="Display Name" label="Display Name" menu="" required="true" tooltip="The name that is displayed for the user">&lt;%= @values['First Name']%&gt; &lt;%= @values['Last Name']%&gt;</parameter>
+                    <parameter id="Attributes Map JSON" label="Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the user"></parameter>
+                    <parameter id="Profile Attributes Map JSON" label="Profile Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the profile attributes associated to the user">&lt;%=
+phone_number = @values['Phone Number'].to_s.empty? ? [] : [@values['Phone Number']]
+{
+  "First Name" =&gt; [@values['First Name']],
+  "Last Name"  =&gt; [@values['Last Name']],
+  "Work Phone" =&gt; phone_number,
+  "Cell Phone" =&gt; phone_number
+}.to_json%&gt;</parameter>
+                    <parameter id="Is Space Admin" label="Is Space Admin" menu="" required="false" tooltip="(True | False) Whether the user is a super administrator user">&lt;%=JSON.parse(@results['Approval Task']['Fields JSON']).has_key?('Space Admin') ? JSON.parse(@results['Approval Task']['Fields JSON'])['Space Admin'] : "false"%&gt;</parameter>
+                    <parameter id="Is Enabled" label="Is Enabled" menu="" required="false" tooltip="(True | False) Whether the user is enabled"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Memberships" type="Complete" value="JSON.parse(@results['Approval Task']['Fields JSON']).has_key?('Memberships')">system_loop_head_v1_32</task>
+                    <task label="No Memberships" type="Complete" value="!JSON.parse(@results['Approval Task']['Fields JSON']).has_key?('Memberships')">system_junction_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_47" name="Close Submission" x="868" y="607">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state">Closed</parameter>
+                    <parameter id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_membership_create_v1" id="routine_kinetic_team_membership_create_v1_48" name="Add Membership" x="363" y="597">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Team Name" label="Team Name" menu="" required="true" tooltip="The name the team to add the user to">&lt;%=@results['Member Head']['Value']%&gt;</parameter>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="">&lt;%= @values['Email'].downcase %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_33</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

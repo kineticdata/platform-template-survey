@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-money"
+      ]
+    }
+  ],
+  "description": "",
+  "name": "Finance",
+  "slug": "c482980d384a9d0e7bc39e1140270870"
+}

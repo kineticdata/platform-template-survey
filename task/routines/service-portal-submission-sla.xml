@@ -1,0 +1,694 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_service_portal_submission_sla_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Service Portal Submission SLA</name>
+        <author></author>
+        <notes></notes>
+        <lastID>81</lastID>
+        <taskDefinition id="routine_kinetic_solutions_service_portal_submission_sla_v1" name="Service Portal Submission SLA" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Source Data" label="Source Data" required="true" tooltip="Source Data of the submission">&lt;%=@source['Data']%&gt;</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="0" y="-32">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_81</task>
+                </dependents>
+            </task>
+            <task definition_id="system_wait_v1" id="system_wait_v1_2" name="Initial Wait" x="1" y="203">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Time to wait" label="Wait time:" menu="" required="true" tooltip="Time you want to wait for deferred task">&lt;%= 
+daysToWait = @results['Get Config']['Service Days Due'].to_f / 2
+submittedAt = JSON.parse(@inputs['Source Data'])['submission']['submittedAt']
+
+waitTime= (daysToWait*86400 - (DateTime.now.to_time.to_i -  DateTime.parse(submittedAt).to_time.to_i)).to_i
+
+waitTime &lt; 0 ? 0 : waitTime%&gt;</parameter>
+                    <parameter id="Time unit" label="Time unit:" menu="Second,Minute,Hour,Day,Week" required="true" tooltip="Unit of measurement for time (Seconds, Minutes, Hours, Days, Weeks)">Second</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_65</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_4" name="Return - Met - Initial" x="1" y="584">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_6" name="1 - Children Head" x="298" y="329">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;children&gt;&lt;%=JSON.parse(@results['Get Submission - Status Check 1']['Children JSON']).collect {|child| "&lt;child&gt;#{child['id']}&lt;/child&gt;"}.join%&gt;&lt;/children&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//children/child</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">childId</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_7</task>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_70</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_7" name="1 - Children Tail" x="480" y="330">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_wait_v1_20</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_9" name="1 - Junction - to Tail" x="480" y="429">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_19" name="1 - Junction Notify" x="561" y="856">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="system_wait_v1" id="system_wait_v1_20" name="Secondary Wait" x="484" y="182">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Time to wait" label="Wait time:" menu="" required="true" tooltip="Time you want to wait for deferred task">&lt;%= 
+daysToWait = @results['Get Config']['Service Days Due'].to_f * 0.9
+submittedAt = JSON.parse(@inputs['Source Data'])['submission']['submittedAt']
+
+waitTime=(daysToWait*86400 - (DateTime.now.to_time.to_i -  DateTime.parse(submittedAt).to_time.to_i)).to_i
+
+waitTime &lt; 0 ? 0 : waitTime%&gt;</parameter>
+                    <parameter id="Time unit" label="Time unit:" menu="Second,Minute,Hour,Day,Week" required="true" tooltip="Unit of measurement for time (Seconds, Minutes, Hours, Days, Weeks)">Second</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_66</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_22" name="2 - Children Head" x="727" y="1">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;children&gt;&lt;%=JSON.parse(@results['Get Submission - Status Check 2']['Children JSON']).collect {|child| "&lt;child&gt;#{child['id']}&lt;/child&gt;"}.join%&gt;&lt;/children&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//ids/id</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">childId</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_23</task>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_74</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_23" name="2 - Children Tail" x="902" y="12">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_39</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_24" name="2 - Junction - to Tail" x="902" y="112">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_28" name="Return - Met - Secondary" x="319" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_31" name="2 - Junction Notify" x="1208" y="484">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_24</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_39" name="Return" x="1111" y="23">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_53" name="Join" x="1041" y="362">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_62" name="system_noop_v1_62" x="870.6875" y="212.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Assigned == Service Owner" type="Complete" value="JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team'] == @results['Owning Team']['Value']">system_join_v1_53</task>
+                    <task label="Assigned != Service Owner" type="Complete" value="JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team'] != @results['Owning Team']['Value']">routine_kinetic_email_template_notification_send_v1_79</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_config_v1" id="routine_kinetic_solutions_service_portal_submission_config_v1_63" name="Get Config" x="0" y="119">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@inputs['Source Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_wait_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_65" name="Get Submission - Status Check 1" x="0" y="319">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@results['Submission Id']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] == &quot;Closed&quot;">system_tree_return_v1_4</task>
+                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] != &quot;Closed&quot;">system_loop_head_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_66" name="Get Submission - Status Check 2" x="494" y="-1">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@results['Submission Id']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] == &quot;Closed&quot;">system_tree_return_v1_28</task>
+                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] != &quot;Closed&quot;">system_loop_head_v1_22</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_67" name="1- Notify Default - No Assigned Team" x="143" y="836">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">Default</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">SLM - Task Routed To Default Team</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+ "Percent Remaining" =&gt; "50"
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_68" name="1 - Assign to Default Team" x="154" y="704">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @childId %&gt;</parameter>
+                    <parameter id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
+                    <parameter id="Updated - Current Page" label="Updated - Current Page" menu="" required="false" tooltip="The submissions current page"></parameter>
+                    <parameter id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">&lt;%={
+"Assigned Team" =&gt; "Default"
+}.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_67</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_69" name="1- Send Reminder - Assigned Team" x="341" y="704">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%=JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Team']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">SLM - Assigned Team</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=
+child_answers = JSON.parse(@results['1 - Get Child Answers']['Values JSON'])
+target = ""
+assignedTeam = child_answers.has_key?('Assigned Team') ? child_answers['Assigned Team'] : nil
+assignedIndividual = child_answers.has_key?('Assigned Individual') ? child_answers['Assigned Individual'] : nil
+
+if assignedTeam.nil? &amp;&amp; !assignedIndividual.nil?
+ target = assignedIndividual
+elsif assignedIndividual.nil?
+ target = assignedTeam
+else
+ target = "#{assignedTeam} &gt; #{assignedIndividual}"
+end
+{
+  "Percent Remaining" =&gt; "50",
+  "Target" =&gt; target
+}.to_json %&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_70" name="1 - Get Child Answers" x="297" y="418">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Open" type="Complete" value="@results['1 - Get Child Answers']['Core State'] != &quot;Closed&quot;">system_noop_v1_71</task>
+                    <task label="Closed" type="Complete" value="@results['1 - Get Child Answers']['Core State'] == &quot;Closed&quot;">system_junction_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_71" name="Open" x="302" y="528">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Unassigned" type="Complete" value="(&#10;  # Assigned Team Null &amp;&amp; Assigned Individual Don't Exist&#10;  (!JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  !JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual'))||&#10;  # Assigned Team &amp;&amp; Assigned Individual Null&#10;  (JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty? &amp;&amp;&#10; JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp;&#10;  JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Individual'].to_s.empty?)||&#10;  # Assigned Team Doesn't Exist &amp;&amp; Assigned Individaul Null&#10;  (!JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  (JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp; JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Individual'].to_s.empty?))||&#10;  # Assigned Individual Doesn't Exist &amp;&amp; Assigned Team Empty&#10;  (!JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp;&#10;  (JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp; JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty?))&#10;)">routine_kinetic_submission_update_v1_68</task>
+                    <task label="Assigned" type="Complete" value="(JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp; !JSON.parse(@results['1 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty?) || (JSON.parse(@results['1 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp; !JSON.parse(@results['1 - Get Child Answers']['Values JSON']).to_s.empty?)">routine_kinetic_email_template_notification_send_v1_69</task>
+                    <task label="" type="Complete" value="">system_junction_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_73" name="2 - Open" x="726" y="207">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Unassigned" type="Complete" value="(&#10;  # Assigned Team Null &amp;&amp; Assigned Individual Don't Exist&#10;  (!JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  !JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual'))||&#10;  # Assigned Team &amp;&amp; Assigned Individual Null&#10;  (JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  @JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty? &amp;&amp;&#10;  JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp;&#10; JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Individual'].to_s.empty?)||&#10;  # Assigned Team Doesn't Exist &amp;&amp; Assigned Individaul Null&#10;  (!JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp;&#10;  (JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp; JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Individual'].to_s.empty?))||&#10;  # Assigned Individual Doesn't Exist &amp;&amp; Assigned Team Empty&#10;  (!JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp;&#10;  (JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp; JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty?))&#10;)">routine_kinetic_submission_update_v1_75</task>
+                    <task label="Assigned" type="Complete" value="(JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Team') &amp;&amp; !JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team'].to_s.empty?) || (JSON.parse(@results['2 - Get Child Answers']['Values JSON']).has_key?('Assigned Individual') &amp;&amp; !JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Individual'].to_s.empty?)">routine_kinetic_email_template_notification_send_v1_78</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_74" name="2 - Get Child Answers" x="727" y="88">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Closed" type="Complete" value="@results['2 - Get Child Answers']['Core State'] == &quot;Closed&quot;">system_junction_v1_24</task>
+                    <task label="Open" type="Complete" value="@results['2 - Get Child Answers']['Core State'] != &quot;Closed&quot;">system_noop_v1_73</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_75" name="2 - Assign to Default Team" x="610" y="373">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @childId %&gt;</parameter>
+                    <parameter id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
+                    <parameter id="Updated - Current Page" label="Updated - Current Page" menu="" required="false" tooltip="The submissions current page"></parameter>
+                    <parameter id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">&lt;%={
+"Assigned Team" =&gt; "Default"
+}.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_76</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_76" name="2- Notify Default - No Assigned Team" x="616" y="528">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">Default</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">SLM - Task Routed To Default Team</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+ "Percent Remaining" =&gt; "10"
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_78" name="2 - Send Reminder - Assigned Team" x="737" y="352">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%=JSON.parse(@results['2 - Get Child Answers']['Values JSON'])['Assigned Team']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">SLM - Assigned Team</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=
+child_answers = JSON.parse(@results['2 - Get Child Answers']['Values JSON'])
+
+target = ""
+assignedTeam = child_answers.has_key?('Assigned Team') ? child_answers['Assigned Team'] : nil
+assignedIndividual = child_answers.has_key?('Assigned Individual') ?child_answers['Assigned Individual'] : nil
+
+if assignedTeam.nil? &amp;&amp; !assignedIndividual.nil?
+ target = assignedIndividual
+elsif assignedIndividual.nil?
+ target = assignedTeam
+else
+ target = "#{assignedTeam} &gt; #{assignedIndividual}"
+end
+{
+  "Percent Remaining" =&gt; "10",
+  "Target" =&gt; target
+}.to_json %&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_noop_v1_62</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_79" name="2- Send Reminder - Service Owner" x="850" y="388">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%=@results['Get Config']['Owning Team']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">SLM - Service Owner</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=
+child_answers = JSON.parse(@results['2 - Get Child Answers']['Values JSON'])
+target = ""
+assignedTeam = child_answers.has_key?('Assigned Team') ? child_answers['Assigned Team'] : nil
+assignedIndividual = child_answers.has_key?('Assigned Individual') ? child_answers['Assigned Individual'] : nil
+
+if assignedTeam.nil? &amp;&amp; !assignedIndividual.nil?
+ target = assignedIndividual
+elsif assignedIndividual.nil?
+ target = assignedTeam
+else
+ target = "#{assignedTeam} &gt; #{assignedIndividual}"
+end
+
+{
+  "Owning Team" =&gt; @results['Owning Team']['Value'],
+  "Form Name" =&gt; @results['Get Submission']['Form Name'],
+  "Target" =&gt; target,
+  "Percent Remaining" =&gt; "10",
+  "Summary" =&gt; "#{child_answers['Summary']}",
+  "Details" =&gt; "#{child_answers['Details']}"
+}.to_json %&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_observers_v1_80</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_observers_v1" id="routine_kinetic_submission_update_observers_v1_80" name="Add Service Owner as Observer" x="1000" y="402">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to update">&lt;%=@results['1 - Get Child Answers']['Id']%&gt;</parameter>
+                    <parameter id="Observing Teams" label="Observing Teams" menu="" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission">&lt;%=@results['Get Config']['Owning Team']%&gt;</parameter>
+                    <parameter id="Observing Individuals" label="Observing Individuals" menu="" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission"></parameter>
+                    <parameter id="Replace Existing" label="Replace Existing" menu="" required="false" tooltip="true or false if existing observers should be replaced">false</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_81" name="Submission Id" x="-2" y="23">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=JSON.parse(@inputs['Source Data'])['submission']['id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_service_portal_submission_config_v1_63</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

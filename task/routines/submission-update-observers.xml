@@ -1,0 +1,133 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_submission_update_observers_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Submission Update Observers</name>
+        <author></author>
+        <notes></notes>
+        <lastID>31</lastID>
+        <taskDefinition id="routine_kinetic_submission_update_observers_v1" name="Submission Update Observers" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Submission Id" label="Submission Id" required="true" tooltip="Id of the submission to update"></parameter>
+                <parameter id="Observing Teams" label="Observing Teams" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission"></parameter>
+                <parameter id="Observing Individuals" label="Observing Individuals" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission"></parameter>
+                <parameter id="Replace Existing" label="Replace Existing" required="false" tooltip="true or false if existing observers should be replaced">false</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="99" y="86">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">kinetic_request_ce_submission_update_observers_v1_30</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_handler_failure_error_process_v1" id="routine_handler_failure_error_process_v1_10" name="Error Process" x="506" y="76">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Error Message" label="Error Message" menu="" required="false" tooltip="Error Message ">&lt;%=@results['Update Submission']['Handler Error Message']%&gt;</parameter>
+                    <parameter id="Handler Name" label="Handler Name" menu="" required="false" tooltip="">kinetic_request_ce_submission_update_observers_v1</parameter>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="">&lt;%=@run['Id']%&gt;</parameter>
+                    <parameter id="Inputs JSON" label="Inputs JSON" menu="" required="false" tooltip="">&lt;%=@inputs.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_observers_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_26" name="Return" x="264" y="231">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_27" name="Return From Error" x="904" y="76">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="kinetic_request_ce_submission_update_observers_v1" id="kinetic_request_ce_submission_update_observers_v1_30" name="Update Submission" x="264" y="75">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter id="space_slug" label="Space Slug" menu="" required="false" tooltip="The Space the submission is being retrieved from."></parameter>
+                    <parameter id="submission_id" label="Submission Id" menu="" required="true" tooltip="The id of the submission being updated.">&lt;%=@inputs['Submission Id']%&gt;</parameter>
+                    <parameter id="observing_teams" label="Observing Teams" menu="" required="false" tooltip="A JSON array of the teams that should exist in this submissions Observing Teams field">&lt;%=@inputs['Observing Teams']%&gt;</parameter>
+                    <parameter id="observing_individuals" label="Observing Individuals" menu="" required="false" tooltip="A JSON array of the individuals that should exist in this submissions Observing Individuals field">&lt;%=@inputs['Observing Individuals']%&gt;</parameter>
+                    <parameter id="replace_existing" label="Replace Existing" menu="" required="false" tooltip="If the given Observing Team/Individual fields should be overwritten">&lt;%=@inputs['Replace Existing']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Error" type="Complete" value="@results['Update Submission']['Handler Error Message'].nil?">system_tree_return_v1_26</task>
+                    <task label="Error" type="Complete" value="!@results['Update Submission']['Handler Error Message'].nil?">routine_handler_failure_error_process_v1_10</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_observers_v1" id="routine_kinetic_submission_update_observers_v1_31" name="Retry" x="715" y="88">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to update">&lt;%=@results['Error Process']['Submission Id']%&gt;</parameter>
+                    <parameter id="Observing Teams" label="Observing Teams" menu="" required="false" tooltip="JSON array of team names to add to Observing Teams field on Submission">&lt;%=@results['Error Process']['Observing Teams']%&gt;</parameter>
+                    <parameter id="Observing Individuals" label="Observing Individuals" menu="" required="false" tooltip="JSON array of usernames to add to Observing Individuals field on Submission">&lt;%=@results['Error Process']['Observing Individuals']%&gt;</parameter>
+                    <parameter id="Replace Existing" label="Replace Existing" menu="" required="false" tooltip="true or false if existing observers should be replaced">&lt;%=@results['Error Process']['Replace Existing']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_27</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

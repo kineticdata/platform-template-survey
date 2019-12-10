@@ -1,0 +1,449 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_queue_task_create_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Queue Task Create</name>
+        <author></author>
+        <notes></notes>
+        <lastID>154</lastID>
+        <taskDefinition id="routine_kinetic_queue_task_create_v1" name="Queue Task Create" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Kapp Slug" label="Kapp Slug" required="true" tooltip="Slug of the Queue Kapp">queue</parameter>
+                <parameter id="Task Form Slug" label="Task Form Slug" required="true" tooltip="Slug of the form the task is created for">work-order</parameter>
+                <parameter id="Summary" label="Summary" required="true" tooltip="A summary of what is to be worked on "></parameter>
+                <parameter id="Details" label="Details" required="true" tooltip="A description of what is to be worked on "></parameter>
+                <parameter id="Days Due" label="Days Due" required="true" tooltip="Number of days from now the task is to be completed by"></parameter>
+                <parameter id="Assignee Team" label="Assignee Team" required="true" tooltip="Name of the team to assign work to (ex. &quot;Test::Test::Test&quot;)"></parameter>
+                <parameter id="Assignee Id" label="Assignee Id" required="false" tooltip="Id of the person the task will be assigned to"></parameter>
+                <parameter id="Originating System" label="Originating System" required="true" tooltip="Source of the parent record (e.g. Kinetic Core, Salesforce ..etc)">Kinetic Core</parameter>
+                <parameter id="Originating Id" label="Originating Id" required="true" tooltip="Id of the originating systems record"></parameter>
+                <parameter id="System Input" label="System Input" required="false" tooltip="Structured data that can be leveraged by the queue task form"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Task Submission Id" tooltip="Submission Id of the completed task"></result>
+                <result name="Assignee Id" tooltip="Id of the user who completed the task"></result>
+                <result name="Fields JSON" tooltip="A JSON map of questions that were answered on the task record"></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="276" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_140</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_defer_v1" id="utilities_defer_v1_46" name="Fulfillment" x="274" y="309">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="deferral_value" label="Initial Deferral Value" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create">A task was created and assigned to the &lt;%=@results['Verify Assignment']['Assigned Team']%&gt; team</message>
+                    <message type="Update"></message>
+                    <message type="Complete">A task for your request was recently completed</message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_136</task>
+                    <task label="Activity Update" type="Update" value="@trigger['Message'] == &quot;Activity Update&quot; &amp;&amp; @results['Has Kinetic Submission Origin']['output'].to_s == 'true'  &amp;&amp; @results.has_key?('Create Activity Record') &amp;&amp; @results['Create Activity Record'].has_key?('Id') &amp;&amp; !@results['Create Activity Record']['Id'].nil?">routine_kinetic_queue_task_update_origin_submission_activity_v1_151</task>
+                    <task label="" type="Create" value="">routine_kinetic_form_retrieve_v1_154</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_106" name="Return" x="176" y="606">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Task Submission Id" label="Task Submission Id" menu="" required="false" tooltip="Submission Id of the completed task">&lt;%=@results['Create Fulfillment Record']['Id']%&gt;</parameter>
+                    <parameter id="Assignee Id" label="Assignee Id" menu="" required="false" tooltip="Id of the user who completed the task">&lt;%=
+key = "Assigned Individual"
+JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON'])[key]%&gt;</parameter>
+                    <parameter id="Fields JSON" label="Fields JSON" menu="" required="false" tooltip="A JSON map of questions that were answered on the task record">&lt;%=@results['Retrieve Fulfillment Values']['Values JSON']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_152</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_assignment_validate_v1" id="routine_kinetic_queue_assignment_validate_v1_132" name="Verify Assignment" x="275" y="207">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="The Assigned Team">&lt;%=@inputs['Assignee Team']%&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip="The Assigned Individual">&lt;%=@inputs['Assignee Id']%&gt;</parameter>
+                    <parameter id="Originating System" label="Originating System" menu="" required="false" tooltip="The system originating the fulfillment process">&lt;%=@inputs['Originating System']%&gt;</parameter>
+                    <parameter id="Originating Id" label="Originating Id" menu="" required="false" tooltip="The Id of the record originating the fulfillment process">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_defer_v1_46</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_133" name="Create Fulfillment Record" x="627" y="297">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp to create the submission in">&lt;%=@inputs['Kapp Slug']%&gt;</parameter>
+                    <parameter id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">&lt;%=@inputs['Task Form Slug']%&gt;</parameter>
+                    <parameter id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%=
+values = {
+  'Assigned Team' =&gt; @results['Verify Assignment']['Assigned Team'],
+  'Assigned Team Display Name' =&gt; @results['Verify Assignment']['Assigned Team Display Name'],
+  'Assigned Individual' =&gt; @results['Verify Assignment']['Assigned Individual'],
+  'Assigned Individual Display Name' =&gt; @results['Verify Assignment']['Assigned Individual Display Name'],
+  'Deferral Token' =&gt; @results['Fulfillment']['deferral_token'],
+  'Details'  =&gt; @inputs['Details'],
+  'Originating Id' =&gt; @inputs['Originating Id'],
+  'Originating System' =&gt; @inputs['Originating System'],
+  'Summary' =&gt; @inputs['Summary'],
+  'System Input' =&gt; @inputs['System Input'],
+  'Discussion Id' =&gt; ''
+}
+
+# Extract Form Fields
+form_fields = JSON.parse(@results['Retrieve Queue Form']['Fields JSON']).map{|field| field.values}.flatten
+
+# Prepare System Input fields
+system_inputs = JSON.parse( @inputs['System Input'] || "{}" )
+
+# Remove the values fields, as those are "unsettable" and should be handled in other ways
+updatable_fields = form_fields - values.keys
+
+# Set each updatable field if there is a matching field in the system_input fields
+updatable_fields.each{|field|
+  values[field] = system_inputs[field] if system_inputs.has_key?(field)
+}
+
+# Handle Status if not provided as a system input
+if values['Status'].nil?
+  values['Status'] = "Open"
+end
+
+# Handle Due Date if not provided as a system input
+if values['Due Date'].nil?
+  values['Due Date'] = (DateTime.now + @inputs['Days Due'].to_f).iso8601
+end
+
+values.to_json%&gt;</parameter>
+                    <parameter id="Origin Id" label="Origin Id" menu="" required="false" tooltip="Sets the submissions origin to another Kinetic Submission">&lt;%= @inputs['Originating System'] == "Kinetic Core" ? @inputs['Originating Id'] : nil%&gt;</parameter>
+                    <parameter id="Parent Id" label="Parent Id" menu="" required="false" tooltip="Sets the submissions parent to another Kinetic Submission">&lt;%= @inputs['Originating System'] == "Kinetic Core" ? @inputs['Originating Id'] : nil%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Originating Id &amp;amp;&amp;amp; Core" type="Complete" value="@results['Has Kinetic Submission Origin']['output'].to_s == 'true'">system_noop_v1_135</task>
+                    <task label="Has Token" type="Complete" value="@run.has_key?('Token') &amp;&amp; !@run['Token'].to_s.nil?">utilities_create_trigger_v1_137</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_135" name="Has Kinetic Origin" x="846" y="297">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_145</task>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_task_relate_origin_submission_discussion_v1_146</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_136" name="Retrieve Fulfillment Values" x="275" y="451">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@results['Create Fulfillment Record']['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Notes for Customer" type="Complete" value="@results['Has Kinetic Submission Origin']['output'].to_s == 'true' &amp;&amp; JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON']).has_key?('Notes for Customer') &amp;&amp; !JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON'])['Notes for Customer'].to_s.empty?">routine_kinetic_submission_retrieve_v1_141</task>
+                    <task label="Activity Complete" type="Complete" value="@results['Has Kinetic Submission Origin']['output'].to_s == 'true' &amp;&amp; @results.has_key?('Create Activity Record') &amp;&amp; @results['Create Activity Record'].has_key?('Id') &amp;&amp; !@results['Create Activity Record']['Id'].nil?">routine_kinetic_submission_activity_update_v1_150</task>
+                    <task label="" type="Complete" value="">system_tree_return_v1_106</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_create_trigger_v1" id="utilities_create_trigger_v1_137" name="Send Fulfillment Id to Parent Run" x="627" y="134">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="action_type" label="Action Type" menu="Update,Complete" required="true" tooltip="">Update</parameter>
+                    <parameter id="deferral_token" label="Deferral Token" menu="" required="true" tooltip="">&lt;%=@run['Token']%&gt;</parameter>
+                    <parameter id="deferred_variables" label="Deferred Results" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="message" label="Message" menu="" required="false" tooltip="">&lt;%="TASK_ID:#{@results['Create Fulfillment Record']['Id']}"%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_140" name="Has Kinetic Submission Origin" x="276" y="100">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@inputs['Originating System'] == "Kinetic Core" &amp;&amp; !@inputs['Originating Id'].to_s.empty?%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_assignment_validate_v1_132</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_141" name="Retrieve Orig Submission" x="473" y="452">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Requested For" type="Complete" value="JSON.parse(@results['Retrieve Orig Submission']['Values JSON']).has_key? 'Requested For'">routine_kinetic_email_template_notification_send_v1_143</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_143" name="Send Notes to Customer" x="673" y="439">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%=
+key = "Requested For"
+JSON.parse(@results['Retrieve Orig Submission']['Values JSON'])[key]%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Service Note</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%=
+key = "Notes for Customer"
+note = JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON'])[key]
+
+{
+  "Note" =&gt; note
+}.to_json %&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%=@inputs['Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_145" name="Create Activity Record" x="995" y="384">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to create the activity record for">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                    <parameter id="Data" label="Data" menu="" required="false" tooltip="Data to store in the submission activity">&lt;%=
+{
+  "Assigned Team" =&gt; @results['Verify Assignment']['Assigned Team'],
+  "Assigned Individual" =&gt; @results['Verify Assignment']['Assigned Individual'],
+  "Status" =&gt; "In Progress",
+  "Comments" =&gt; nil
+}.to_json %&gt;</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'An Approval was Created' : 'A Fulfillment Task was Created'%</parameter>
+                    <parameter id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'Approval Created' : 'Fulfillment Task Created'%&gt;</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'Approval' : 'Task'%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1_146" name="Relate Origin Submission Discussion" x="1005" y="176">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Origin Submission Id" label="Origin Submission Id" menu="" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists">&lt;%=@results['Create Fulfillment Record']['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_update_v1" id="routine_kinetic_submission_activity_update_v1_150" name="Activity - Complete" x="374" y="606">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="The Id of the submission in which the activity is related">&lt;%=@results['Retrieve Fulfillment Values']['Origin Id']%&gt;</parameter>
+                    <parameter id="Activity Id" label="Activity Id" menu="" required="true" tooltip="The Id of the submission activity">&lt;%=@results['Create Activity Record']['Id']%&gt;</parameter>
+                    <parameter id="Updated - Data" label="Updated - Data" menu="" required="false" tooltip="Data to store in the submission activity">&lt;%=
+queue_task_values = JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON'])
+comments = queue_task_values.has_key?('Notes for Customer') ? queue_task_values['Notes for Customer'] : nil
+if comments.nil?
+  if queue_task_values.has_key?('Cancellation Reason') &amp;&amp; !queue_task_values.to_s.empty?
+    comments = "Cancellation Reason -- #{queue_task_values['Cancellation Reason']}"
+  end
+end
+decision = queue_task_values.has_key?('Decision') ? queue_task_values['Decision'] : nil
+denial_reason = queue_task_values.has_key?('Denial Reason') ? queue_task_values['Denial Reason'] : nil
+
+{
+  "Assigned Team" =&gt; queue_task_values['Assigned Team'],
+  "Assigned Individual" =&gt; queue_task_values['Assigned Individual'],
+  "Status" =&gt; queue_task_values['Status'],
+  "Comments" =&gt; comments,
+  "Decision" =&gt; decision,
+  "Denial Reason" =&gt; denial_reason
+}.to_json %&gt;</parameter>
+                    <parameter id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="Description of the submission activity"></parameter>
+                    <parameter id="Updated - Label" label="Updated - Label" menu="" required="false" tooltip="Label for the submission activity"></parameter>
+                    <parameter id="Updated - Type" label="Updated - Type" menu="" required="false" tooltip="Type of submission activity"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_152</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_task_update_origin_submission_activity_v1" id="routine_kinetic_queue_task_update_origin_submission_activity_v1_151" name="Origin Activity Update" x="44" y="297">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Origin Submission Id" label="Origin Submission Id" menu="" required="true" tooltip="The Id of the Origin Submission.">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                    <parameter id="Queue Task Submission Id" label="Queue Task Submission Id" menu="" required="true" tooltip="The Id of the Queue Task Submission">&lt;%=@results['Create Fulfillment Record']['Id']%&gt;</parameter>
+                    <parameter id="Origin Submission Activity Id" label="Origin Submission Activity Id" menu="" required="true" tooltip="The Id of the Origin Submissions activity record to update">&lt;%=@results['Create Activity Record']['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_152" name="Work Order Complete - Continue" x="275" y="673">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_153</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_153" name="Finish" x="278.6875" y="790.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_154" name="Retrieve Queue Form" x="452" y="297">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%=@inputs['Kapp Slug']%&gt;</parameter>
+                    <parameter id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%=@inputs['Task Form Slug']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_create_v1_133</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

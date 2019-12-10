@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Users with this role are able to modify data within the Admin Kapp's Datastores.",
+  "name": "Role::Data Admin",
+  "slug": "a311a2e0945c2e3ffb37f9a353fa8348"
+}

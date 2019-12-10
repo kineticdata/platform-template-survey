@@ -1,0 +1,40 @@
+{
+  "name": "Form Developers",
+  "rule": "@identity.is_member_of?('Role::Form Developer') ||\n@identity.is_member_of?('Role::Task Developer') ||\n@identity.get_property('spaceAdmin') == 'true'",
+  "message": "Must be a member of the form developers role or the task developers role.",
+  "type": "Console Access",
+  "consolePolicyRules": [
+    {
+      "name": "Engine",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Environment",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Errors",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Logs",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Runs",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Staged",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "System Errors",
+      "policyRule": "Form Developers"
+    },
+    {
+      "name": "Trees",
+      "policyRule": "Form Developers"
+    }
+  ]
+}

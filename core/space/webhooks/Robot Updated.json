@@ -1,0 +1,9 @@
+{
+  "authStrategy": {},
+  "event": "Updated",
+  "filter": "form('slug')===\"robot-definitions\"",
+  "name": "Robot Updated",
+  "type": "Datastore Submission",
+  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Datastore%20Submissions%20%3E%20${form('slug')}/Saved",
+  "attributes": null
+}

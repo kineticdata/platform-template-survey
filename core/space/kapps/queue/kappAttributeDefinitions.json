@@ -1,0 +1,47 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "The name of the package that this Kapp should use for display",
+    "name": "Bundle Package"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "If the Kapp has custom workflow that should be executed when a form is Created, Updated, Deleted...etc)",
+    "name": "Custom Form Workflow"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Description of the Kapp",
+    "name": "Description"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this kapp",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Discussion Server Url"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Icon"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Notification template used when a submission has been completed.",
+    "name": "Notification Template Name - Complete"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Notification to send when tasks are created",
+    "name": "Notification Template Name - Create"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Team that owns and manages services in this kapp (overridden by form attributes)",
+    "name": "Owning Team"
+  }
+]

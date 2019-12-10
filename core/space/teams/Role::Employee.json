@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "False"
+      ]
+    }
+  ],
+  "description": "Users with this role are considered Employees, and have access to request things from the Service Catalog.",
+  "name": "Role::Employee",
+  "slug": "a0093227b6c60c6d3eabe96f73cafccb"
+}

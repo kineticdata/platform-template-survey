@@ -1,0 +1,229 @@
+{
+  "afterLogoutPath": null,
+  "attributes": [
+    {
+      "name": "Approval Form Slug",
+      "values": [
+        "approval"
+      ]
+    },
+    {
+      "name": "Bundle Package",
+      "values": [
+        "services"
+      ]
+    },
+    {
+      "name": "Description",
+      "values": [
+        "Browse, request and check status of services"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-book"
+      ]
+    },
+    {
+      "name": "Kapp Configuration Status",
+      "values": [
+        "true"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Complete",
+      "values": [
+        "Service Completed"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Create",
+      "values": [
+        "Service Submitted"
+      ]
+    },
+    {
+      "name": "Owning Team",
+      "values": [
+        "Default",
+        "Default"
+      ]
+    },
+    {
+      "name": "Record Search History",
+      "values": [
+        "All"
+      ]
+    },
+    {
+      "name": "Service Days Due",
+      "values": [
+        "7"
+      ]
+    },
+    {
+      "name": "Shared Bridged Resource Form Slug",
+      "values": [
+        "shared-resources"
+      ]
+    },
+    {
+      "name": "Statuses - Active",
+      "values": [
+        "Awaiting Approval",
+        "In Progress",
+        "Pending Approval",
+        "Submitted"
+      ]
+    },
+    {
+      "name": "Statuses - Cancelled",
+      "values": [
+        "Cancelled"
+      ]
+    },
+    {
+      "name": "Statuses - Inactive",
+      "values": [
+        "Draft"
+      ]
+    },
+    {
+      "name": "Task Assignee Team",
+      "values": [
+        "Default"
+      ]
+    },
+    {
+      "name": "Task Form Slug",
+      "values": [
+        "work-order"
+      ]
+    }
+  ],
+  "bundlePath": "webpack",
+  "defaultFormConfirmationPage": "space.jsp",
+  "defaultFormDisplayPage": "space.jsp",
+  "defaultSubmissionLabelExpression": "${form('name')}",
+  "displayType": "Display Page",
+  "displayValue": "space.jsp",
+  "fields": [
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k3",
+      "name": "Assigned Individual"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k1",
+      "name": "Assigned Team"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k6",
+      "name": "Deferral Token"
+    },
+    {
+      "dataType": "date",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k5",
+      "name": "Due Date"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k7",
+      "name": "Requested By"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k9",
+      "name": "Requested For"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k11",
+      "name": "Status"
+    }
+  ],
+  "formTypes": [
+    {
+      "name": "Approval"
+    },
+    {
+      "name": "Console"
+    },
+    {
+      "name": "Content"
+    },
+    {
+      "name": "Service"
+    },
+    {
+      "name": "Service Description"
+    },
+    {
+      "name": "Subservice"
+    },
+    {
+      "name": "Template"
+    },
+    {
+      "name": "Utility"
+    },
+    {
+      "name": "Work Order"
+    }
+  ],
+  "loginPage": "",
+  "name": "Services",
+  "resetPasswordPage": "",
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Authenticated Users"
+    },
+    {
+      "endpoint": "Form Creation",
+      "name": "Kapp Owners"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Kapp Owners"
+    },
+    {
+      "endpoint": "Default Form Display",
+      "name": "Employees"
+    },
+    {
+      "endpoint": "Default Form Modification",
+      "name": "Form Owners - Kapp Owners"
+    },
+    {
+      "endpoint": "Default Submission Access",
+      "name": "Requester - Form Owners - Observers"
+    },
+    {
+      "endpoint": "Default Submission Modification",
+      "name": "Requester"
+    },
+    {
+      "endpoint": "Submission Support",
+      "name": "Submission Support"
+    }
+  ],
+  "slug": "services"
+}

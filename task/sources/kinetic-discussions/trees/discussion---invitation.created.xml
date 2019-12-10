@@ -1,0 +1,177 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Discussions</sourceName>
+    <sourceGroup>Discussion > Invitation</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>27</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="13" y="330">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_10</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Invite Type" x="169" y="331">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+
+invitee_username = @invitee['username']
+invite_type = "targeted invitation"
+
+if invitee_username.nil? == true then
+  invite_type = "new user invitation"
+end
+
+invite_type
+
+%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_local_kinetic_discussions_user_notification_vars_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_local_kinetic_discussions_user_notification_vars" id="routine_local_kinetic_discussions_user_notification_vars_23" name="Build Vars" x="330" y="330">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Web Server Url" label="Web Server Url" menu="" required="true" tooltip="">&lt;%= @space_attributes['Web Server Url']%&gt;</parameter>
+                    <parameter id="Space Slug" label="Space Slug" menu="" required="true" tooltip="">&lt;%= @space['Slug'] %&gt;</parameter>
+                    <parameter id="Send To" label="Send To" menu="" required="true" tooltip="">&lt;%=
+
+if @invitee['username'].nil? == false then
+  @invitee['username']
+else
+  @invitee['email']
+end
+
+%&gt;</parameter>
+                    <parameter id="Event" label="Event" menu="" required="true" tooltip="">&lt;%=@results['Invite Type']['output']%&gt;</parameter>
+                    <parameter id="Invited By" label="Invited By" menu="" required="false" tooltip="">&lt;%= @invitation['invitedBy']['email']%&gt;</parameter>
+                    <parameter id="Issue" label="Issue" menu="" required="false" tooltip="">&lt;%= @discussion['title']%&gt;</parameter>
+                    <parameter id="Issues" label="Issues" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Messages" label="Messages" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Existing User" type="Complete" value="@results['Invite Type']['output'] == &quot;targeted invitation&quot; &amp;&amp; @results['Build Vars']['Status'] == &quot;Send&quot;">routine_kinetic_email_template_notification_send_v1_24</task>
+                    <task label="New User" type="Complete" value="@results['Invite Type']['output'] == &quot;new user invitation&quot; &amp;&amp; @results['Build Vars']['Status'] == &quot;Send&quot;">routine_kinetic_email_template_notification_send_v1_25</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_24" name="Send Existing User Email" x="536" y="409">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @invitee['email']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Discussion Email Template</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+  "Subject" =&gt; @results['Build Vars']['Subject'],
+  "Summary" =&gt; @results['Build Vars']['Summary'],
+  "Body" =&gt; @results['Build Vars']['Body'],
+  "Button Label" =&gt; @results['Build Vars']['Button Label'],
+  "Button Url" =&gt; @results['Build Vars']['Button Url']
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @space_attributes['Admin Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_26</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_25" name="Send Invite Email" x="550" y="197">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @invitee['email']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">Discussion Email Template</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+  "Subject" =&gt; @results['Build Vars']['Subject'],
+  "Summary" =&gt; @results['Build Vars']['Summary'],
+  "Body" =&gt; @results['Build Vars']['Body'],
+  "Button Label" =&gt; @results['Build Vars']['Button Label'],
+  "Button Url" =&gt; @results['Build Vars']['Button Url']
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @space_attributes['Admin Kapp Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_26</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_26" name="Continue" x="698.6875" y="320.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_27</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_27" name="Finish" x="836.6875" y="309.6875">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

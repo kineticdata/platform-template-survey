@@ -1,0 +1,252 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Task</sourceName>
+    <sourceGroup>Run Error</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="1">
+        <name>Notify on Run Error</name>
+        <author></author>
+        <notes>Sends notifications to process owners and system owners in the event of a process exception.</notes>
+        <lastID>18</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="66" y="34">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">kinetic_core_api_v1_14</task>
+                    <task label="" type="Complete" value="">kinetic_core_api_v1_16</task>
+                </dependents>
+            </task>
+            <task definition_id="smtp_email_send_v1" id="smtp_email_send_v1_1" name="Notify Process Owner" x="463" y="401">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="from" label="From (email address)" menu="" required="true" tooltip="The email address of the simulated sender.">&lt;%=@results['Configure From Email Address']['output']%&gt;</parameter>
+                    <parameter id="to" label="To (email address)" menu="" required="true" tooltip="The email address of the intended recipient.">&lt;%=@error['tree']['Owner Email']%&gt;</parameter>
+                    <parameter id="subject" label="Subject" menu="" required="false" tooltip="The subject of the email.">Kinetic Task Run Error (&lt;%= ENV['space_slug']%&gt;)</parameter>
+                    <parameter id="htmlbody" label="HTML Body" menu="" required="false" tooltip="HTML representing the body of a rich email.">&lt;h1&gt;Run Error in Space's task engine (&lt;%= ENV['space_slug']%&gt;)&lt;/h1&gt;
+            &lt;h2&gt;Source Information&lt;/h2&gt;
+            &lt;ul&gt;
+            &lt;li&gt;Source: &lt;%=@error['tree']['Source']%&gt;&lt;/li&gt;
+            &lt;li&gt;Source Group: &lt;%=@error['tree']['Source Group']%&gt;&lt;/li&gt;
+            &lt;li&gt;Source Id: &lt;%=@error['run']['Source Id']%&gt;&lt;/li&gt;
+            &lt;li&gt;Tree Name: &lt;%=@error['tree']['Name']%&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="&lt;%=@results['Configure Web Server']['output']%&gt;/app/runs/&lt;%=@error['run']['Id']%&gt;"&gt;Run #&lt;%=@error['run']['Id']%&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            
+            &lt;h2&gt;Error Details&lt;/h2&gt;
+            &lt;pre&gt;&lt;%=@error['Text']%&gt;&lt;/pre&gt;</parameter>
+                    <parameter id="textbody" label="Alternate (text) Body" menu="" required="false" tooltip="A plaintext message that will be displayed if the recipient can't display multipart HTML emails.">Run Error
+            
+            Source Information
+             - Source: &lt;%=@error['tree']['Source Root']%&gt;
+             - Source Group: &lt;%=@error['tree']['Source Group']%&gt;
+             - Source Id: &lt;%=@error['run']['Source Id']%&gt;
+             - Tree Name: &lt;%=@error['tree']['Name']%&gt;
+             - Run Id: &lt;%=@error['run']['Id']%&gt;
+            
+            Error Details
+            &lt;%=@error['Text']%&gt;
+            </parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="smtp_email_send_v1" id="smtp_email_send_v1_2" name="Notify System Owner" x="272" y="400">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="from" label="From (email address)" menu="" required="true" tooltip="The email address of the simulated sender.">&lt;%=@results['Configure From Email Address']['output']%&gt;</parameter>
+                    <parameter id="to" label="To (email address)" menu="" required="true" tooltip="The email address of the intended recipient.">&lt;%=@results['Configure System Owner Email Address']['output']%&gt;</parameter>
+                    <parameter id="subject" label="Subject" menu="" required="false" tooltip="The subject of the email.">Kinetic Task Run Error (&lt;%= ENV['space_slug']%&gt;)</parameter>
+                    <parameter id="htmlbody" label="HTML Body" menu="" required="false" tooltip="HTML representing the body of a rich email.">&lt;h1&gt;Run Error in Space's task engine (&lt;%= ENV['space_slug']%&gt;)&lt;/h1&gt;
+            &lt;h2&gt;Source Information&lt;/h2&gt;
+            &lt;ul&gt;
+            &lt;li&gt;Source: &lt;%=@error['tree']['Source']%&gt;&lt;/li&gt;
+            &lt;li&gt;Source Group: &lt;%=@error['tree']['Source Group']%&gt;&lt;/li&gt;
+            &lt;li&gt;Source Id: &lt;%=@error['run']['Source Id']%&gt;&lt;/li&gt;
+            &lt;li&gt;Tree Name: &lt;%=@error['tree']['Name']%&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="&lt;%=@results['Configure Web Server']['output']%&gt;/app/runs/&lt;%=@error['run']['Id']%&gt;"&gt;Run #&lt;%=@error['run']['Id']%&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            
+            &lt;h2&gt;Error Details&lt;/h2&gt;
+            &lt;pre&gt;&lt;%=@error['Text']%&gt;&lt;/pre&gt;</parameter>
+                    <parameter id="textbody" label="Alternate (text) Body" menu="" required="false" tooltip="A plaintext message that will be displayed if the recipient can't display multipart HTML emails.">Run Error
+            
+            Source Information
+             - Source: &lt;%=@error['tree']['Source Root']%&gt;
+             - Source Group: &lt;%=@error['tree']['Source Group']%&gt;
+             - Source Id: &lt;%=@error['run']['Source Id']%&gt;
+             - Tree Name: &lt;%=@error['tree']['Name']%&gt;
+             - Run Id: &lt;%=@error['run']['Id']%&gt;
+            
+            Error Details
+            &lt;%=@error['Text']%&gt;
+            </parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_4" name="Configure From Email Address" x="493" y="11">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">wally@kinops.io</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_5" name="Configure System Owner Email Address" x="625" y="-11">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=JSON.parse(@results['Retrieve Space Admins']['Response Body'])['users'].select {|user| !user["email"].include?("@kinops.io")}.map { |user| user["email"]  }.join(',')%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_6" name="Configure Web Server" x="627" y="156">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+host = ""
+space_slug = JSON.parse(@results['Retrieve Space']['Response Body'])['space']['slug']
+space_attributes_map = JSON.parse(@results['Retrieve Space']['Response Body'])['space']['attributesMap']
+if space_attributes_map.has_key?('Task Server Host') &amp;&amp; !space_attributes_map['Task Server Host'].empty?
+  host = space_attributes_map['Task Server Host'].first
+else
+  host = "#{space_slug}.kinops.io"
+end
+"https://#{host}/kinetic-task"%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Configured?" type="Complete" value="!@results['Configure From Email Address']['output'].empty? &amp;&amp; !@results['Configure System Owner Email Address']['output'].empty? &amp;&amp; !@results['Configure Web Server']['output'].empty?">system_noop_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_7" name="Noop" x="362" y="274">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">smtp_email_send_v1_2</task>
+                    <task label="Owner Defined?" type="Complete" value="!@error['tree']['Owner Email'].nil?">smtp_email_send_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_14" name="Retrieve Space Admins" x="200" y="-65">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
+                    <parameter id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/users?q=spaceAdmin="true"</parameter>
+                    <parameter id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Error" type="Complete" value="@results['Retrieve Space Admins']['Handler Error Message'].to_s.empty?">system_join_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_16" name="Retrieve Space" x="209" y="110">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
+                    <parameter id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/space?include=attributesMap</parameter>
+                    <parameter id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Error" type="Complete" value="@results['Retrieve Space']['Handler Error Message'].to_s.empty?">system_join_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_17" name="Data Fetch - Complete" x="363" y="24">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_4</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

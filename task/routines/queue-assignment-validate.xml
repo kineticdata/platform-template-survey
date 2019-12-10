@@ -1,0 +1,513 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_queue_assignment_validate_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Queue Assignment Validate</name>
+        <author>james.davies@kineticdata.com</author>
+        <notes></notes>
+        <lastID>85</lastID>
+        <taskDefinition id="routine_kinetic_queue_assignment_validate_v1" name="Queue Assignment Validate" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Assigned Team" label="Assigned Team" required="false" tooltip="The Assigned Team">&lt;%=@inputs['Assignee Team']%&gt;</parameter>
+                <parameter id="Assigned Individual" label="Assigned Individual" required="false" tooltip="The Assigned Individual">&lt;%=@inputs['Assignee Id']%&gt;</parameter>
+                <parameter id="Originating System" label="Originating System" required="false" tooltip="The system originating the fulfillment process">&lt;%=@inputs['Originating System']%&gt;</parameter>
+                <parameter id="Originating Id" label="Originating Id" required="false" tooltip="The Id of the record originating the fulfillment process">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Assigned Team" tooltip=""></result>
+                <result name="Assigned Team Display Name" tooltip=""></result>
+                <result name="Assigned Individual" tooltip=""></result>
+                <result name="Assigned Individual Display Name" tooltip=""></result>
+                <result name="Assignment Error" tooltip=""></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="510" y="-120">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Team or Individual" type="Complete" value="@inputs['Assigned Team'].to_s.size &gt; 0 || @inputs['Assigned Individual'].to_s.size &gt; 0">system_noop_v1_45</task>
+                    <task label="No Team or Individual" type="Complete" value="@inputs['Assigned Team'].to_s.size == 0 &amp;&amp; @inputs['Assigned Individual'].to_s.size == 0">utilities_echo_v1_72</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_40" name="Return Team" x="-27" y="152">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_45" name="Has Assignment Values" x="330" y="-11">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Has Team" type="Complete" value="@inputs['Assigned Team'].to_s.size &gt; 0">routine_kinetic_team_retrieve_v1_80</task>
+                    <task label="Only Assigned Individual" type="Complete" value="@inputs['Assigned Team'].to_s.size == 0 &amp;&amp; @inputs['Assigned Individual'].to_s.size &gt; 0">routine_kinetic_user_retrieve_v1_82</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_47" name="Return Assigned Individual" x="715" y="231">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Assigned Individual']['Username']%&gt;</parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Assigned Individual']['Display Name']%&gt;</parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_49" name="Return Team And Assigned Individual" x="-144" y="510">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team Assigned Individual']['Username']%&gt;</parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team Assigned Individual']['Display Name']%&gt;</parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_52" name="Individual Is Team Member" x="-11" y="374">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+
+members = JSON.parse(@results['Retrieve Team']['Memberships JSON'])
+assignee = @results['Retrieve Team Assigned Individual']['Username']
+members.any?{|member| member["user"]["username"] == assignee}%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Is Team Member" type="Complete" value="@results['Individual Is Team Member']['output'].to_s.downcase == &quot;true&quot;">system_tree_return_v1_49</task>
+                    <task label="Not Team Member" type="Complete" value="@results['Individual Is Team Member']['output'].to_s.downcase != &quot;true&quot;">utilities_echo_v1_64</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_57" name="JOIN: Errors" x="424" y="382">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_space_retrieve_v1_83</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_63" name="RETURN: Team No Assigned Individual" x="121" y="659">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip="">&lt;%=@results['WARNING: Team Assigned Individual Not In Team']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_64" name="WARNING: Team Assigned Individual Not In Team" x="121" y="506">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">Assigned Individual (&lt;%=@inputs['Assigned Individual']%&gt;) is not a member of the (&lt;%=@results['Retrieve Team']['Name']%&gt;) team. Task has been assigned to the &lt;%=@results['Retrieve Team']['Name']%&gt; Team with no assignee.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_63</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_65" name="WARNING: Team Assigned Individual Does Not Exist" x="253" y="506">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">Assigned Individual (&lt;%=@inputs['Assigned Individual']%&gt;) does not exist in the system. Task will been assigned to the &lt;%=@results['Retrieve Team']['Name']%&gt; Team with no assignee.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_67</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_67" name="RETURN: Team No Assigned Individual - User Not Found" x="253" y="660">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip="">&lt;%=@results['Retrieve Team']['Name']%&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip="">&lt;%=@results['WARNING: Team Assigned Individual Does Not Exist']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_68" name="ERROR: Team Does Not Exist" x="299" y="242">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">Assigned Team (&lt;%=@inputs['Assigned Team']%&gt;) does not exist in the system. Task was assigned to the Default Team.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_57</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_69" name="ERROR: Team No Members" x="429" y="242">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">Assigned Team (&lt;%=@inputs['Assigned Team']%&gt;) does not have any active members. Task was assigned to the Default Team.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_57</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_70" name="ERROR: Assigned Individual Does Not Exist" x="584" y="221">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">Assigned Individual (&lt;%=@inputs['Assigned Individual']%&gt;) does not exist in the system. Task was assigned to the Default Team.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_57</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_72" name="ERROR: No Assignment Values" x="968" y="77">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">No Assigned Team or Assigned Individual provided. Task was assigned to the Default Team.</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_57</task>
+                    <task label="" type="Complete" value="">system_join_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_73" name="RETURN: Default Team" x="429" y="561">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Assigned Team" label="Assigned Team" menu="" required="false" tooltip="">&lt;%= attributes = JSON.parse(@results['Retrieve Space Default Team']['Attributes Map JSON'])
+attributes.has_key?('Task Assignee Team') ? attributes['Task Assignee Team'][0] : "Default" %&gt;</parameter>
+                    <parameter id="Assigned Team Display Name" label="Assigned Team Display Name" menu="" required="false" tooltip="">&lt;%= attributes = JSON.parse(@results['Retrieve Space Default Team']['Attributes Map JSON'])
+attributes.has_key?('Task Assignee Team') ? attributes['Task Assignee Team'][0] : "Default" %&gt;</parameter>
+                    <parameter id="Assigned Individual" label="Assigned Individual" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assigned Individual Display Name" label="Assigned Individual Display Name" menu="" required="false" tooltip=""></parameter>
+                    <parameter id="Assignment Error" label="Assignment Error" menu="" required="false" tooltip="">&lt;%=  message = "Error Assigning to Provided Team or Indidvidual"
+if @results.has_key? 'ERROR: No Assignment Values'
+   message = @results['ERROR: No Assignment Values']['output']
+elsif @results.has_key? 'ERROR: Assigned Individual Does Not Exist'
+   message = @results['ERROR: Assigned Individual Does Not Exist']['output']
+elsif @results.has_key? 'ERROR: Team No Members'
+   message = @results['ERROR: Team No Members']['output']
+elsif @results.has_key? 'ERROR: Team Does Not Exist'
+   message = @results['ERROR: Team Does Not Exist']['output']
+end 
+message%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_74" name="Message to Owning Team" x="979" y="385">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  message = "Error Assigning to Provided Team or Individual"
+if @results.has_key?('ERROR: No Assignment Values')
+   message = @results['ERROR: No Assignment Values']['output']
+elsif @results.has_key?('ERROR: Assigned Individual Does Not Exist')
+   message = @results['ERROR: Assigned Individual Does Not Exist']['output']
+elsif @results.has_key?('ERROR: Team No Members')
+   message = @results['ERROR: Team No Members']['output']
+elsif @results.has_key?('ERROR: Team Does Not Exist')
+   message = @results['ERROR: Team Does Not Exist']['output']
+elsif @results.has_key?('WARNING: Team Assigned Individual Does Not Exist')
+   message = @results['WARNING: Team Assigned Individual Does Not Exist']['output']
+elsif @results.has_key?('WARNING: Team Assigned Individual Not In Team')
+   message = @results['WARNING: Team Assigned Individual Not In Team']['output']
+end 
+message%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_84</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_75" name="Join - Message to Owning Team" x="979" y="245">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Originating System Kinetic" type="Complete" value="!@inputs['Originating Id'].to_s.empty? &amp;&amp; ['ce', 'core', 'kinetic'].any?{|word| @inputs['Originating System'].to_s.downcase.include?(word)}">utilities_echo_v1_74</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_80" name="Retrieve Team" x="164" y="43">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%=@inputs['Assigned Team']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Members" type="Complete" value="@results['Retrieve Team']['Exists'].to_s != &quot;false&quot; &amp;&amp; JSON.parse(@results['Retrieve Team']['Memberships JSON']).size == 0">utilities_echo_v1_69</task>
+                    <task label="Does Not Exist" type="Complete" value="@results['Retrieve Team']['Exists'].to_s == &quot;false&quot;">utilities_echo_v1_68</task>
+                    <task label="No Assigned Individual" type="Complete" value="@results['Retrieve Team']['Exists'].to_s != &quot;false&quot; &amp;&amp; JSON.parse(@results['Retrieve Team']['Memberships JSON']).size &gt; 0 &amp;&amp; @inputs['Assigned Individual'].to_s.empty?">system_tree_return_v1_40</task>
+                    <task label="Has Assigned Individual" type="Complete" value="@results['Retrieve Team']['Exists'].to_s != &quot;false&quot; &amp;&amp; JSON.parse(@results['Retrieve Team']['Memberships JSON']).size &gt; 0 &amp;&amp; !@inputs['Assigned Individual'].to_s.empty?">routine_kinetic_user_retrieve_v1_81</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_81" name="Retrieve Team Assigned Individual" x="115" y="233">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%=@inputs['Assigned Individual']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Exists" type="Complete" value="['yes', 'true'].include?(@results['Retrieve Team Assigned Individual']['Exists'].to_s.downcase)">utilities_echo_v1_52</task>
+                    <task label="Does Not Exist" type="Complete" value="['no', 'false'].include?(@results['Retrieve Team Assigned Individual']['Exists'].to_s.downcase)">utilities_echo_v1_65</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_82" name="Retrieve Assigned Individual" x="649" y="55">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%=@inputs['Assigned Individual']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Exists" type="Complete" value="['yes', 'true'].include?(@results['Retrieve Assigned Individual']['Exists'].to_s.downcase)">system_tree_return_v1_47</task>
+                    <task label="Doesn't Exist" type="Complete" value="['no', 'false'].include?(@results['Retrieve Assigned Individual']['Exists'].to_s.downcase)">utilities_echo_v1_70</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_space_retrieve_v1" id="routine_kinetic_space_retrieve_v1_83" name="Retrieve Space Default Team" x="429" y="440">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_73</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_84" name="Retrieve Origin Submission" x="979" y="495">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@inputs['Originating Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_discussion_message_to_form_owning_team_create_v1_85</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_discussion_message_to_form_owning_team_create_v1" id="routine_kinetic_discussion_message_to_form_owning_team_create_v1_85" name="Add Discussion Message to Form Owning Team" x="978" y="607">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="Slug of the kapp the form exists in or DATASTORE">&lt;%=@results['Retrieve Origin Submission']['Kapp Slug']%&gt;</parameter>
+                    <parameter id="Form Slug" label="Form Slug" menu="" required="true" tooltip="Slug of the form to add a discussion message to">&lt;%=@results['Retrieve Origin Submission']['Form Slug']%&gt;</parameter>
+                    <parameter id="Message" label="Message" menu="" required="true" tooltip="Discussion Message to create for the given submission">&lt;%=@results['Message to Owning Team']['output']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

@@ -1,0 +1,83 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Teams</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Updated</name>
+        <author></author>
+        <notes></notes>
+        <lastID>24</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="-9" y="1">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Default Team Renamed" type="Complete" value="@team_previous['Name'] == &quot;Default&quot; &amp;&amp; @team['Name'] != &quot;Default&quot;">routine_kinetic_users_retrieve_list_v1_22</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_users_retrieve_list_v1" id="routine_kinetic_users_retrieve_list_v1_22" name="Retrieve All Users" x="253" y="-11">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Query" label="Query" menu="" required="false" tooltip="Query to use to fetch users. All users fetched when left blank">spaceAdmin="true"</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_team_create_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_create_v1" id="routine_kinetic_team_create_v1_23" name="Create Default Team" x="429" y="-21">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The teams name">Default</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="The teams description"></parameter>
+                    <parameter id="Attributes Map JSON" label="Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the team"></parameter>
+                    <parameter id="Memberships List JSON" label="Memberships List JSON" menu="" required="false" tooltip="A JSON array of usernames to be added as team members (ie. ['john.doe', 'jane.doe'])">&lt;%=
+users = JSON.parse(@results['Retrieve All Users']['Users List JSON'])
+users.map{|user| user['username']}.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_24</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_24" name="Finish" x="605" y="1">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

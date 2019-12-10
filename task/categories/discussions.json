@@ -1,0 +1,37 @@
+{
+  "name": "Discussions",
+  "description": "Functions for interacting with Kinetic Discussions",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_discussion_create_v1",
+    "routine_kinetic_discussion_delete_v1",
+    "routine_kinetic_discussion_retrieve_v1",
+    "routine_kinetic_discussion_update_v1",
+    "routine_kinetic_discussions_retrieve_list_v1",
+    "routine_kinetic_invitation_create_v1",
+    "routine_kinetic_invitation_delete_v1",
+    "routine_kinetic_invitation_retrieve_v1",
+    "routine_kinetic_invitation_update_v1",
+    "routine_kinetic_invitations_retrieve_list_v1",
+    "routine_kinetic_message_create_v1",
+    "routine_kinetic_message_delete_v1",
+    "routine_kinetic_message_retrieve_v1",
+    "routine_kinetic_message_update_v1",
+    "routine_kinetic_messages_retrieve_list_v1",
+    "routine_kinetic_participant_create_v1",
+    "routine_kinetic_participant_delete_v1",
+    "routine_kinetic_participant_retrieve_v1",
+    "routine_kinetic_participant_update_v1",
+    "routine_kinetic_participants_retrieve_list_v1",
+    "routine_kinetic_related_item_create_v1",
+    "routine_kinetic_related_item_delete_v1",
+    "routine_kinetic_related_item_retrieve_v1",
+    "routine_kinetic_related_items_retrieve_list_v1"
+  ]
+}

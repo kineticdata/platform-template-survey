@@ -1,0 +1,6 @@
+{
+  "name": "Allow All",
+  "rule": "true",
+  "message": "Unrestricted access",
+  "type": "API Access"
+}

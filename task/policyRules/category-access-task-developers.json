@@ -1,0 +1,6 @@
+{
+  "name": "Task Developers",
+  "rule": "@identity.is_member_of?('Role::Task Developer') ||\n@identity.get_property('spaceAdmin') == 'true'",
+  "message": "Must be a member of the Task Developers role.",
+  "type": "Category Access"
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "If the queue task is allowed to be reassigned to other teams.",
+    "name": "Allow Reassignment"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Teams that can be assigned work for this queue task.",
+    "name": "Assignable Teams"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Dictates if the App should present an assignment selector before displaying a form",
+    "name": "Assignment Type"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "If the form has custom submission workflow for a given event, the name of the event (i.e. Created, Saved, Submitted...etc) should be listed as one of the attribute values",
+    "name": "Custom Submission Workflow"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this form",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Form Configuration"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Notification template used when a submission has been completed.",
+    "name": "Notification Template Name - Complete"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Notification to send when tasks are created for this form",
+    "name": "Notification Template Name - Create"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "The Team that can access this service from Queue",
+    "name": "Owning Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "A comma separated list of subtasks that are allowed to be 'attached' to this work order / subtask. If this attribute is blank or missing, all subtasks are allowed.",
+    "name": "Permitted Subtasks"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "'True' or 'Yes' means that work orders / subtasks of this type are not allowed to have related items; the 'Add' button will not be visible / enabled.",
+    "name": "Prohibit Subtasks"
+  }
+]

@@ -1,0 +1,450 @@
+{
+  "anonymous": false,
+  "attributes": [
+    {
+      "name": "Custom Submission Workflow",
+      "values": [
+        "Submitted"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-address-book-o"
+      ]
+    },
+    {
+      "name": "Owning Team",
+      "values": [
+        "Administrators"
+      ]
+    }
+  ],
+  "bridgedResources": [
+    {
+      "model": "Team",
+      "name": "Roles",
+      "order": [
+        {
+          "attribute": "Name",
+          "direction": "asc"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "qualification": "All Roles",
+      "status": "Active"
+    },
+    {
+      "model": "Team",
+      "name": "Teams",
+      "order": [
+        {
+          "attribute": "Name",
+          "direction": "asc"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "qualification": "All Teams",
+      "status": "Active"
+    },
+    {
+      "model": "Person",
+      "name": "Users",
+      "order": [
+        {
+          "attribute": "Username",
+          "direction": "asc"
+        }
+      ],
+      "parameters": [
+
+      ],
+      "qualification": "All",
+      "status": "Active"
+    }
+  ],
+  "categorizations": [
+
+  ],
+  "customHeadContent": "<style>\n  .modal-dialog {\n   max-width: 60%; \n  }\n</style>",
+  "description": "Form used for inviting others to the system.",
+  "name": "Invite Users",
+  "notes": null,
+  "pages": [
+    {
+      "advanceCondition": null,
+      "displayCondition": null,
+      "displayPage": "",
+      "elements": [
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "HTML Panels",
+          "title": null,
+          "visible": true,
+          "omitWhenHidden": null,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "content",
+              "renderType": "html",
+              "name": "Add Users Tables",
+              "text": "<div id=\"inviteUsersContainer\" class=\"section\">\n  <h3 class=\"text-center\">Invite others to kinops</h3>\n  <p class=\"text-center\">\n    The form below will help you quickly invite your teammates to join kinops.\n    <br />\n    <br />\n    <strong>Note:</strong> You only need to provide an email address to invite\n    someone. They can configure their profiles once they sign in. Configuring\n    someone as a \"Space Admin\" will give them full admin access to the system.\n  </p>\n  <br />\n  <div class=\"message\" />\n  <br />\n  <div class=\"row clearfix\">\n    <div class=\"col-md-12 column\">\n      <table class=\"table table-bordered table-hover\" id=\"new-users\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">\n              Email <small>(required)</small>\n            </th>\n            <th class=\"text-center\">Roles</th>\n            <th class=\"text-center\">Teams</th>\n            <th class=\"text-center\">Space Admin</th>\n            <th />\n          </tr>\n        </thead>\n        <tbody />\n      </table>\n    </div>\n  </div>\n</div>",
+              "visible": true,
+              "renderAttributes": {
+              }
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Questions",
+          "title": "Questions",
+          "visible": false,
+          "omitWhenHidden": true,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "field",
+              "name": "Description",
+              "label": "Description",
+              "key": "f1",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Footer",
+          "title": null,
+          "visible": true,
+          "omitWhenHidden": null,
+          "renderAttributes": {
+            "class": "text-right"
+          },
+          "elements": [
+            {
+              "type": "button",
+              "label": "Invite Now!",
+              "name": "Submit",
+              "visible": true,
+              "enabled": true,
+              "renderType": "custom",
+              "renderAttributes": {
+              },
+              "events": [
+                {
+                  "name": "Validate and Submit",
+                  "type": "Click",
+                  "action": "Custom",
+                  "code": "var newUsers = [];\nvar errors = false;\n\n$('#new-users tbody tr').each(function(){\n\tvar email = $(this).find('input[name=\"email\"]').val()\n\tif (!_.isEmpty(email)){\n\t\tif (validateEmail(email)){\n\n\t\t\t// Build Teams Array\n\t\t\tteams = $(this).find('select[name=\"teams\"]').val() || [];\n\t\t\trole = \"Role::\" + $(this).find('select[name=\"roles\"]').val();\n\t\t\tteams.push(role);\n\n\t\t\t// Build New User Object\n\t\t\tnewUser = {\n\t\t\t\temail: $(this).find('input[name=\"email\"]').val(),\n\t\t\t\tdisplayName: $(this).find('input[name=\"email\"]').val(),\n\t\t\t\tprofileAttributes: [],\n\t\t\t\tteams: teams,\n\t\t\t\tspaceAdmin: $(this).find('input[name=\"spaceAdmin\"]').is(':checked')\n\t\t\t}\n\n\t\t\t// Push new user to new users array\n\t\t\tnewUsers.push(newUser);\n\t\t} else {\n\t\t\t$(this).first('td input span').text('Please enter a valid email!');\n\t\t\t$(this).addClass('has-error');\n\t        errors = true;\n\t\t}\n\t}\n});\n\nif (!errors && !_.isEmpty(newUsers)){\n\tK('field[Users JSON]').value(JSON.stringify(newUsers));\n\tK('form').submitPage();\n} else if (_.isEmpty(newUsers)){\n\t$('#inviteUsersContainer div.message').notifie({ type: 'alert', message: K.translate('bundle','Enter some users to invite!')});\n}\n\nfunction validateEmail(email) {\n  \tvar re = /^(([^<>()[\\]\\\\.,;:\\s@\\\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/;\n \treturn re.test(email);\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "renderType": null,
+          "name": "Hidden System Questions Do Not Delete",
+          "title": "Hidden System Questions Do Not Delete",
+          "visible": false,
+          "omitWhenHidden": false,
+          "renderAttributes": {
+          },
+          "elements": [
+            {
+              "type": "field",
+              "name": "Users JSON",
+              "label": "Users JSON",
+              "key": "f910",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Requested For",
+              "label": "Requested For",
+              "key": "f908",
+              "defaultValue": "${identity('username')}",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Requested For Display Name",
+              "label": "Requested For Display Name",
+              "key": "f909",
+              "defaultValue": "${identity('displayName')}",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Requested By",
+              "label": "Requested By",
+              "key": "f906",
+              "defaultValue": "${identity('username')}",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Requested By Display Name",
+              "label": "Requested By Display Name",
+              "key": "f907",
+              "defaultValue": "${identity('displayName')}",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Discussion Id",
+              "label": "Discussion Id",
+              "key": "f902",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            },
+            {
+              "type": "field",
+              "name": "Observing Teams",
+              "label": "Observing Teams",
+              "key": "f904",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "json",
+              "renderType": "checkbox",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Observing Individuals",
+              "label": "Observing Individuals",
+              "key": "f905",
+              "defaultValue": null,
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "json",
+              "renderType": "checkbox",
+              "choicesResourceName": null,
+              "choicesRunIf": null,
+              "choices": [
+
+              ]
+            },
+            {
+              "type": "field",
+              "name": "Status",
+              "label": "Status",
+              "key": "f901",
+              "defaultValue": "Draft",
+              "defaultResourceName": null,
+              "visible": true,
+              "enabled": true,
+              "required": false,
+              "requiredMessage": null,
+              "omitWhenHidden": null,
+              "pattern": null,
+              "constraints": [
+
+              ],
+              "events": [
+
+              ],
+              "renderAttributes": {
+              },
+              "dataType": "string",
+              "renderType": "text",
+              "rows": 1
+            }
+          ]
+        }
+      ],
+      "events": [
+        {
+          "name": "Initialize User Table",
+          "type": "Load",
+          "action": "Custom",
+          "code": "// Hide Submit button while table loads\nK(\"button[Submit]\").hide();\n$(\"#inviteUsersContainer\").hide();\n\n// Global variable to store users table\nvar table = $(\"#new-users\");\nvar teams;\nvar roles;\nvar currentUsers;\nvar newUsers;\n\n// Build up variables to store teams/users from bridge\nvar deferredTeams = jQuery.Deferred();\nvar deferredRoles = jQuery.Deferred();\nvar deferredUsers = jQuery.Deferred();\n\n// Get Teams from Bridge\nK(\"bridgedResource[Teams]\").load({\n  attributes: [\"Name\"],\n  success: function(bridgedData) {\n    deferredTeams.resolve(\n      bridgedData.map(function(item) {\n        return item.Name;\n      })\n    );\n  }\n});\n\n// Get Roles from Bridge\nK(\"bridgedResource[Roles]\").load({\n  attributes: [\"Name\"],\n  success: function(bridgedData) {\n    deferredRoles.resolve(\n      bridgedData.map(function(item) {\n        return item.Name.split(\"::\")[1];\n      })\n    );\n  }\n});\n// Get Users from Bridge\nK(\"bridgedResource[Users]\").load({\n  attributes: [\"Email\"],\n  success: function(bridgedData) {\n    deferredUsers.resolve(\n      bridgedData.map(function(item) {\n        return item.Email;\n      })\n    );\n  }\n});\n\n// Wait for Bridge to finish executing\n$.when(\n  deferredTeams.promise(),\n  deferredRoles.promise(),\n  deferredUsers.promise()\n).then(function(t, r, u) {\n  // Store Users & teams in global variables\n  teams = t;\n  //roles = r;\n  // Temporary workaround to only allow for specific roles to be added to the roles list.\n  // TODO: add attribute to the Roles Teams that we can use to filter the list here or in the bridge call.\n  roles = [\"Contractor\", \"Employee\", \"Vendor\"];\n  users = u;\n\n  // Build the table\n  initializeTable();\n});\n\n// Initialize Users Table\nfunction initializeTable(teams, roles) {\n  // Add two initial rows to the table\n  $(table)\n    .find(\"tbody\")\n    .append(buildRow());\n  $(table)\n    .find(\"tbody\")\n    .append(buildRow());\n\n  // Build a last row that will be used to add more rows\n  lastRow = buildRow();\n\n  // Build functionality to make the last row always add another row.\n  $(lastRow).attr(\"id\", \"addARowRow\");\n  $(lastRow)\n    .find(\"input\")\n    .click(function() {\n      $(buildRow()).insertBefore($(\"#addARowRow\"));\n      $(\"#addARowRow\")\n        .prev()\n        .find('input[name=\"email\"]')\n        .focus();\n    });\n  // Add the last row to the table\n  $(table)\n    .find(\"tbody\")\n    .append(lastRow);\n\n  // Display the Table and Submit Button\n  $(\"#inviteUsersContainer\").fadeIn({ duration: 1000 });\n  K(\"button[Submit]\").show();\n\n  // Populate link to User Management in the admin kapp\n  $(\"h5 a.userManagementLink\").attr(\n    \"href\",\n    \"/\" + bundle.spaceSlug() + \"/\" + bundle.config.adminKappSlug + \"/users\"\n  );\n}\n\nfunction buildRow() {\n  var newRow = $(\"<tr>\").append(\n    $(\"<td>\").append(\n      $(\"<div>\", { class: \"form-group\" }).append(\n        $(\"<input>\", {\n          type: \"text\",\n          placeholder: \"Email\",\n          name: \"email\",\n          class: \"form-control\"\n        }),\n        $(\"<span>\", { class: \"help-block text-center\" })\n      )\n    ),\n    $(\"<td>\").append(\n      $(\"<select>\", { name: \"roles\" }).append(buildOptions(roles))\n    ),\n    $(\"<td>\").append(\n      $(\"<select>\", {\n        multiple: \"multiple\",\n        name: \"teams\"\n      }).append(buildOptions(teams))\n    ),\n    $(\"<td>\").append(\n      $(\"<center>\").append(\n        $(\"<input>\", { type: \"checkbox\", name: \"spaceAdmin\" })\n      )\n    ),\n    $(\"<td>\", { align: \"center\" }).append(\n      $(\"<button>\", {\n        title: \"Remove\",\n        class: \"btn btn-xs btn-danger remove\"\n      }).append($(\"<span>\", { class: \"fa fa-times fa-fw\" }))\n    )\n  );\n\n  return newRow;\n}\n\n// Function used to build up options Array\nfunction buildOptions(optionsArray) {\n  var options = \"\";\n  $.each(optionsArray, function() {\n    // TODO: add a defualt attribute to Roles Teams then chage this conditional to pick up on that attribute.\n    if (this == \"Employee\") {\n      options += '<option value=\"' + this + '\"  selected>' + this + \"</option>\";\n    } else {\n      options += '<option value=\"' + this + '\">' + this + \"</option>\";\n    }\n  });\n  return options;\n}\n\nfunction validateEmail(email) {\n  var re = /^(([^<>()[\\]\\\\.,;:\\s@\\\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/;\n  return re.test(email);\n}\n\n// Add Row Click Handler\n$(\"a#add_row\").click(function() {\n  addEmptyRow();\n});\n\n// Validate Entered Email Address (ensure user doesn't already exist)\n$(table).delegate('tr td input[name=\"email\"]', \"blur\", function(e) {\n  enteredVal = $(this).val();\n  if (!_.isEmpty(enteredVal) && users.includes(enteredVal)) {\n    $(this)\n      .next()\n      .text(\"This user already exists!\");\n    $(this)\n      .parent()\n      .addClass(\"has-error\");\n    $(this).val(null);\n    $(this).focus();\n  } else if (!_.isEmpty(enteredVal) && !validateEmail(enteredVal)) {\n    $(this)\n      .next()\n      .text(\"Please enter a valid email!\");\n    $(this)\n      .parent()\n      .addClass(\"has-error\");\n    $(this).focus();\n  } else {\n    $(this)\n      .parent()\n      .removeClass(\"has-error\");\n    $(this)\n      .next()\n      .text(\"\");\n  }\n});\n\n// Delete Row Click Handler\n$(table).delegate(\"button.remove\", \"click\", function(e) {\n  var tr = $(this).closest(\"tr\");\n  if ($(tr).attr(\"id\") !== \"addARowRow\") {\n    $(this)\n      .closest(\"tr\")\n      .remove();\n  }\n});\n\n// Clone Row Click Handler\n$(table).delegate(\"button.clone\", \"click\", function(e) {\n  // Clone the selected Row\n  newRow = $(this)\n    .closest(\"tr\")\n    .clone();\n  // Get a list of the Teams that were previously selected\n  var selectedTeams = $(this)\n    .closest(\"tr\")\n    .find(\"select\")\n    .val();\n  // Remove the bootstrap-select plugin\n  $(newRow)\n    .find(\".bootstrap-select\")\n    .replaceWith(function() {\n      return $(\"select\", this);\n    });\n  // Re-create the select-picker plugin\n  $(newRow)\n    .find(\"td select.selectpicker\")\n    .selectpicker({ iconBase: \"fa\", tickIcon: \"fa-check\" });\n  $(newRow)\n    .find(\"td select.selectpicker\")\n    .selectpicker(\"val\", selectedTeams);\n  // Append the new row to the table\n  $(newRow).insertBefore($(\"#addARowRow\"));\n  $(\"#addARowRow\")\n    .prev()\n    .find('input[name=\"email\"]')\n    .focus();\n});\n",
+          "bridgedResourceName": null
+        }
+      ],
+      "name": "Page 1",
+      "renderType": "submittable",
+      "type": "page"
+    }
+  ],
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Submission Access",
+      "name": "Admins"
+    }
+  ],
+  "slug": "invite-users",
+  "status": "Active",
+  "submissionLabelExpression": "${form('name')}",
+  "type": "Utility"
+}

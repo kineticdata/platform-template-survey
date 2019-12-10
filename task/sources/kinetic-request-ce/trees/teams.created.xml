@@ -1,0 +1,108 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Teams</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>19</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="153" y="142">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_discussion_create_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_team_update_v1" id="routine_kinetic_team_update_v1_16" name="Set Discussion Id" x="486" y="121">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Current Name" label="Current Name" menu="" required="true" tooltip="The Teams current name">&lt;%= @team['Name']%&gt;</parameter>
+                    <parameter id="Updated - Name" label="Updated - Name" menu="" required="false" tooltip="The updated name - may be omitted"></parameter>
+                    <parameter id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="The updated description"></parameter>
+                    <parameter id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="Include only attributes that need to be updated">&lt;%={"Discussion Id" =&gt; [@results['Create Discussion']['Id']]}.to_json %&gt;</parameter>
+                    <parameter id="Updated - Memberships List JSON" label="Updated - Memberships List JSON" menu="" required="false" tooltip="A JSON array of usernames to be added as team members. This will replace existing team members (ie. ['john.doe', 'jane.doe'])"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_related_item_create_v1_18</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_17" name="Finish" x="811" y="133">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_related_item_create_v1" id="routine_kinetic_related_item_create_v1_18" name="Relate Discussion to Team" x="627" y="120">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Create Discussion']['Id']%&gt;</parameter>
+                    <parameter id="Key" label="Key" menu="" required="true" tooltip="Unique identifier for the related item">&lt;%= @team['Slug']%&gt;</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of related item relationship (name or label)">Team</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_discussion_create_v1" id="routine_kinetic_discussion_create_v1_19" name="Create Discussion" x="309" y="131">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Title" label="Title" menu="" required="true" tooltip="The title of the discussion">&lt;%= @team['Name']%&gt; Team Discussion</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="The description of the discussion">Primary Discussion for Team</parameter>
+                    <parameter id="Is Archived" label="Is Archived" menu="" required="false" tooltip="Archived discussions do not allow new messages"></parameter>
+                    <parameter id="Is Private" label="Is Private" menu="" required="false" tooltip="Private discussions only allow explicitly invited users to view"></parameter>
+                    <parameter id="Join Policy Name" label="Join Policy Name" menu="" required="false" tooltip="The name of the security policy for allowing users to join"></parameter>
+                    <parameter id="Owning Users" label="Owning Users" menu="" required="false" tooltip="A comma separated list of usernames allowed to manage the discussion"></parameter>
+                    <parameter id="Owning Teams" label="Owning Teams" menu="" required="false" tooltip="A comma separated list of team names allowed to manage the discussion">&lt;%=@team['Name']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_team_update_v1_16</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

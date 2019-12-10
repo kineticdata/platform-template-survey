@@ -1,0 +1,467 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > services</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Submitted</name>
+        <author></author>
+        <notes></notes>
+        <lastID>81</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="-34" y="-165">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_service_portal_submission_config_v1_62</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_29" name="Outcome" x="1061" y="-46">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%= outcome = "Completed"
+if @results.has_key?('Status - Cancelled')
+  outcome = "Cancelled"
+elsif @results.has_key?('Status - Approval - Denied')
+  outcome = "Denied"
+end
+outcome%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_74</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_58" name="Approval - Continue" x="341" y="275">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_status_v1_68</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_59" name="Fulfillment - Continue" x="791" y="-55">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_29</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_config_v1" id="routine_kinetic_solutions_service_portal_submission_config_v1_62" name="Build Config" x="-34" y="-88">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="false" tooltip="Submission Source Data Used to Build Configuration">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_status_v1_63</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_63" name="Status - Submitted" x="-32" y="-22">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Submitted</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_service_portal_submission_sla_v1_81</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_65" name="Create Activity Record" x="-34" y="263">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to create the activity record for">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Data" label="Data" menu="" required="false" tooltip="Data to store in the submission activity">&lt;%={"Comments"=&gt;"Your request has been successfully received"}.to_json%&gt;</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity">Your Request Was Successfully Submitted</parameter>
+                    <parameter id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">Submission Received</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">Submission Submitted</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No Approval" type="Complete" value="@results['Build Config']['Approver'].to_s.empty?">system_junction_v1_58</task>
+                    <task label="Approval" type="Complete" value="!@results['Build Config']['Approver'].to_s.empty?">routine_kinetic_submission_update_status_v1_67</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_66" name="Status - Approval - Denied" x="342" y="-66">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Denied</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_59</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_67" name="Status - Pending Approval" x="153" y="176">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Pending Approval</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_service_portal_submission_approval_v1_77</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_68" name="Status - In Progress" x="539" y="265">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">In Progress</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_queue_task_create_v1_78</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_69" name="Approval Task Id" x="219" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@trigger['Message'].to_s.gsub("TASK_ID:", "")%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_70" name="Fulfillment Task Id" x="505" y="56">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=@trigger['Message'].to_s.gsub("TASK_ID:", "")%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_71" name="Retrieve Task Answers" x="779" y="158">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%=@results['Create Task']['Task Submission Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Cancelled" type="Complete" value="JSON.parse(@results['Retrieve Task Answers']['Values JSON']).has_key?('Status') &amp;&amp; JSON.parse(@results['Retrieve Task Answers']['Values JSON'])['Status'] == &quot;Cancelled&quot;">routine_kinetic_submission_update_status_v1_72</task>
+                    <task label="Not Cancelled" type="Complete" value="(JSON.parse(@results['Retrieve Task Answers']['Values JSON']).has_key?('Status') &amp;&amp; JSON.parse(@results['Retrieve Task Answers']['Values JSON'])['Status'] != &quot;Cancelled&quot;) || !JSON.parse(@results['Retrieve Task Answers']['Values JSON']).has_key?('Status')">routine_kinetic_submission_update_status_v1_73</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_72" name="Status - Cancelled" x="662" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Cancelled</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_59</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_status_v1" id="routine_kinetic_submission_update_status_v1_73" name="Status - Complete" x="932" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the Submission that is being updated">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Status" label="Status" menu="" required="true" tooltip="Status to set the submission to. (e.g. Submitted, In Progress)">Complete</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_59</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_74" name="Submission Completed Activity Record" x="1051" y="33">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to create the activity record for">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Data" label="Data" menu="" required="false" tooltip="Data to store in the submission activity">&lt;%={"Comments"=&gt;"Your request has been successfully completed"}.to_json%&gt;</parameter>
+                    <parameter id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity">Your Request Was Successfully Completed</parameter>
+                    <parameter id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">Submission Complete</parameter>
+                    <parameter id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">Submission Completed</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_80</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_75" name="Close Submission" x="1061" y="265">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state">Closed</parameter>
+                    <parameter id="Updated - Current Page" label="Updated - Current Page" menu="" required="false" tooltip="The submissions current page"></parameter>
+                    <parameter id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_finish_v1_76</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_finish_v1" id="routine_kinetic_finish_v1_76" name="Finish" x="1055" y="363">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Run Id" label="Run Id" menu="" required="false" tooltip="The Id of the completed run">&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_approval_v1" id="routine_kinetic_solutions_service_portal_submission_approval_v1_77" name="Create Approval" x="340" y="119">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Approver" label="Approver" menu="" required="true" tooltip="Options are &quot;Manager&quot;, a username, or a team name">&lt;%=@results['Build Config']['Approver']%&gt;</parameter>
+                    <parameter id="Approval Form Slug" label="Approval Form Slug" menu="" required="true" tooltip="The Slug of the Queue form to create an approval in">&lt;%=@results['Build Config']['Approval Form Slug']%&gt;</parameter>
+                    <parameter id="Details" label="Details" menu="" required="true" tooltip="A description of what is being approved ">&lt;%=@results['Build Config']['Fulfillment Details']%&gt;</parameter>
+                    <parameter id="Originating Submission Id" label="Originating Submission Id" menu="" required="true" tooltip="The Id of the originating submission">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="Service Days Due" label="Service Days Due" menu="" required="true" tooltip="Number of Days until the submission is due to be completed">&lt;%=@results['Build Config']['Service Days Due']%&gt;</parameter>
+                    <parameter id="Queue Kapp Slug" label="Queue Kapp Slug" menu="" required="true" tooltip="The Slug of the Kapp in which this approval should be created">&lt;%=@results['Build Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Summary" label="Summary" menu="" required="true" tooltip="A summary of what is being approved">&lt;%=@results['Build Config']['Fulfillment Summary']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Denied" type="Complete" value="@results['Create Approval']['Decision'].to_s.downcase == &quot;denied&quot;">routine_kinetic_submission_update_status_v1_66</task>
+                    <task label="Task Id Message" type="Update" value="@trigger['Message'].to_s.start_with?(&quot;TASK_ID:&quot;)">utilities_echo_v1_69</task>
+                    <task label="Approved" type="Complete" value="@results['Create Approval']['Decision'].to_s.downcase != &quot;denied&quot;">system_junction_v1_58</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_queue_task_create_v1" id="routine_kinetic_queue_task_create_v1_78" name="Create Task" x="539" y="174">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="Slug of the Queue Kapp">&lt;%=@results['Build Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter id="Task Form Slug" label="Task Form Slug" menu="" required="true" tooltip="Slug of the form the task is created for">&lt;%=@results['Build Config']['Task Form Slug']%&gt;</parameter>
+                    <parameter id="Summary" label="Summary" menu="" required="true" tooltip="A summary of what is to be worked on ">&lt;%=@results['Build Config']['Fulfillment Summary']%&gt;</parameter>
+                    <parameter id="Details" label="Details" menu="" required="true" tooltip="A description of what is to be worked on ">&lt;%=@results['Build Config']['Fulfillment Details']%&gt;</parameter>
+                    <parameter id="Days Due" label="Days Due" menu="" required="true" tooltip="Number of days from now the task is to be completed by">&lt;%=@results['Build Config']['Service Days Due']%&gt;</parameter>
+                    <parameter id="Assignee Team" label="Assignee Team" menu="" required="true" tooltip="Name of the team to assign work to (ex. &quot;Test::Test::Test&quot;)">&lt;%=@results['Build Config']['Task Assignee Team']%&gt;</parameter>
+                    <parameter id="Assignee Id" label="Assignee Id" menu="" required="false" tooltip="Id of the person the task will be assigned to">&lt;%=@results['Build Config']['Task Assignee Individual']%&gt;</parameter>
+                    <parameter id="Originating System" label="Originating System" menu="" required="true" tooltip="Source of the parent record (e.g. Kinetic Core, Salesforce ..etc)">Kinetic Core</parameter>
+                    <parameter id="Originating Id" label="Originating Id" menu="" required="true" tooltip="Id of the originating systems record">&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter id="System Input" label="System Input" menu="" required="false" tooltip="Structured data that can be leveraged by the queue task form"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_71</task>
+                    <task label="Task Id Message" type="Update" value="@trigger['Message'].to_s.start_with?(&quot;TASK_ID:&quot;)">utilities_echo_v1_70</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_79" name="Notify - Submitted" x="-34" y="132">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @submission['Created By']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%=@results['Build Config']['Notification Template Name - Create']%&gt;</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages."></parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_65</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_80" name="Notify - Complete" x="1056" y="165">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @submission['Created By']%&gt;</parameter>
+                    <parameter id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%=@results['Build Config']['Notification Template Name - Complete']%&gt;</parameter>
+                    <parameter id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages.">&lt;%={
+  "Outcome" =&gt; @results['Outcome']['output']
+}.to_json%&gt;</parameter>
+                    <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
+                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Id']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_75</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_service_portal_submission_sla_v1" id="routine_kinetic_solutions_service_portal_submission_sla_v1_81" name="Attach SLA" x="-34" y="66">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Source Data" label="Source Data" menu="" required="true" tooltip="Source Data of the submission">&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_email_template_notification_send_v1_79</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

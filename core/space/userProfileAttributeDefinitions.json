@@ -1,0 +1,32 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "Allows a user to choose the default Kapp they see when they login.",
+    "name": "Default Kapp Display"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "First Name"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Used to configure which guided tour should be displayed",
+    "name": "Guided Tour"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "Last Name"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Phone Number"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Personal Filters used within the Queue Kapp.",
+    "name": "Queue Personal Filters"
+  }
+]

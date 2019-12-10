@@ -1,0 +1,22 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "True or False if this team should be used in Queue Kapp Assignments",
+    "name": "Assignable"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "JSON object that defines the default filter configuration when this team is selected in Queue",
+    "name": "Default Queue Filter"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The guid of the response discussion used by this team.",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Icon that represents this Team",
+    "name": "Icon"
+  }
+]

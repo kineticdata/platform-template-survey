@@ -1,0 +1,82 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "The Queue kapp form which approvals related to this form should be created in (Kapp setting is used if not set here)",
+    "name": "Approval Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Options are: Team Name, Individual Name or Manager",
+    "name": "Approver"
+  },
+  {
+    "allowsMultiple": false,
+    "description": null,
+    "name": "Console Slug"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "If the form has custom submission workflow for a given event, the name of the event (i.e. Created, Saved, Submitted...etc) should be listed as one of the attribute values",
+    "name": "Custom Submission Workflow"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this form",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Font Awesome Icon Class",
+    "name": "Icon"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the Notification Template to use when this forms submission is completed. (Defaults to Kapp setting when not set at the Form Level)",
+    "name": "Notification Template Name - Complete"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the Notification Template to use when this forms submission is submitted. (Defaults to Kapp setting when not set at the Form Level)",
+    "name": "Notification Template Name - Create"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Team that owns and manages this service (Defaults to Kapp Attribute when not set here)",
+    "name": "Owning Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Number of days until service is expected to be fulfilled - Defaults to Kapp Attribute if not set here.",
+    "name": "Service Days Due"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Active",
+    "name": "Statuses - Active"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Cancelled",
+    "name": "Statuses - Cancelled"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Submissions with a status value included in this attribute will be considered Inactive",
+    "name": "Statuses - Inactive"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "User to assign tasks to when this form is submitted.",
+    "name": "Task Assignee Individual"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Team to assign tasks to when this form is submitted.",
+    "name": "Task Assignee Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The form to use when creating a fulfillment task for this item",
+    "name": "Task Form Slug"
+  }
+]

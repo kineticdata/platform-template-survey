@@ -1,0 +1,26 @@
+[
+  {
+    "message": "Must be an administrator.",
+    "name": "Admins",
+    "rule": "/* \n * Space admins are allowed access regardless of the the result of security \n * policies.  Returning 'false' denies anyone but a space access. \n */\nfalse",
+    "type": "Space"
+  },
+  {
+    "message": "Must be authenticated.",
+    "name": "Authenticated Users",
+    "rule": "identity('authenticated')",
+    "type": "Space"
+  },
+  {
+    "message": "Only users with the role Data Admin have access to this resource.",
+    "name": "Data Admins",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  // Data Admins\n  return hasIntersection(identity('teams'), ['Role::Data Admin']);\n})()\n",
+    "type": "Datastore Form"
+  },
+  {
+    "message": "Everyone is allowed access.",
+    "name": "Everyone",
+    "rule": "true",
+    "type": "Space"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "name": "Kapps",
+  "description": "Functions for interacting with Kinetic Kapps",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_kapp_create_v1",
+    "routine_kinetic_kapp_delete_v1",
+    "routine_kinetic_kapp_retrieve_v1",
+    "routine_kinetic_kapp_update_v1",
+    "routine_kinetic_kapps_retrieve_list_v1"
+  ]
+}

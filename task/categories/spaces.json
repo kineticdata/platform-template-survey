@@ -1,0 +1,15 @@
+{
+  "name": "Spaces",
+  "description": "Functions for interacting with Kinetic Spaces",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_space_retrieve_v1",
+    "routine_kinetic_space_update_v1"
+  ]
+}

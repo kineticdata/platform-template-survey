@@ -1,0 +1,137 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "Slug of this spaces Admin Kapp (typically admin)",
+    "name": "Admin Kapp Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Slug of the Admin Kapp form that is used for managing system alerts (typically 'alerts').",
+    "name": "Alerts Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Queue kapp form which approvals should be created in (Overridden by Kapp and Form Attributes)",
+    "name": "Approval Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Slug of this spaces Catalog Kapp (typically catalog)",
+    "name": "Catalog Kapp Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used by users to request their manager be changed.",
+    "name": "Change Manager Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Allows Space Administrators to set a default Kapp that will display for Users in their Space. This can be overridden by a User Profile Attribute.",
+    "name": "Default Kapp Display"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "If set to true, users won't be able to request their own accounts. Only system administrators will be able to grant them access.",
+    "name": "Disable Self Sign Up"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this space",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Url of this spaces response server",
+    "name": "Discussion Server Url"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used for collecting feedback about the kinops portal.",
+    "name": "Feedback Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used by users to get help within the kinops portal.",
+    "name": "Help Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Any users whose usernames match this regular expression, will not be shown in the Kapp.",
+    "name": "Hidden Users Regex"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used by Admins to mass invite others to kinops",
+    "name": "Invite Others Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the Space Bundle which allows for sharing of libraries between bundles.",
+    "name": "Libraries Bundle Path"
+  },
+  {
+    "allowsMultiple": true,
+    "description": "Team that owns and manages the system (overridden by kapp and form attributes)",
+    "name": "Owning Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Slug of this spaces Queue Kapp (typically queue)",
+    "name": "Queue Kapp Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used for requesting an alert be displayed in the kinops portal.",
+    "name": "Request Alert Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Number of days until service is expected to be fulfilled - Overridden by Form / Kapp Attribute",
+    "name": "Service Days Due"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Form used to request a new service be added to the catalog.",
+    "name": "Suggest a Service Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Username of user to assign tasks to if not defined in a form or kapp.",
+    "name": "Task Assignee Individual"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Team to assign tasks to if not defined in a form or kapp.",
+    "name": "Task Assignee Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "The Queue kapp form to use when creating a task item (Overridden by Kapp and Form Attributes)",
+    "name": "Task Form Slug"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name or address and port of the task server if not 80 or 443. (ex. kinops.io)",
+    "name": "Task Server Host"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "http or https",
+    "name": "Task Server Scheme"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Url of this spaces workflow engine",
+    "name": "Task Server Url"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Name of the source for this space in the workflow engine",
+    "name": "Task Source Name"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Url of the request web server that this space exists",
+    "name": "Web Server Url"
+  }
+]

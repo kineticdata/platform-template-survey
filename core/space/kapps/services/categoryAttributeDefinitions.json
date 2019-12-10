@@ -1,0 +1,32 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "The Discussion Id related to this category",
+    "name": "Discussion Id"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Determines if the Category should be hidden or not on the category page.",
+    "name": "Hidden"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Font Awesome Icon Class",
+    "name": "Icon"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Category Label",
+    "name": "Label"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "If the category has a parent, the parent category slug is set here",
+    "name": "Parent"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Order in which this category should appear",
+    "name": "Sort Order"
+  }
+]

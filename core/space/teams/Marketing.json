@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "name": "Assignable",
+      "values": [
+        "True"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-film"
+      ]
+    }
+  ],
+  "description": "",
+  "name": "Marketing",
+  "slug": "7cb15e416d62919b1b40298324fbe30b"
+}

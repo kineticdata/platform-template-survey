@@ -1,0 +1,225 @@
+{
+  "attributes": [
+    {
+      "name": "Datastore Configuration",
+      "values": [
+        "[]"
+      ]
+    }
+  ],
+  "bridgedResources": [
+
+  ],
+  "customHeadContent": null,
+  "description": "Form used to track Search History from within the system.",
+  "indexDefinitions": [
+    {
+      "name": "createdAt",
+      "parts": [
+        "createdAt"
+      ],
+      "unique": false
+    },
+    {
+      "name": "createdBy",
+      "parts": [
+        "createdBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "handle",
+      "parts": [
+        "handle"
+      ],
+      "unique": false
+    },
+    {
+      "name": "submittedAt",
+      "parts": [
+        "submittedAt"
+      ],
+      "unique": false
+    },
+    {
+      "name": "submittedBy",
+      "parts": [
+        "submittedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "updatedAt",
+      "parts": [
+        "updatedAt"
+      ],
+      "unique": false
+    },
+    {
+      "name": "updatedBy",
+      "parts": [
+        "updatedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "values[Kapp Slug]",
+      "parts": [
+        "values[Kapp Slug]"
+      ],
+      "unique": false
+    },
+    {
+      "name": "values[Number of Results Found]",
+      "parts": [
+        "values[Number of Results Found]"
+      ],
+      "unique": false
+    },
+    {
+      "name": "values[Search Term]",
+      "parts": [
+        "values[Search Term]"
+      ],
+      "unique": false
+    }
+  ],
+  "name": "Search History",
+  "notes": null,
+  "pages": [
+    {
+      "advanceCondition": "false",
+      "displayCondition": null,
+      "displayPage": "",
+      "elements": [
+        {
+          "type": "field",
+          "name": "Search Term",
+          "label": "Search Term",
+          "key": "fSample",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": true,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "field",
+          "name": "Number of Results Found",
+          "label": "Number of Results Found",
+          "key": "f3",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": true,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "field",
+          "name": "Kapp Slug",
+          "label": "Kapp Slug",
+          "key": "f2",
+          "defaultValue": null,
+          "defaultResourceName": null,
+          "visible": true,
+          "enabled": true,
+          "required": true,
+          "requiredMessage": null,
+          "omitWhenHidden": null,
+          "pattern": null,
+          "constraints": [
+
+          ],
+          "events": [
+
+          ],
+          "renderAttributes": {
+          },
+          "dataType": "string",
+          "renderType": "text",
+          "rows": 1
+        },
+        {
+          "type": "button",
+          "label": "Save",
+          "name": "Save",
+          "visible": "bundle.adminDatastore != null",
+          "enabled": true,
+          "renderType": "submit-page",
+          "renderAttributes": {
+            "class": "btn btn-tertiary"
+          }
+        },
+        {
+          "type": "button",
+          "label": "Cancel",
+          "name": "Cancel",
+          "visible": "bundle.adminDatastore != null",
+          "enabled": true,
+          "renderType": "custom",
+          "renderAttributes": {
+            "class": "btn btn-link cancel-record"
+          },
+          "events": [
+
+          ]
+        }
+      ],
+      "events": [
+
+      ],
+      "name": "Datastore",
+      "renderType": "submittable",
+      "type": "page"
+    }
+  ],
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Authenticated Users"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Admins"
+    },
+    {
+      "endpoint": "Submission Access",
+      "name": "Data Admins"
+    },
+    {
+      "endpoint": "Submission Modification",
+      "name": "Admins"
+    }
+  ],
+  "slug": "search-history",
+  "status": "Active",
+  "submissionLabelExpression": null
+}

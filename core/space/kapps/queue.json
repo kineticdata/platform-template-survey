@@ -1,0 +1,159 @@
+{
+  "afterLogoutPath": null,
+  "attributes": [
+    {
+      "name": "Bundle Package",
+      "values": [
+        "queue"
+      ]
+    },
+    {
+      "name": "Description",
+      "values": [
+        "Work tasks assigned to you or your team"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-list-ul"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Complete",
+      "values": [
+        "Task Completed - Ad-hoc Task"
+      ]
+    },
+    {
+      "name": "Notification Template Name - Create",
+      "values": [
+        "Task Created"
+      ]
+    },
+    {
+      "name": "Owning Team",
+      "values": [
+        "Default"
+      ]
+    }
+  ],
+  "bundlePath": "webpack",
+  "defaultFormConfirmationPage": "space.jsp",
+  "defaultFormDisplayPage": "space.jsp",
+  "defaultSubmissionLabelExpression": "${form('name')}",
+  "displayType": "Display Page",
+  "displayValue": "space.jsp",
+  "fields": [
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k3",
+      "name": "Assigned Individual"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k1",
+      "name": "Assigned Team"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k6",
+      "name": "Deferral Token"
+    },
+    {
+      "dataType": "date",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k5",
+      "name": "Due Date"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k7",
+      "name": "Requested By"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k9",
+      "name": "Requested For"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k11",
+      "name": "Status"
+    }
+  ],
+  "formTypes": [
+    {
+      "name": "Approval"
+    },
+    {
+      "name": "Automated"
+    },
+    {
+      "name": "Console"
+    },
+    {
+      "name": "Subtask"
+    },
+    {
+      "name": "Task"
+    },
+    {
+      "name": "Template"
+    },
+    {
+      "name": "Work Item"
+    }
+  ],
+  "loginPage": "",
+  "name": "Queue",
+  "resetPasswordPage": "",
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Authenticated Users"
+    },
+    {
+      "endpoint": "Form Creation",
+      "name": "Kapp Owners"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Kapp Owners"
+    },
+    {
+      "endpoint": "Default Form Display",
+      "name": "Form Owners - Implicit Owners - Kapp Owners"
+    },
+    {
+      "endpoint": "Default Form Modification",
+      "name": "Form Owners - Kapp Owners"
+    },
+    {
+      "endpoint": "Default Submission Access",
+      "name": "Assigned Team - Assigned Individual - Observers - Creators"
+    },
+    {
+      "endpoint": "Default Submission Modification",
+      "name": "Assigned Team - Assigned Individual - Observers"
+    },
+    {
+      "endpoint": "Submission Support",
+      "name": "Submission Support"
+    }
+  ],
+  "slug": "queue"
+}
