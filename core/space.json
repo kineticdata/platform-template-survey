@@ -158,10 +158,7 @@
   "platformComponents": {
     "agents": [
 
-    ],
-    "task": {
-      "url": "https://space-template.kinops.io/kinetic-task"
-    }
+    ]
   },
   "resetPasswordPage": null,
   "securityPolicies": [
