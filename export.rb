@@ -133,13 +133,24 @@ Dir["#{core_path}/space/bridges/*.json"].each do |filename|
   end
 end
 
-# cleanup filestore key
+# cleanup space
 filename = "#{core_path}/space.json"
 space = JSON.parse(File.read(filename))
+# filestore key
 if space.has_key?("filestore") && space["filestore"].has_key?("key")
   space["filestore"].delete("key")
-  File.open(filename, 'w') { |file| file.write(JSON.pretty_generate(space)) }
 end
+# platform components
+if space.has_key?("platformComponents")
+  if space["platformComponents"].has_key?("task")
+    space["platformComponents"].delete("task")
+  end
+  (space["platformComponents"]["agents"] || []).each do |agent|
+    space["platformComponents"]["agents"]["url"] = ""
+  end
+end
+# rewrite the space file
+File.open(filename, 'w') { |file| file.write(JSON.pretty_generate(space)) }
 
 # cleanup discussion ids
 Dir["#{core_path}/**/*.json"].each do |filename|
