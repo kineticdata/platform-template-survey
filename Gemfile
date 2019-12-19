@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
 
-gem 'kinetic_sdk', '1.0.1'
+gem 'kinetic_sdk', '5.0.0'
