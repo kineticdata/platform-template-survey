@@ -549,7 +549,7 @@ end
 
 # Generate appropriate discussion invites for the requester
 requester_discussion_ids.each do |discussion_id|
-  discussions_sdk.add_invitation_by_username(discussion_id, requester_email)
+  discussions_sdk.add_invitation_by_username(discussion_id, vars["data"]["requesting_user"]["username"])
 end
 
 # re-enable webooks while provisioning requesting user / teams
