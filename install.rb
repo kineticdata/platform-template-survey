@@ -189,22 +189,6 @@ http_options = (vars["http_options"] || {}).each_with_object({}) do |(k, v), res
   result[k.to_sym] = v
 end
 
-### REMOVE ###
-
-discussions_options = http_options.merge({
-  oauth_client_id: oauth_client_prod_bundle["clientId"],
-  oauth_client_secret: oauth_client_prod_bundle["clientSecret"],
-})
-logger.info "HTTP OPTIONS \"#{discussions_options.inspect}\" "
-
-discussions_sdk = KineticSdk::Discussions.new({
-  space_server_url: vars["core"]["server"],
-  space_slug: vars["core"]["space_slug"],
-  username: vars["core"]["service_user_username"],
-  password: vars["core"]["service_user_password"],
-  options: discussions_options,
-})
-
 logger.info "Installing gems for the \"#{template_name}\" template."
 
 # ------------------------------------------------------------------------------
