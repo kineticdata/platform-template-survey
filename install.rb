@@ -501,6 +501,9 @@ discussions_sdk = KineticSdk::Discussions.new({
   options: discussions_options,
 })
 
+# Keep track of which discussions to invite the requester to
+requester_discussion_ids = []
+
 # Create an 'All Company' discussion
 all_company_discussion = discussions_sdk.add_discussion({
   "title" => "All Company",
@@ -518,7 +521,7 @@ space_sdk.add_space_attribute("Discussion Id", all_company_discussion["id"])
 requester_discussion_ids.unshift(all_company_discussion["id"])
 
 # For each of the teams
-(space_sdk.fetch_teams.content["teams"] || []).each do |team|
+(space_sdk.find_teams.content["teams"] || []).each do |team|
 
   # Skip if the team is a Role
   next if team["name"].start_with?("Role::")
