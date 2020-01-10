@@ -487,12 +487,16 @@ space_sdk.find_kapps.content["kapps"].each do |kapp|
 end
 
 # Create a Discussion SDK connection for the requester user
+discussions_options = http_options.merge({
+  oauth_client_id: oauth_client_prod_bundle["clientId"],
+  oauth_client_secret: oauth_client_prod_bundle["clientSecret"],
+})
 discussions_sdk = KineticSdk::Discussions.new({
   space_server_url: vars["core"]["server"],
   space_slug: vars["core"]["space_slug"],
   username: vars["core"]["service_user_username"],
   password: vars["core"]["service_user_password"],
-  options: http_options,
+  options: discussions_options,
 })
 
 # Create an 'All Company' discussion
