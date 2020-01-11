@@ -189,8 +189,6 @@ http_options = (vars["http_options"] || {}).each_with_object({}) do |(k, v), res
   result[k.to_sym] = v
 end
 
-logger.info "Installing gems for the \"#{template_name}\" template."
-
 # ------------------------------------------------------------------------------
 # core
 # ------------------------------------------------------------------------------
