@@ -38,7 +38,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -48,7 +47,6 @@
               "text": "<h4>A Kinetic Task handler failed and needs your attention <small>Details Below</small></h4>\n<dl>\n  <dt>Handler that failed</dt>\n  <dd>${values('Handler Name')}</dd>\n  <dt>Run Id</dt>\n  <dd>${values('Run Id')}</dd>\n  <dt>Error Message</dt>\n  <dd>${values('Error Message')}</dd>\n</dl>\n<h5>You can retry the workflow after correcting the issue, or modify the inputs to this run</h5>",
               "visible": true,
               "renderAttributes": {
-
               }
             },
             {
@@ -71,7 +69,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "radio",
@@ -116,7 +113,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -142,7 +138,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -179,7 +174,6 @@
                 }
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "radio",
@@ -207,7 +201,6 @@
               "text": "<div class=\"row\">\n\t<div class =\"col-10\">\n\t\t<div id=\"inputs\" class=\"form-horizontal\">\n\t\t</div>\n\t</div>\n</div>",
               "visible": "values('Action') === 'Update Inputs'",
               "renderAttributes": {
-
               }
             }
           ]
@@ -220,7 +213,6 @@
           "visible": false,
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -243,7 +235,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -269,7 +260,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -295,7 +285,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -321,7 +310,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -347,7 +335,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -373,7 +360,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -399,7 +385,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -429,7 +414,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -459,7 +443,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -485,7 +468,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "datetime"
@@ -510,7 +492,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -536,7 +517,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -562,7 +542,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "datetime"
@@ -577,7 +556,6 @@
           "visible": false,
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -600,7 +578,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -626,7 +603,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -652,7 +628,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -678,7 +653,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -704,7 +678,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",

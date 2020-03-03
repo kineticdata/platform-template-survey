@@ -8,7 +8,7 @@
         <name>Service Portal Submission SLA</name>
         <author></author>
         <notes></notes>
-        <lastID>81</lastID>
+        <lastID>84</lastID>
         <taskDefinition id="routine_kinetic_solutions_service_portal_submission_sla_v1" name="Service Portal Submission SLA" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -336,8 +336,9 @@ waitTime &lt; 0 ? 0 : waitTime%&gt;</parameter>
                     <message type="Complete"></message>
                 </messages>
                 <dependents>
-                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] == &quot;Closed&quot;">system_tree_return_v1_4</task>
-                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] != &quot;Closed&quot;">system_loop_head_v1_6</task>
+                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] == &quot;Closed&quot; &amp;&amp; @results['Get Submission - Status Check 1']['Exists'] != &quot;false&quot;">system_tree_return_v1_4</task>
+                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 1']['Core State'] != &quot;Closed&quot; &amp;&amp; @results['Get Submission - Status Check 1']['Exists'] != &quot;false&quot;">system_loop_head_v1_6</task>
+                    <task label="Doesn't Exist" type="Complete" value="@results['Get Submission - Status Check 1']['Exists'] == &quot;false&quot;">system_noop_v1_83</task>
                 </dependents>
             </task>
             <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_66" name="Get Submission - Status Check 2" x="494" y="-1">
@@ -355,8 +356,9 @@ waitTime &lt; 0 ? 0 : waitTime%&gt;</parameter>
                     <message type="Complete"></message>
                 </messages>
                 <dependents>
-                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] == &quot;Closed&quot;">system_tree_return_v1_28</task>
-                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] != &quot;Closed&quot;">system_loop_head_v1_22</task>
+                    <task label="Closed" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] == &quot;Closed&quot; &amp;&amp; @results['Get Submission - Status Check 2']['Exists'] != &quot;false&quot;">system_tree_return_v1_28</task>
+                    <task label="Open" type="Complete" value="@results['Get Submission - Status Check 2']['Core State'] != &quot;Closed&quot; &amp;&amp; @results['Get Submission - Status Check 2']['Exists'] != &quot;false&quot;">system_loop_head_v1_22</task>
+                    <task label="Doesn't Exist" type="Complete" value="@results['Get Submission - Status Check 2']['Exists'] == &quot;false&quot;">system_noop_v1_84</task>
                 </dependents>
             </task>
             <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_67" name="1- Notify Default - No Assigned Team" x="143" y="836">
@@ -688,6 +690,34 @@ end
                 <dependents>
                     <task label="" type="Complete" value="">routine_kinetic_solutions_service_portal_submission_config_v1_63</task>
                 </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_83" name="Submission Does Not Exist 1" x="135" y="441">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_84" name="Submission Does Not Exist 2" x="340" y="152">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
             </task>
         </request>
     </taskTree>

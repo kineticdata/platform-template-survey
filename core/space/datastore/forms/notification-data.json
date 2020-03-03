@@ -155,7 +155,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -181,7 +180,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -207,7 +205,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -233,7 +230,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -248,7 +244,7 @@
           "defaultResourceName": null,
           "visible": true,
           "enabled": true,
-          "required": true,
+          "required": "values('Type') !== \"Snippet\"",
           "requiredMessage": null,
           "omitWhenHidden": null,
           "pattern": null,
@@ -259,7 +255,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -285,7 +280,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -311,7 +305,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -337,7 +330,6 @@
 
           ],
           "renderAttributes": {
-
           },
           "dataType": "string",
           "renderType": "text",
@@ -351,7 +343,6 @@
           "enabled": true,
           "renderType": "submit-page",
           "renderAttributes": {
-
           }
         }
       ],

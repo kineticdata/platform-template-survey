@@ -45,7 +45,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -56,7 +55,6 @@
               "visible": "submission('id') !== null",
               "omitWhenHidden": false,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -66,7 +64,6 @@
                   "text": "<h3>Case Status</h3>",
                   "visible": true,
                   "renderAttributes": {
-
                   }
                 },
                 {
@@ -89,7 +86,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "radio",
@@ -134,7 +130,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -160,7 +155,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -186,7 +180,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -212,7 +205,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -228,7 +220,6 @@
               "visible": true,
               "omitWhenHidden": null,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -238,7 +229,6 @@
                   "text": "<h3>Contact Info</h3>",
                   "visible": true,
                   "renderAttributes": {
-
                   }
                 },
                 {
@@ -261,7 +251,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -287,7 +276,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -316,7 +304,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -332,7 +319,6 @@
               "visible": true,
               "omitWhenHidden": null,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -342,7 +328,6 @@
                   "text": "<h3>Case Details</h3>",
                   "visible": true,
                   "renderAttributes": {
-
                   }
                 },
                 {
@@ -365,7 +350,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -391,7 +375,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -409,7 +392,6 @@
           "visible": false,
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -432,7 +414,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -458,7 +439,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -484,7 +464,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -510,7 +489,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -536,7 +514,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -562,7 +539,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -588,7 +564,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -618,7 +593,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -648,7 +622,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "datetime"

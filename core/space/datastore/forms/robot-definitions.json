@@ -324,7 +324,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -347,7 +346,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "datetime"
@@ -372,7 +370,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -398,7 +395,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -424,7 +420,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -450,7 +445,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -466,7 +460,6 @@
           "enabled": true,
           "renderType": "custom",
           "renderAttributes": {
-
           },
           "events": [
             {
@@ -491,7 +484,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -514,7 +506,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -540,7 +531,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -566,7 +556,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -592,7 +581,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "radio",
@@ -629,7 +617,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -642,7 +629,6 @@
               "text": "<div class=\"alert alert-danger\" role=\"alert\">\n  'Runtime Inputs' must be valid JSON or blank. <br>\n  Example: {\"input 1\":\"value 1\",\"input 2\":\"value 2\"}\n</div>",
               "visible": false,
               "renderAttributes": {
-
               }
             },
             {
@@ -665,7 +651,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -681,7 +666,6 @@
           "visible": "values('Embedded') === null  || (values('Embedded') !== null && values('Embedded Display Mode') === \"Advanced\") ",
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -729,7 +713,6 @@
               "visible": "values('Notify Upon Each Run Completion') === \"Yes\"",
               "omitWhenHidden": true,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -752,7 +735,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -778,7 +760,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -795,7 +776,6 @@
           "text": "<hr/>",
           "visible": true,
           "renderAttributes": {
-
           }
         },
         {
@@ -806,7 +786,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -827,7 +806,6 @@
               "visible": true,
               "omitWhenHidden": null,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -850,7 +828,6 @@
 
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "text",
@@ -887,7 +864,6 @@
                     }
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "dropdown",
@@ -952,7 +928,6 @@
                     }
                   ],
                   "renderAttributes": {
-
                   },
                   "dataType": "string",
                   "renderType": "dropdown",
@@ -1043,7 +1018,6 @@
               "visible": "values('Recurrence') == \"yearly\"",
               "omitWhenHidden": true,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -1133,7 +1107,6 @@
               "visible": "values('Recurrence') == \"weekly\" || ((values('Recurrence') == \"monthly\" || values('Recurrence') == \"yearly\") && values('Timing') == \"relative\")",
               "omitWhenHidden": true,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -1665,7 +1638,6 @@
               "visible": "(values('Recurrence') == \"monthly\" || values('Recurrence') == \"yearly\") && values('Timing') == \"absolute\"",
               "omitWhenHidden": true,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -1901,7 +1873,6 @@
 
                               ],
                               "renderAttributes": {
-
                               },
                               "dataType": "string",
                               "renderType": "dropdown",
@@ -2039,7 +2010,6 @@
 
                               ],
                               "renderAttributes": {
-
                               },
                               "dataType": "string",
                               "renderType": "dropdown",
@@ -2369,7 +2339,6 @@
                                   "enabled": true,
                                   "renderType": "custom",
                                   "renderAttributes": {
-
                                   },
                                   "events": [
                                     {
@@ -2399,7 +2368,6 @@
           "text": "<hr/>",
           "visible": true,
           "renderAttributes": {
-
           }
         },
         {
@@ -2410,7 +2378,6 @@
           "visible": "values('Embedded') === null  || (values('Embedded') !== null  && values('Embedded Display Mode') === \"Advanced\") ",
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -2460,7 +2427,6 @@
                         }
                       ],
                       "renderAttributes": {
-
                       },
                       "dataType": "string",
                       "renderType": "datetime"
@@ -2540,7 +2506,6 @@
                         }
                       ],
                       "renderAttributes": {
-
                       },
                       "dataType": "string",
                       "renderType": "datetime"
@@ -2580,7 +2545,6 @@
               "text": "<hr/>",
               "visible": true,
               "renderAttributes": {
-
               }
             },
             {
@@ -2601,7 +2565,6 @@
                   "text": "Next scheduled execution (local time): <b><span id=\"next-scheduled-execution\"></span></b>",
                   "visible": true,
                   "renderAttributes": {
-
                   }
                 }
               ]
@@ -2614,7 +2577,6 @@
               "visible": "values('End Date') != null",
               "omitWhenHidden": true,
               "renderAttributes": {
-
               },
               "elements": [
                 {
@@ -2662,7 +2624,6 @@
                   "visible": "values('Notify Upon Schedule Completion') === \"Yes\"",
                   "omitWhenHidden": true,
                   "renderAttributes": {
-
                   },
                   "elements": [
                     {
@@ -2685,7 +2646,6 @@
 
                       ],
                       "renderAttributes": {
-
                       },
                       "dataType": "string",
                       "renderType": "text",
@@ -2711,7 +2671,6 @@
 
                       ],
                       "renderAttributes": {
-
                       },
                       "dataType": "string",
                       "renderType": "text",
@@ -2731,7 +2690,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {

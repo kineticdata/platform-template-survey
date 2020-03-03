@@ -106,6 +106,18 @@
       "name": "Console"
     },
     {
+      "name": "Content"
+    },
+    {
+      "name": "Service"
+    },
+    {
+      "name": "Service Description"
+    },
+    {
+      "name": "Subservice"
+    },
+    {
       "name": "Subtask"
     },
     {
@@ -116,6 +128,9 @@
     },
     {
       "name": "Work Item"
+    },
+    {
+      "name": "Work Order"
     }
   ],
   "loginPage": "",
@@ -155,5 +170,8 @@
       "name": "Submission Support"
     }
   ],
-  "slug": "queue"
+  "slug": "queue",
+  "webApis": [
+
+  ]
 }

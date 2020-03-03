@@ -88,7 +88,6 @@
           "visible": true,
           "omitWhenHidden": null,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -98,7 +97,6 @@
               "text": "<div id=\"inviteUsersContainer\" class=\"section\">\n  <h3 class=\"text-center\">Invite others to kinops</h3>\n  <p class=\"text-center\">\n    The form below will help you quickly invite your teammates to join kinops.\n    <br />\n    <br />\n    <strong>Note:</strong> You only need to provide an email address to invite\n    someone. They can configure their profiles once they sign in. Configuring\n    someone as a \"Space Admin\" will give them full admin access to the system.\n  </p>\n  <br />\n  <div class=\"message\" />\n  <br />\n  <div class=\"row clearfix\">\n    <div class=\"col-md-12 column\">\n      <table class=\"table table-bordered table-hover\" id=\"new-users\">\n        <thead>\n          <tr>\n            <th class=\"text-center\">\n              Email <small>(required)</small>\n            </th>\n            <th class=\"text-center\">Roles</th>\n            <th class=\"text-center\">Teams</th>\n            <th class=\"text-center\">Space Admin</th>\n            <th />\n          </tr>\n        </thead>\n        <tbody />\n      </table>\n    </div>\n  </div>\n</div>",
               "visible": true,
               "renderAttributes": {
-
               }
             }
           ]
@@ -111,7 +109,6 @@
           "visible": false,
           "omitWhenHidden": true,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -134,7 +131,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -161,7 +157,6 @@
               "enabled": true,
               "renderType": "custom",
               "renderAttributes": {
-
               },
               "events": [
                 {
@@ -182,7 +177,6 @@
           "visible": false,
           "omitWhenHidden": false,
           "renderAttributes": {
-
           },
           "elements": [
             {
@@ -205,7 +199,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -231,7 +224,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -257,7 +249,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -283,7 +274,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -309,7 +299,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -335,7 +324,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",
@@ -361,7 +349,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -391,7 +378,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "json",
               "renderType": "checkbox",
@@ -421,7 +407,6 @@
 
               ],
               "renderAttributes": {
-
               },
               "dataType": "string",
               "renderType": "text",

@@ -122,9 +122,27 @@
       ]
     },
     {
+      "name": "Task Server Host",
+      "values": [
+        "service-portal-template.kinops.io"
+      ]
+    },
+    {
+      "name": "Task Server Scheme",
+      "values": [
+        "https"
+      ]
+    },
+    {
       "name": "Task Server Space Slug",
       "values": [
-        "space-template"
+        "service-portal-template"
+      ]
+    },
+    {
+      "name": "Task Server Url",
+      "values": [
+        "https://service-portal-template.kinops.io/kinetic-task"
       ]
     },
     {
@@ -136,7 +154,7 @@
     {
       "name": "Web Server Url",
       "values": [
-        "https://space-template.kinops.io"
+        "https://service-portal-template.kinops.io"
       ]
     }
   ],
@@ -154,7 +172,7 @@
     "en"
   ],
   "loginPage": null,
-  "name": "Space Template",
+  "name": "Service Portal Template",
   "platformComponents": {
     "agents": [
 
@@ -201,11 +219,14 @@
   ],
   "sessionInactiveLimitInSeconds": 2592000,
   "sharedBundleBase": "hydrogen-v1",
-  "slug": "space-template",
+  "slug": "service-portal-template",
   "trustedFrameDomains": [
 
   ],
   "trustedResourceDomains": [
+
+  ],
+  "webApis": [
 
   ]
 }
