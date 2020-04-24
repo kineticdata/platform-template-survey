@@ -6,7 +6,7 @@
     <taskTree builder_version="" schema_version="1.0" version="">
         <name>Created</name>
         <author></author>
-        <notes>Sends invite and reminder notifications - standard survey create tree</notes>
+        <notes></notes>
         <lastID>6</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">

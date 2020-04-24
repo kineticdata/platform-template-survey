@@ -6,7 +6,7 @@
     <taskTree builder_version="" schema_version="1.0" version="">
         <name>Submitted</name>
         <author></author>
-        <notes>Processes survey once it has been submitted, and runs the Survey&amp;apos;s custom workflow if defined.</notes>
+        <notes></notes>
         <lastID>5</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">

@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "securityPolicies": [
+    {
+      "endpoint": "Execution",
+      "name": "Survey Initiators"
+    }
+  ],
+  "slug": "generate-survey",
+  "attributes": null
+}

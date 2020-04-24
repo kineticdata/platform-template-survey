@@ -134,17 +134,5 @@
       "name": "Kapp Owner"
     }
   ],
-  "slug": "survey",
-  "webApis": [
-    {
-      "method": "POST",
-      "securityPolicies": [
-        {
-          "endpoint": "Execution",
-          "name": "Survey Initiators"
-        }
-      ],
-      "slug": "generate-survey"
-    }
-  ]
+  "slug": "survey"
 }

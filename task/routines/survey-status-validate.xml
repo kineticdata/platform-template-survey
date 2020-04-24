@@ -46,7 +46,7 @@
 oldStart = "" 
 oldEnd = ""
 
-if !@inputs['Previous Config'].nil?
+if !@inputs['Previous Config'].to_s.empty?
 config = JSON.parse(@inputs['Previous Config'] )
 oldStart = config["Survey Period"]['Start'] 
 oldEnd = config["Survey Period"]['Stop']
@@ -62,9 +62,7 @@ if (oldStart == newStart &amp;&amp; oldEnd == newEnd)
 end
 theresult %&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="Handle Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;true&quot;">utilities_echo_v1_2</task>
                 </dependents>
@@ -197,7 +195,7 @@ diff.to_i%&gt;</parameter>
                     <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_8</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_8" name="Look Up Form" x="210" y="858">
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_8" name="Look Up Form" x="212" y="850">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -209,7 +207,7 @@ diff.to_i%&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="" type="Complete" value="">utilities_echo_v1_9</task>
+                    <task label="Form Exists" type="Complete" value="@results['Look Up Form']['Exists'].downcase == &quot;true&quot;">utilities_echo_v1_9</task>
                 </dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Should Status be Active - Update" x="211" y="986">
@@ -219,16 +217,18 @@ diff.to_i%&gt;</parameter>
                 <deferrable>false</deferrable>
                 <visible>true</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  attr = JSON.parse(@results['Look Up Form']['Attributes Map JSON'])
 config = JSON.parse(attr['Survey Configuration'][0])
 newStart = config["Survey Period"]['Start']
 newEnd = config["Survey Period"]['Stop']
 
-range = Date.new(newStart)..Date.new(newEnd)
+range = Date.parse(newStart)..Date.parse(newEnd)
 
 range.cover?(Date.today) %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Needs to be active" type="Complete" value="@results['Look Up Form']['Status'] != &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_10</task>
                     <task label="No update needed" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">system_join_v1_11</task>

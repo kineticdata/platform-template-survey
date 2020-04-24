@@ -124,7 +124,7 @@
     {
       "name": "Task Server Host",
       "values": [
-        "survey.kinopsdev.io"
+        "survey.kinops.io"
       ]
     },
     {
@@ -142,7 +142,7 @@
     {
       "name": "Task Server Url",
       "values": [
-        "https://survey.kinopsdev.io/kinetic-task"
+        "https://survey.kinops.io/kinetic-task"
       ]
     },
     {
@@ -154,7 +154,7 @@
     {
       "name": "Web Server Url",
       "values": [
-        "https://survey.kinopsdev.io"
+        "https://survey.kinops.io"
       ]
     }
   ],
@@ -172,7 +172,7 @@
     "en"
   ],
   "loginPage": null,
-  "name": "Kinetic Data Survey",
+  "name": "Survey Testing Prod",
   "platformComponents": {
     "agents": [
 
@@ -225,8 +225,5 @@
   ],
   "trustedResourceDomains": [
     "http://localhost:3000"
-  ],
-  "webApis": [
-
   ]
 }

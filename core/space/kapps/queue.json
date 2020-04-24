@@ -170,8 +170,5 @@
       "name": "Submission Support"
     }
   ],
-  "slug": "queue",
-  "webApis": [
-
-  ]
+  "slug": "queue"
 }

@@ -7,7 +7,7 @@
     <taskTree builder_version="" schema_version="1.0" version="">
         <name>Survey Create</name>
         <author></author>
-        <notes>Does all necessary checks and creates a survey.</notes>
+        <notes></notes>
         <lastID>30</lastID>
         <taskDefinition id="routine_kinetic_solutions_survey_create_v1" name="Survey Create" schema_version="1.0" version="1">
             <visible>false</visible>
