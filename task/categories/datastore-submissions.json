@@ -9,6 +9,7 @@
 
   ],
   "trees": [
+    "routine_datastore_submission_retrieve_by_query_v1",
     "routine_kinetic_datastore_submission_activities_retrieve_list_v1",
     "routine_kinetic_datastore_submission_activity_create_v1",
     "routine_kinetic_datastore_submission_activity_delete_v1",

@@ -1,0 +1,8 @@
+{
+  "attributes": [
+
+  ],
+  "description": "This role is given to integration users that are able to generate surveys.",
+  "name": "Role::Survey Initiator",
+  "slug": "f1a17a193dbfa5b0ff9201afa86e55f8"
+}

@@ -1,0 +1,201 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>WebApis > survey</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>generate-survey</name>
+        <author></author>
+        <notes></notes>
+        <lastID>9</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="265" y="-101">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_survey_create_v1" id="routine_kinetic_solutions_survey_create_v1_1" name="Create Survey" x="539" y="660">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="To store the slug for the survey form">&lt;%= @results['Survey Slug']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="true" tooltip="To store the data for the survey">&lt;%= @results['Data']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= @results['User Id']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="To store the kapp that contains the survey form">&lt;%= @source['Group'].gsub("WebApis &gt; ","") %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= @results['Reference Id']['output'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Survey Slug" x="222" y="26">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
+begin
+  JSON.parse(@request['Body'])['surveySlug'] 
+rescue
+  ""
+end%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_3" name="User Id" x="224" y="134">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
+begin
+  JSON.parse(@request['Body'])['userId'] 
+rescue
+  ""
+end%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_4" name="Validate Call" x="227" y="515">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+
+surveySlug = @results['Survey Slug']['output']
+userId = @results['User Id']['output']
+referenceId = @results['Reference Id']['output']
+data = @results['Data']['output']
+# Validate Call
+(surveySlug.to_s.empty? || userId.to_s.empty? || referenceId.to_s.empty? || data.to_s.empty?) ? "false" : "true" %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Valid Call" type="Complete" value="@results['Validate Call']['output'].to_s.strip == &quot;true&quot;">system_tree_return_v1_6</task>
+                    <task label="Invalid Call" type="Complete" value="@results['Validate Call']['output'].to_s.strip == &quot;false&quot;">system_tree_return_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_5" name="Data" x="229" y="388">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
+begin
+  JSON.parse(@request['Body'])['data'].to_json 
+rescue
+  ""
+end%&gt;
+</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_6" name="Respond 200" x="544" y="498">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="content" label="Content" menu="" required="false" tooltip="">&lt;%= {"message" =&gt; "Survey Successfully Created"}.to_json %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="content_type" label="Content Type" menu="" required="false" tooltip="">application/json</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="headers_json" label="Headers (JSON)" menu="" required="false" tooltip="">{}</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="response_code" label="Response Code" menu="" required="false" tooltip="">200</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_survey_create_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_7" name="Respond 400" x="-81" y="507">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="content" label="Content" menu="" required="false" tooltip="">&lt;%= 
+errors = []
+errors.push "Invalid surveySlug" if @results['Survey Slug']['output'].to_s.empty?
+errors.push "Invalid userId" if @results['User Id']['output'].to_s.empty?
+errors.push "Invalid data" if @results['Data']['output'].to_s.empty?
+
+{
+  "message" =&gt; "There was an issue generating the survey", 
+  "errors" =&gt; errors
+}.to_json %&gt;
+
+</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="content_type" label="Content Type" menu="" required="false" tooltip="">application/json</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="headers_json" label="Headers (JSON)" menu="" required="false" tooltip="">{}</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="response_code" label="Response Code" menu="" required="false" tooltip="">400</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_8" name="DEVELOPER NOTES" x="370" y="78">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">We may want to do some more validation in here. 
+
+- We can fetch the survey form by slug and make sure it exists
+- We can validate some of the data??</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Reference Id" x="225" y="258">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
+begin
+  JSON.parse(@request['Body'])['referenceId'] 
+rescue
+  ""
+end%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_5</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

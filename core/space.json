@@ -34,7 +34,7 @@
     {
       "name": "Default Kapp Display",
       "values": [
-        "services"
+        "survey"
       ]
     },
     {
@@ -124,7 +124,7 @@
     {
       "name": "Task Server Host",
       "values": [
-        "service-portal-template.kinops.io"
+        "survey.kinopsdev.io"
       ]
     },
     {
@@ -136,13 +136,13 @@
     {
       "name": "Task Server Space Slug",
       "values": [
-        "service-portal-template"
+        "survey"
       ]
     },
     {
       "name": "Task Server Url",
       "values": [
-        "https://service-portal-template.kinops.io/kinetic-task"
+        "https://survey.kinopsdev.io/kinetic-task"
       ]
     },
     {
@@ -154,7 +154,7 @@
     {
       "name": "Web Server Url",
       "values": [
-        "https://service-portal-template.kinops.io"
+        "https://survey.kinopsdev.io"
       ]
     }
   ],
@@ -167,12 +167,12 @@
   "defaultLocale": "en",
   "defaultTimezone": "America/Chicago",
   "displayType": "Single Page App",
-  "displayValue": "spa.jsp?location=https://s3.amazonaws.com/kinops.io/bundles/kinetic/releases/2.x.x",
+  "displayValue": "https://s3.amazonaws.com/kinops.io/bundles/kinetic/branches/feature/survey/index.html",
   "enabledLocales": [
     "en"
   ],
   "loginPage": null,
-  "name": "Service Portal Template",
+  "name": "Kinetic Data Survey",
   "platformComponents": {
     "agents": [
 
@@ -219,12 +219,12 @@
   ],
   "sessionInactiveLimitInSeconds": 2592000,
   "sharedBundleBase": "hydrogen-v1",
-  "slug": "service-portal-template",
+  "slug": "survey",
   "trustedFrameDomains": [
-
+    "localhost:3000"
   ],
   "trustedResourceDomains": [
-
+    "http://localhost:3000"
   ],
   "webApis": [
 

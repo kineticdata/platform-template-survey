@@ -1,17 +1,4 @@
 {
-  "authStrategy": {
-    "type": "Signature",
-    "properties": [
-      {
-        "name": "Key",
-        "value": "kinops-request-ce"
-      },
-      {
-        "name": "Secret",
-        "sensitive": "true"
-      }
-    ]
-  },
   "event": "Created",
   "filter": "kapp('attribute:Custom Form Workflow').indexOf('Created') === -1",
   "name": "Form Created - Space Default",

@@ -1,0 +1,150 @@
+{
+  "afterLogoutPath": null,
+  "attributes": [
+    {
+      "name": "Bundle Package",
+      "values": [
+        "survey"
+      ]
+    },
+    {
+      "name": "Confirmation Page Text",
+      "values": [
+        "Thanks for completing the survey. We appreciate your feedback!"
+      ]
+    },
+    {
+      "name": "Icon",
+      "values": [
+        "fa-pencil-square"
+      ]
+    },
+    {
+      "name": "Owning Team",
+      "values": [
+        "Default"
+      ]
+    }
+  ],
+  "bundlePath": null,
+  "defaultFormConfirmationPage": null,
+  "defaultFormDisplayPage": null,
+  "defaultSubmissionLabelExpression": "${values('Recipient Id')}",
+  "displayType": "Display Page",
+  "displayValue": null,
+  "fields": [
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k3",
+      "name": "Assigned Individual"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k1",
+      "name": "Assigned Team"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k6",
+      "name": "Deferral Token"
+    },
+    {
+      "dataType": "date",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k5",
+      "name": "Due Date"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k7",
+      "name": "Requested By"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k9",
+      "name": "Requested For"
+    },
+    {
+      "dataType": "string",
+      "defaultResourceName": null,
+      "defaultValue": null,
+      "key": "k11",
+      "name": "Status"
+    }
+  ],
+  "formTypes": [
+    {
+      "name": "Survey"
+    },
+    {
+      "name": "Survey Action"
+    },
+    {
+      "name": "Template"
+    },
+    {
+      "name": "Utility"
+    }
+  ],
+  "loginPage": null,
+  "name": "Survey",
+  "resetPasswordPage": null,
+  "securityPolicies": [
+    {
+      "endpoint": "Display",
+      "name": "Kapp Owner"
+    },
+    {
+      "endpoint": "Form Creation",
+      "name": "Kapp Owner"
+    },
+    {
+      "endpoint": "Modification",
+      "name": "Kapp Owner"
+    },
+    {
+      "endpoint": "Default Form Display",
+      "name": "Everyone"
+    },
+    {
+      "endpoint": "Default Form Modification",
+      "name": "Form Owners - Kapp Owners"
+    },
+    {
+      "endpoint": "Default Submission Access",
+      "name": "Everyone"
+    },
+    {
+      "endpoint": "Default Submission Modification",
+      "name": "Everyone"
+    },
+    {
+      "endpoint": "Submission Support",
+      "name": "Kapp Owner"
+    }
+  ],
+  "slug": "survey",
+  "webApis": [
+    {
+      "method": "POST",
+      "securityPolicies": [
+        {
+          "endpoint": "Execution",
+          "name": "Survey Initiators"
+        }
+      ],
+      "slug": "generate-survey"
+    }
+  ]
+}

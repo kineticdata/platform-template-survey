@@ -1,0 +1,56 @@
+[
+  {
+    "message": "Must be an administrator.",
+    "name": "Admins",
+    "rule": "/* \n * Space admins are allowed access regardless of the the result of security \n * policies.  Returning 'false' denies anyone but a space access. \n */\nfalse",
+    "type": "Kapp"
+  },
+  {
+    "message": "Must be authenticated.",
+    "name": "Authenticated Users",
+    "rule": "identity('authenticated')",
+    "type": "Kapp"
+  },
+  {
+    "message": "Everyone is allowed access.",
+    "name": "Everyone",
+    "rule": "true",
+    "type": "Kapp"
+  },
+  {
+    "message": "Must be the kapp owner or form owner.",
+    "name": "Form Owners - Kapp Owners",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  return (\n    // Form Owners\n    hasIntersection(form('attribute:Owning Team'), identity('teams'))\n    // Kapp Owners\n    || hasIntersection(kapp('attribute:Owning Team'), identity('teams'))\n  );\n})()",
+    "type": "Form"
+  },
+  {
+    "message": "Must be a Kapp owner to access this resource",
+    "name": "Kapp Owner",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  return (\n    // Kapp Owners\n    hasIntersection(kapp('attribute:Owning Team'), identity('teams'))\n    || hasIntersection(kapp('attribute:Owning Individual'), identity('username'))\n  );\n})()\n",
+    "type": "Kapp"
+  },
+  {
+    "message": "Must be a member of the survey's owning team, or the owning individual to access this resource",
+    "name": "Owning Team - Owning Individual",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  return (\n    // Form Owners\n    hasIntersection(form('attribute:Owning Team'), identity('teams'))\n    || hasIntersection(form('attribute:Owning Individual'), identity('username'))\n  );\n})()\n",
+    "type": "Form"
+  },
+  {
+    "message": "Must be the Recipient, a Member of the Owning Team, an Owning Individual, or the submitter to access",
+    "name": "Recipient Id - Owning Team - Owning Individual - Submitter",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  return (\n    // Submitter\n    (submission('anonymous') && submission('sessionToken') == identity('sessionToken'))\n    || (!submission('anonymous') && submission('createdBy') == identity('username'))\n    // Form Owners\n    || hasIntersection(form('attribute:Owning Team'), identity('teams'))\n    || hasIntersection(form('attribute:Owning Individual'), identity('username'))\n    // Kapp Owners\n    || hasIntersection(kapp('attribute:Owning Team'), identity('teams'))\n    // Recipient\n    || hasIntersection(values('Recipient Id', []), identity('username'))\n    || hasIntersection(values('Recipient Id', []), identity('email'))\n  );\n})()\n",
+    "type": "Submission"
+  },
+  {
+    "message": "Must be the user that created the submission.",
+    "name": "Submitter",
+    "rule": "(submission('anonymous') && submission('sessionToken') == identity('sessionToken'))\n|| (!submission('anonymous') && submission('createdBy') == identity('username'))",
+    "type": "Submission"
+  },
+  {
+    "message": "Must be a Kapp Owner or a member of the Survey Initiators team to access this resource.",
+    "name": "Survey Initiators",
+    "rule": "(function() {\n  // Helper method\n  var hasIntersection = function(obj1, obj2) {\n    // Ensure the objects are not empty\n    obj1 = (obj1 === null || obj1 === undefined) ? [] : obj1;\n    obj2 = (obj2 === null || obj2 === undefined) ? [] : obj2;\n    // If the parameters are not lists, wrap them in lists\n    var list1 = (obj1 instanceof Array) ? obj1 : [obj1];\n    var list2 = (obj2 instanceof Array) ? obj2 : [obj2];\n    // Find the intersection\n    var intersection = list1.filter(function(n) {\n      return list2.indexOf(n) != -1;\n    });\n    // Return whether any intersecting values were found\n    return list1.find(function(value) {return hasValue(list2, value)}) !== undefined;\n  };\n  // Helper method\n  var hasValue = function(list, value) {\n    return (list instanceof Array) && list.indexOf(value) != -1\n  };\n\n  // Survey Initiators\n  return hasIntersection(identity('teams'), ['Role::Role::Survey Initiator'])\n  // Kapp Owners\n  || hasIntersection(kapp('attribute:Owning Team'), identity('teams'))\n  || hasIntersection(kapp('attribute:Owning Individual'), identity('username'))\n})()\n",
+    "type": "Kapp"
+  }
+]

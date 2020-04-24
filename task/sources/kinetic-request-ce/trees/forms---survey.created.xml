@@ -1,0 +1,113 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Forms > survey</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Created</name>
+        <author></author>
+        <notes></notes>
+        <lastID>32</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="550" y="-55">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Has Survey Config" type="Complete" value="@form_attributes.has_key?('Survey Configuration') &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].empty?">system_noop_v1_22</task>
+                    <task label="Is Survey" type="Complete" value="@form_attributes.has_key?('Survey Configuration') &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].empty?">routine_kinetic_solutions_survey_status_validate_v1_32</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_22" name="Is Survey" x="999" y="-50">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Has polling configuration" type="Complete" value=" JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot;">system_noop_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_23" name="Is poller" x="999" y="150">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_24</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_24" name="Get Polling Info" x="999" y="266">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  output = JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]
+output.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_datastore_submission_create_v1_25</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_25" name="Create Robot" x="997" y="384">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">robot-definitions</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%=  values = {"Days"=&gt;[],"Discussion Id"=&gt;nil,"Embedded"=&gt;nil,"Embedded Display Mode"=&gt;nil,"End Date"=&gt;nil,"End Date Original"=&gt;nil,"Execution Hour"=&gt;nil,"Execution Minute"=&gt;"00","Friday Index"=&gt;[],"Interval"=&gt;"1","Monday Index"=&gt;[],"Months"=&gt;[],"Notify Upon Each Run Completion"=&gt;"No","Notify Upon Schedule Completion"=&gt;nil,"Run Completion Notification Message Template"=&gt;nil,"Run Completion Recipient"=&gt;nil,"Saturday Index"=&gt;[],"Schedule Completion Notification Message Template"=&gt;nil,"Schedule Completion Recipient"=&gt;nil,"Sunday Index"=&gt;[],"Thursday Index"=&gt;[],"Timing"=&gt;nil,"Tuesday Index"=&gt;[],"Wednesday Index"=&gt;[],"Weekdays"=&gt;[]}
+values["Robot Name"] = @form['Slug'] + " poller" 
+values["Interval"] = @results['Get Polling Info']['output']["Interval"]
+values["Description"] = "Used for polling source for survey"
+values["Recurrence"] = "minutely"
+values["Recurrence Label"] = "minutely"
+values["Recurrence Description"] = "Every #{@results['Get Polling Info']['output']["Interval"]} minutes"
+values["Notify Upon Each Run Completion"] = "No"
+values["Status"] = "Active"
+values["Start Date"] = DateTime.now
+values["Category"] = "Survey Poller"
+values["Task Tree"] = @results['Get Polling Info']['output']["Source"]
+runtime = {}
+runtime["Survey Slug"] = @form['Slug']
+runtime["Kapp Slug"] = @kapp['Slug'] 
+values["Runtime Inputs"] = runtime.to_json
+values.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_32" name="Update Status as Necessary" x="706" y="77.5">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%=  @form['Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="">&lt;%=  @kapp['Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Previous Config" label="Previous Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes_previous['Survey Configuration'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Config" label="Current Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Status" label="Current Status" menu="" required="true" tooltip="">&lt;%=  @form['Status'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

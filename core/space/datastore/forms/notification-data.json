@@ -244,7 +244,7 @@
           "defaultResourceName": null,
           "visible": true,
           "enabled": true,
-          "required": "values('Type') !== \"Snippet\"",
+          "required": true,
           "requiredMessage": null,
           "omitWhenHidden": null,
           "pattern": null,

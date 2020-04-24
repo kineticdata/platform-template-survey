@@ -1,0 +1,155 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_survey_reminder_send_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Survey Reminder Send</name>
+        <author></author>
+        <notes>Sends reminders to survey recipient based on survey configuration</notes>
+        <lastID>7</lastID>
+        <taskDefinition id="routine_kinetic_solutions_survey_reminder_send_v1" name="Survey Reminder Send" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Reminder Email Template" label="Reminder Email Template" required="true" tooltip=""></parameter>
+                <parameter id="Reminder Count" label="Reminder Count" required="true" tooltip=""></parameter>
+                <parameter id="User Id" label="User Id" required="true" tooltip=""></parameter>
+                <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip=""></parameter>
+                <parameter id="Survey Submission Id" label="Survey Submission Id" required="true" tooltip=""></parameter>
+                <parameter id="Wait Days" label="Wait Days" required="true" tooltip=""></parameter>
+                <parameter id="Survey Kapp Slug" label="Survey Kapp Slug" required="true" tooltip=""></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="No more to send" type="Complete" value="@inputs['Reminder Count'].to_i &lt; 1">system_junction_v1_4</task>
+                    <task label="Still have reminder to send" type="Complete" value="@inputs['Reminder Count'].to_i &gt;= 1">system_wait_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_1" name="Send Reminder" x="-34" y="497">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%= @inputs['Reminder Email Template'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: services, queue, etc.)">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @inputs['Survey Submission Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug Initiating Notification" label="Form Slug Initiating Notification" menu="" required="false" tooltip="The slug of the Form sending the notification (ex: work-order, cleaning, etc.)">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form.">true</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="No more to send" x="366.0425212606304" y="17.000500250125057">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_3" name="Check Status" x="-33" y="333">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @inputs['Survey Submission Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Still have reminder to send" type="Complete" value="@results['Check Status']['Core State'] == &quot;Draft&quot;">routine_kinetic_email_template_notification_send_v1_1</task>
+                    <task label="Survey already done" type="Complete" value="@results['Check Status']['Core State'] != &quot;draft&quot;">system_junction_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_4" name="Done" x="371.048024012006" y="167.00300150075043">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_survey_reminder_send_v1" id="routine_kinetic_solutions_survey_reminder_send_v1_5" name="Call Self" x="375.0345172586294" y="500">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Reminder Email Template" label="Reminder Email Template" menu="" required="true" tooltip="">&lt;%= @inputs['Reminder Email Template'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Reminder Count" label="Reminder Count" menu="" required="true" tooltip="">&lt;%= @inputs['Reminder Count'].to_i -1 %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Submission Id" label="Survey Submission Id" menu="" required="true" tooltip="">&lt;%= @inputs['Survey Submission Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Wait Days" label="Wait Days" menu="" required="true" tooltip="">&lt;%= @inputs['Wait Days'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="system_wait_v1" id="system_wait_v1_6" name="Wait until next reminder" x="-36" y="180">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Time to wait" label="Wait time:" menu="" required="true" tooltip="Time you want to wait for deferred task">&lt;%= @inputs['Wait Days'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Time unit" label="Time unit:" menu="Second,Minute,Hour,Day,Week" required="true" tooltip="Unit of measurement for time (Seconds, Minutes, Hours, Days, Weeks)">Day</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_7" name="Reminder Submission Activity" x="160.99649824912456" y="495.9794897448724">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to create the activity record for">&lt;%= @inputs['Survey Submission Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="false" tooltip="Data to store in the submission activity"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity">A reminder to take the survey was sent to the recipient</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">Survey Reminder Sent</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">Reminder</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_survey_reminder_send_v1_5</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

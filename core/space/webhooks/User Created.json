@@ -1,17 +1,4 @@
 {
-  "authStrategy": {
-    "type": "Signature",
-    "properties": [
-      {
-        "name": "Key",
-        "value": "kinops-request-ce"
-      },
-      {
-        "name": "Secret",
-        "sensitive": "true"
-      }
-    ]
-  },
   "event": "Created",
   "filter": "user('invitedBy') === null",
   "name": "User Created",

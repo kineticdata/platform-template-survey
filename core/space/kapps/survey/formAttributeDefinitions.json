@@ -1,0 +1,22 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "Confirmation Page Text"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Individual that owns the Survey form",
+    "name": "Owning Individual"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Team that owns the Survey form",
+    "name": "Owning Team"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "This attribute stores a JSON map of the survey configuration settings",
+    "name": "Survey Configuration"
+  }
+]

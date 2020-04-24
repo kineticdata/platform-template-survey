@@ -381,11 +381,9 @@ Time.now().utc.iso8601
 %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%=@inputs['submission id']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Form Slug Initiating Notification" label="Form Slug Initiating Notification" menu="" required="false" tooltip="The slug of the Form sending the notification (ex: work-order, cleaning, etc.)"></parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form.">true</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form.">false</parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents></dependents>
             </task>
             <task definition_id="routine_kinetic_datastore_submissions_retrieve_list_v1" id="routine_kinetic_datastore_submissions_retrieve_list_v1_97" name="Find next execution record" x="509" y="79">
@@ -500,19 +498,14 @@ runtime_inputs = JSON.parse(@results['Recheck submission']['Values JSON'])['Runt
 {
   #"Schedule Name" =&gt; JSON.parse(@results['Get submission']['Values JSON'])['Schedule Name'],
   #"Schedule Id" =&gt; @results['Get submission']['ID'],
-  "Execution Id" =&gt; @results['Create execution record']['Id']
-  
+  "Execution Id" =&gt; @results['Create execution record']['Submission ID']
 }.to_json%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: services, queue, etc.)">Robot</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%=@inputs['submission id']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Form Slug Initiating Notification" label="Form Slug Initiating Notification" menu="" required="false" tooltip="The slug of the Form sending the notification (ex: work-order, cleaning, etc.)"></parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form.">true</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form.">false</parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents></dependents>
             </task>
             <task definition_id="routine_kinetic_datastore_submission_update_v1" id="routine_kinetic_datastore_submission_update_v1_110" name="Update execution record" x="672" y="781">
@@ -530,21 +523,28 @@ runtime_inputs = JSON.parse(@results['Recheck submission']['Values JSON'])['Runt
 require 'time'
 now = Time.now()
 
-#output = "No output - possibly manually completed due to error."
 output = {}
 if @results['Defer routine execution'] &amp;&amp; @results['Defer routine execution'].has_key?('output') &amp;&amp; !@results['Defer routine execution']['output'].nil?
-  output = (@results['Defer routine execution']['output']).gsub(/\\/,'\\\\\\\\')
+  output = begin
+      JSON.parse(@results['Defer routine execution']['output'])
+    rescue
+      # Put the output into the expected structure
+      {"output" =&gt; @results['Defer routine execution']['output']}
+    end
 end
 
-#"Output" =&gt; (@results['Defer routine execution']['output']).gsub(/\\/,'\\\\\\\\').gsub(/"/,'\"')
 {
   "End" =&gt; now.utc.iso8601,
   "Execution Duration" =&gt; now - Time.parse(@results['Capture Execution Start Time']['output']),
-  "Status" =&gt; "Completed", 
+  "Status" =&gt; "Completed",
   "Output" =&gt; output
 }.to_json %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">routine_kinetic_robot_execution_v2_83</task>
                     <task label="Notify" type="Complete" value="JSON.parse(@results['Recheck submission']['Values JSON'])['Notify Upon Each Run Completion'].downcase == &quot;yes&quot;">routine_kinetic_email_template_notification_send_v1_109</task>
@@ -575,7 +575,7 @@ end
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=JSON.parse( @results['Find next execution record - Clear']['Submissions List JSON'] )[0]['id']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=JSON.parse( @results['Find next execution record - Clear']['Submissions List JSON'] )[0][id]%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>

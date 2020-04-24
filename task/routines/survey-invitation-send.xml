@@ -1,0 +1,171 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_survey_invitation_send_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Survey Invitation Send</name>
+        <author></author>
+        <notes>Does all necessary checks and creates a survey.</notes>
+        <lastID>30</lastID>
+        <taskDefinition id="routine_kinetic_solutions_survey_invitation_send_v1" name="Survey Invitation Send" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip="To store the slug for the survey form"></parameter>
+                <parameter id="User Id" label="User Id" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
+                <parameter id="Submission Id" label="Submission Id" required="true" tooltip=""></parameter>
+                <parameter id="Survey Kapp Slug" label="Survey Kapp Slug" required="true" tooltip=""></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_1" name="Get Survey Details" x="-24" y="117">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Active" type="Complete" value="@results['Get Survey Details']['Status'] == &quot;Active&quot;">utilities_echo_v1_10</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Invitation" x="-18" y="210">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+name = "none"
+if config.has_key?("Invitation Notification Name")
+name = config["Invitation Notification Name"] 
+end
+name%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="No invitation specified" type="Complete" value="@results['Check Invitation']['output'] == &quot;none&quot;">system_tree_return_v1_19</task>
+                    <task label="Invitation Specified" type="Complete" value="@results['Check Invitation']['output'] != &quot;none&quot;">routine_kinetic_email_template_notification_send_v1_29</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_16" name="Create Survey" x="12" y="1138">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%= values = {}
+JSON.parse(@inputs['Data']).each do |key,value|
+if @results['Get Survey Details']['Fields JSON'].include?("d-#{key}")
+values["d-#{key}"] = value
+end
+end
+#need to set recipient value based on mapping to be determined
+values['Recipient Id'] = @inputs['User Id']
+values['observing-teams'] = []
+values['observing-teams'].push(@results['Check Owning Team']['output'])
+values['Status'] = "Draft"
+values.to_json%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_20</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_17" name="Check Owning Team" x="10" y="1030">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Owning Team"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_datastore_submission_create_v1_16</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - Do Nothing" x="416.57144" y="211.71428">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_20" name="Completed" x="9.8" y="1249.4667">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Id" label="Survey Id" menu="" required="false" tooltip="">&lt;%= @results['Create Survey']['Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_29" name="Send Invite" x="-16.857143" y="383.7143">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%= @results['Check Invitation']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: services, queue, etc.)">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @inputs['Submission Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug Initiating Notification" label="Form Slug Initiating Notification" menu="" required="false" tooltip="The slug of the Form sending the notification (ex: work-order, cleaning, etc.)">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form."></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_30</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_30" name="Return" x="-16.857143" y="583.7143">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

@@ -1,0 +1,32 @@
+[
+  {
+    "allowsMultiple": false,
+    "description": "Survey bundle package. This should be set to \"survey\"",
+    "name": "Bundle Package"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "Confirmation Page Text"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "A description of the Kapp",
+    "name": "Description"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "Icon"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "Individual that owns the Survey Kapp",
+    "name": "Owning Individual"
+  },
+  {
+    "allowsMultiple": false,
+    "description": "",
+    "name": "Owning Team"
+  }
+]

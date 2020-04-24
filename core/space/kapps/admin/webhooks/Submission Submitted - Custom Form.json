@@ -1,17 +1,4 @@
 {
-  "authStrategy": {
-    "type": "Signature",
-    "properties": [
-      {
-        "name": "Key",
-        "value": "kinops-request-ce"
-      },
-      {
-        "name": "Secret",
-        "sensitive": "true"
-      }
-    ]
-  },
   "event": "Submitted",
   "filter": "form('attribute:Custom Submission Workflow').indexOf('Submitted') > -1",
   "name": "Submission Submitted - Custom Form",

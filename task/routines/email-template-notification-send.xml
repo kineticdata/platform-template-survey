@@ -8,7 +8,7 @@
         <name>Email Template Notification Send</name>
         <author></author>
         <notes></notes>
-        <lastID>193</lastID>
+        <lastID>192</lastID>
         <taskDefinition id="routine_kinetic_email_template_notification_send_v1" name="Email Template Notification Send" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -37,47 +37,59 @@
                     <task label="" type="Complete" value="">utility_csv_to_xml_v1_168</task>
                 </dependents>
             </task>
-            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_144" name="Send Message Loop Start" x="716" y="169">
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_144" name="Send Message Loop Start" x="476" y="82">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;recipients&gt;&lt;%=JSON.parse(@results['Collect Results']['output']).collect{|recipient| "&lt;recipient&gt;#{recipient.to_json}&lt;/recipient&gt;"}.join%&gt;&lt;/recipients&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">/recipients/recipient</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">recipient</parameter>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;recipients&gt;&lt;%=JSON.parse(@results['Collect Results']['output']).collect{|recipient| "&lt;recipient&gt;#{recipient.to_json}&lt;/recipient&gt;"}.join%&gt;&lt;/recipients&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">/recipients/recipient</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">recipient</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_145</task>
-                    <task label="Valid User" type="Complete" value="JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'user' &amp;&amp; !JSON.parse(@results['Send Message Loop Start']['Value'])['recipient'].to_s.empty?">kinetic_core_api_v1_184</task>
+                    <task label="Valid User" type="Complete" value="JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'user' &amp;&amp; !JSON.parse(@results['Send Message Loop Start']['Value'])['username'].to_s.empty?">kinetic_core_api_v1_184</task>
                     <task label="" type="Complete" value="">kinetic_core_api_v1_183</task>
                 </dependents>
             </task>
-            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_145" name="Send Message Loop End" x="714" y="348">
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_145" name="Send Message Loop End" x="618" y="297">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
                     <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_tree_return_v1_155</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_155" name="Return" x="720" y="513">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_155" name="Return" x="618" y="440">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters></parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents></dependents>
             </task>
             <task definition_id="utility_csv_to_xml_v1" id="utility_csv_to_xml_v1_168" name="Recipient List to XML" x="100" y="253">
@@ -87,25 +99,33 @@
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="csv" label="CSV" menu="" required="true" tooltip="">&lt;%=@inputs['Recipient List']%&gt;</parameter>
+                    <parameter id="csv" label="CSV" menu="" required="true" tooltip="">&lt;%=@inputs['Recipient List']%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_head_v1_169</task>
                 </dependents>
             </task>
-            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_169" name="Sanitize Recipients - Start" x="94" y="361">
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_169" name="Sanitize Recipients - Start" x="99" y="340">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;%=@results['Recipient List to XML']['XML']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//list/item</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">recipient</parameter>
+                    <parameter id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;%=@results['Recipient List to XML']['XML']%&gt;</parameter>
+                    <parameter id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath statement to indicate what data records to process.">//list/item</parameter>
+                    <parameter id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">recipient</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_170</task>
                     <task label="" type="Complete" value="">routine_kinetic_user_retrieve_v1_171</task>
@@ -118,158 +138,271 @@
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
                     <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_178</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_171" name="Fetch User" x="96" y="469">
+            <task definition_id="routine_kinetic_user_retrieve_v1" id="routine_kinetic_user_retrieve_v1_171" name="Fetch User" x="100" y="451">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%=@results['Sanitize Recipients - Start']['Value']%&gt;</parameter>
+                    <parameter id="Username" label="Username" menu="" required="true" tooltip="The User's username">&lt;%=@results['Sanitize Recipients - Start']['Value']%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Not Found" type="Complete" value="@results['Fetch User']['Exists'].to_s.downcase != &quot;true&quot;">routine_kinetic_team_retrieve_v1_172</task>
-                    <task label="User Found" type="Complete" value="@results['Fetch User']['Exists'].to_s.downcase == &quot;true&quot;">system_junction_v1_177</task>
+                    <task label="User Found" type="Complete" value="@results['Fetch User']['Exists'].to_s.downcase == &quot;true&quot;">utilities_echo_v1_174</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_172" name="Fetch Team" x="98" y="610">
+            <task definition_id="routine_kinetic_team_retrieve_v1" id="routine_kinetic_team_retrieve_v1_172" name="Fetch Team" x="100" y="528">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%=@results['Sanitize Recipients - Start']['Value']%&gt;</parameter>
+                    <parameter id="Name" label="Name" menu="" required="true" tooltip="The Teams name">&lt;%=@results['Sanitize Recipients - Start']['Value']%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Not Found" type="Complete" value="@results['Fetch Team']['Exists'].to_s.downcase != &quot;true&quot;">utilities_echo_v1_173</task>
-                    <task label="Team Found" type="Complete" value="@results['Fetch Team']['Exists'].to_s.downcase == &quot;true&quot;">system_junction_v1_177</task>
+                    <task label="Team Found" type="Complete" value="@results['Fetch Team']['Exists'].to_s.downcase == &quot;true&quot;">routine_kinetic_users_retrieve_list_v1_181</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_173" name="Is Valid Email" x="95" y="755">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_173" name="Is Valid Email" x="100" y="616">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>true</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.match("#{@results['Sanitize Recipients - Start']['Value']}").nil?)%&gt;
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.match("#{@results['Sanitize Recipients - Start']['Value']}").nil?)%&gt;
 </parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Email Found" type="Complete" value="@results['Is Valid Email']['output'] === &quot;true&quot;">utilities_echo_v1_176</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_176" name="Format Email JSON" x="484" y="746">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_174" name="Format User JSON" x="341" y="440">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>true</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%={
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+email_notifications = 'yes'
+
+language = '- Default -'
+if !@results['Fetch User']['Preferred Locale'].to_s.empty?
+  language = @results['Fetch User']['Preferred Locale']
+end
+
+email = nil
+unless /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.match((@results['Fetch User']['Email']).to_s).nil?
+  email = @results['Fetch User']['Email']
+end
+
+format = {}
+format['type'] = 'user'
+format['username'] = @results['Fetch User']['Username']
+format['smtpaddress'] = email
+format['language'] = language
+format['email notifications'] = email_notifications
+
+format.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_177</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_175" name="Format Team JSON" x="341" y="518">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+formatted_users = []
+# Parse Team Members
+team_members = JSON.parse(@results['Fetch Team']['Memberships JSON']).collect { |member| member['user']['username'] }
+# Parse Users and only filter members
+team_users = JSON.parse(@results['Retrieve Users']['Users List JSON']).select { |user| team_members.include? user['username'] }
+# Format Each Team User
+team_users.each do |user|
+  email_notifications = 'yes'
+  
+  language = '- Default -' 
+  unless user['Preferred Locale'].to_s.empty?
+    language = user['Preferred Locale']
+  end
+
+  email = nil
+  unless /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.match((user['email']).to_s).nil?
+    email = user['email']
+  end
+
+  format = {}
+  format['type'] = 'user'
+  format['username'] = user['username']
+  format['smtpaddress'] = email
+  format['language'] = language
+  format['email notifications'] = email_notifications
+  formatted_users &lt;&lt; format
+end
+
+formatted_users.to_json%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_177</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_176" name="Format Email JSON" x="337" y="616">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%={
   "type"=&gt; "smtp",
   "smtpaddress" =&gt; @results['Sanitize Recipients - Start']['Value'],
   "language"=&gt; "- Default -"
 }.to_json%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_junction_v1_177</task>
                 </dependents>
             </task>
-            <task definition_id="system_junction_v1" id="system_junction_v1_177" name="Sanitize - Complete" x="487" y="544">
+            <task definition_id="system_junction_v1" id="system_junction_v1_177" name="Sanitize - Complete" x="472" y="522">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters></parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_170</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_178" name="Collect Results" x="476" y="179">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_178" name="Collect Results" x="473" y="253">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>true</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+                    <parameter id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
 usernames = []
 recipient_details = []
-if @results.has_key? 'Fetch User'
-  @results['Fetch User'].collect do |user|
-    if user[1]['Exists'] &amp;&amp; user[1]['Exists']=="true"
-      recipient_details.push({
-        "type" =&gt; "user",
-        "recipient" =&gt; user[1]['Username']
-      })
-      usernames.push(user[1]['Username'])
-    end
+if @results.key? 'Format User JSON'
+  @results['Format User JSON'].collect do |user|
+    recipient_details.push(JSON.parse(user[1]['output']))
+    usernames.push(JSON.parse(user[1]['output'])['username'])
   end
 end
 
-if @results.has_key? 'Fetch Team'
-  @results['Fetch Team'].collect do |users|
-    if users[1]['Exists'] &amp;&amp; users[1]['Exists'] == "true"
-      JSON.parse(users[1]['Memberships JSON']).each do |user|
-        # only add if user is not already in the list.
-        unless usernames.include?(user['user']['username'])
-          recipient_details.push({
-            "type" =&gt; "user",
-            "recipient" =&gt; user['user']['username']
-          })
-          usernames.push(user['user']['username'])
-        end
+if @results.key? 'Format Team JSON'
+  @results['Format Team JSON'].collect do |users|
+    JSON.parse(users[1]['output']).each do |user|
+      # only add if user is not already in the list.
+      unless usernames.include?(user['username'])
+        recipient_details.push(user)
+        usernames.push(user['username'])
       end
     end
   end
 end
 
-if @results.has_key? 'Format Email JSON'
+if @results.key? 'Format Email JSON'
   @results['Format Email JSON'].collect do |user|
-    recipient = JSON.parse(user[1]['output'])
-    recipient_details.push({
-      "type" =&gt; recipient['type'],
-      "recipient" =&gt; recipient['smtpaddress']
-    })
+    recipient_details.push(JSON.parse(user[1]['output']))
   end
 end
-
-#recipient_details.select{|user| !user['smtpaddress'].to_s.include?('@kinops.io')}.to_json
-recipient_details.to_json
-
-%&gt;</parameter>
+recipient_details.select{|user| !user['smtpaddress'].to_s.include?('@kinops.io')}.to_json%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_head_v1_144</task>
                 </dependents>
             </task>
-            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_183" name="Fetch Substitution Data" x="1020" y="152">
+            <task definition_id="routine_kinetic_users_retrieve_list_v1" id="routine_kinetic_users_retrieve_list_v1_181" name="Retrieve Users" x="231" y="518">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter id="Query" label="Query" menu="" required="false" tooltip="Query to use to fetch users. All users fetched when left blank"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_175</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_183" name="Fetch Substitution Data" x="825" y="47">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">&lt;%=
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">&lt;%=
 ### SUBMISSIONS ###
 related_submission_id = @inputs['Related Submission Id']
 has_related_submission = !related_submission_id.to_s.empty?
@@ -312,62 +445,66 @@ else
 end
 
 data_api_route%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
+                    <parameter id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_junction_v1_185</task>
                 </dependents>
             </task>
-            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_184" name="Fetch User Data" x="1022" y="257">
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_184" name="Fetch User Data" x="825" y="130">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">&lt;%="/users/#{ERB::Util.url_encode(JSON.parse(@results['Send Message Loop Start']['Value'])['recipient'])}?include=attributes,profileAttributes,details"%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">&lt;%="/users/#{ERB::Util.url_encode(JSON.parse(@results['Send Message Loop Start']['Value'])['username'])}?include=attributes,profileAttributes,details"%&gt;</parameter>
+                    <parameter id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_junction_v1_185</task>
                 </dependents>
             </task>
-            <task definition_id="system_junction_v1" id="system_junction_v1_185" name="Data Fetch - Complete" x="1417" y="145">
+            <task definition_id="system_junction_v1" id="system_junction_v1_185" name="Data Fetch - Complete" x="968" y="93">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters></parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
-                    <task label="Not kinops.io" type="Complete" value="( JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'user' &amp;&amp; !JSON.parse(@results['Fetch User Data']['Response Body'])['email'].to_s.include?('@kinops.io') ) || ( JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'smtp' &amp;&amp; !JSON.parse(@results['Send Message Loop Start']['Value'])['recipient'].to_s.include?('@kinops.io') )&#10;">kinetic_request_ce_notification_template_send_v3_192</task>
-                    <task label="Is kinops.io" type="Complete" value="( JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'user' &amp;&amp; JSON.parse(@results['Fetch User Data']['Response Body'])['email'].to_s.include?('@kinops.io') ) || ( JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'smtp' &amp;&amp; JSON.parse(@results['Send Message Loop Start']['Value'])['recipient'].to_s.include?('@kinops.io') )&#10;">system_junction_v1_193</task>
+                    <task label="" type="Complete" value="">kinetic_request_ce_notification_template_send_v3_192</task>
                 </dependents>
             </task>
-            <task definition_id="kinetic_request_ce_notification_template_send_v3" id="kinetic_request_ce_notification_template_send_v3_192" name="Assemble and Send Message" x="1421" y="343">
+            <task definition_id="kinetic_request_ce_notification_template_send_v3" id="kinetic_request_ce_notification_template_send_v3_192" name="Assemble and Send Message" x="967" y="295">
                 <version>3</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="space_slug" label="Space Slug" menu="" required="false" tooltip="The id of the space from which the submission is being retrieved."></parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="recipient_json" label="Recipient Json Object" menu="" required="true" tooltip="The recipient object should look like this. {&quot;type&quot;:&quot;user&quot;,&quot;username&quot;:&quot;test@mycompany.com&quot;,&quot;smtpaddress&quot;:&quot;test@mycompany.com&quot;,&quot;language&quot;:&quot;- Default -&quot;,&quot;email notifications&quot;:&quot;yes&quot;}  ">&lt;%=
-#@results['Send Message Loop Start']['Value']
-if JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'user'
-  JSON.parse(@results['Fetch User Data']['Response Body'])['user']['email']
-elsif JSON.parse(@results['Send Message Loop Start']['Value'])['type'] == 'smtp'
-  JSON.parse(@results['Send Message Loop Start']['Value'])['recipient']
-end
-%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="notification_template_name" label="Notification Template Name" menu="" required="true" tooltip="The notification template name being used.">&lt;%=@inputs['Notification Template Name']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="replacement_values" label="Replacement Values" menu="" required="false" tooltip="JSON string of replacement values. Required to successfully apply replacements to any notification template.  JSON keys can be 'form', 'values', and 'vars'.">&lt;%=
+                    <parameter id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter id="space_slug" label="Space Slug" menu="" required="false" tooltip="The id of the space from which the submission is being retrieved."></parameter>
+                    <parameter id="recipient_json" label="Recipient Json Object" menu="" required="true" tooltip="The recipient object should look like this. {&quot;type&quot;:&quot;user&quot;,&quot;username&quot;:&quot;test@mycompany.com&quot;,&quot;smtpaddress&quot;:&quot;test@mycompany.com&quot;,&quot;language&quot;:&quot;- Default -&quot;,&quot;email notifications&quot;:&quot;yes&quot;}  ">&lt;%=@results['Send Message Loop Start']['Value']%&gt;</parameter>
+                    <parameter id="notification_template_name" label="Notification Template Name" menu="" required="true" tooltip="The notification template name being used.">&lt;%=@inputs['Notification Template Name']%&gt;</parameter>
+                    <parameter id="replacement_values" label="Replacement Values" menu="" required="false" tooltip="JSON string of replacement values. Required to successfully apply replacements to any notification template.  JSON keys can be 'form', 'values', and 'vars'.">&lt;%=
 ## Parse Replacement Variables Data
 data_response = @results['Fetch Substitution Data']['Handler Error Message'].nil? ? JSON.parse(@results['Fetch Substitution Data']['Response Body']) : nil
 user_response = (@results.has_key?('Fetch User Data') &amp;&amp; @results['Fetch User Data']['Handler Error Message'].nil?) ? JSON.parse(@results['Fetch User Data']['Response Body']) : nil
@@ -559,21 +696,13 @@ unless backup_vars.nil?
 end
 
 @variables.to_json%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="submission_id" label="Submission Id" menu="" required="false" tooltip="Needed if the message contains attachments.">&lt;%=@inputs['Related Submission Id']%&gt;</parameter>
+                    <parameter id="submission_id" label="Submission Id" menu="" required="false" tooltip="Needed if the message contains attachments.">&lt;%=@inputs['Related Submission Id']%&gt;</parameter>
                 </parameters>
-                <messages></messages>
-                <dependents>
-                    <task label="" type="Complete" value="">system_junction_v1_193</task>
-                </dependents>
-            </task>
-            <task definition_id="system_junction_v1" id="system_junction_v1_193" name="Junction" x="1093" y="352">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>false</defers>
-                <deferrable>false</deferrable>
-                <visible>false</visible>
-                <parameters></parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_145</task>
                 </dependents>

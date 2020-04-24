@@ -1,4 +1,4 @@
-# platform-template-service-portal
+# platform-template-survey
 
 This platform template contains forms and workflow for use as a service portal.
 

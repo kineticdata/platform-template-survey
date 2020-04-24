@@ -1,0 +1,331 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_survey_create_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Survey Create</name>
+        <author></author>
+        <notes>Does all necessary checks and creates a survey.</notes>
+        <lastID>30</lastID>
+        <taskDefinition id="routine_kinetic_solutions_survey_create_v1" name="Survey Create" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip="To store the slug for the survey form"></parameter>
+                <parameter id="Data" label="Data" required="true" tooltip="To store the data for the survey"></parameter>
+                <parameter id="User Id" label="User Id" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
+                <parameter id="Survey Kapp Slug" label="Survey Kapp Slug" required="true" tooltip="To store the kapp that contains the survey form"></parameter>
+                <parameter id="Reference Id" label="Reference Id" required="true" tooltip="ID of the ticket in the system creating the survey"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml">
+                <result name="Survey Id" tooltip=""></result>
+            </results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_1" name="Get Survey Details" x="-24" y="117">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Active" type="Complete" value="@results['Get Survey Details']['Status'] == &quot;Active&quot;">utilities_echo_v1_10</task>
+                    <task label="Not Active" type="Complete" value="@results['Get Survey Details']['Status'] != &quot;Active&quot;">system_join_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Check Opt Out" x="10" y="410">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Allow Opt-out"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="allows opt out" type="Complete" value="@results['Check Opt Out']['output'] != &quot;false&quot;">kinetic_core_api_v1_7</task>
+                    <task label="No Opt Out" type="Complete" value="@results['Check Opt Out']['output'] == &quot;false&quot;">system_join_v1_27</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_3" name="handled checks" x="747" y="661">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_7" name="Get Opt Out" x="205" y="498">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/kapp/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/survey-opt-out/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;limit=1&amp;q=values[Survey Slug]="&lt;%= @inputs['Survey Slug'] %&gt;" AND values[User Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_8" name="Get Opt Out Details" x="410" y="598">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= optedOut = "false"
+if @results['Get Opt Out']['Handler Error Message'].nil? 
+response = JSON.parse(@results['Get Opt Out']['Response Body'])
+if response['submissions'].length &gt; 0
+optedOut = "true"
+end
+end
+optedOut %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Opted Out" type="Complete" value="@results['Get Opt Out Details']['output'] != &quot;false&quot;">system_join_v1_3</task>
+                    <task label="Not Opted Out" type="Complete" value="@results['Get Opt Out Details']['output'] == &quot;false&quot;">system_join_v1_27</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Check Stop Date" x="-5" y="303">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Survey Period"]['Stop'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Survey inactive based on period" type="Complete" value="!((((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; @results['Check Stop Date']['output'].nil?) || (((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; ((Date.parse(@results['Check Stop Date']['output']) &lt;=&gt; Date.today) == 1)))">system_join_v1_3</task>
+                    <task label="Survey active" type="Complete" value="(((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; @results['Check Stop Date']['output'].nil?) || (((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; ((Date.parse(@results['Check Stop Date']['output']) &lt;=&gt; Date.today) == 1))">utilities_echo_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Start Date" x="-18" y="210">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Survey Period"]['Start'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_11" name="Check Maximum Freq Days" x="9" y="684">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Maximum Survey Frequency"]["Days"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_12</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_12" name="Check Max Freq Count" x="7" y="793">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Maximum Survey Frequency"]["Count"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">kinetic_core_api_v1_13</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_13" name="Check Freq for User" x="219" y="720">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/&lt;%= @inputs['Survey Slug'] %&gt;/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;timeline=createdAt&amp;limit=1000&amp;start=&lt;%= Date.today - (@results['Check Maximum Freq Days']['output'].to_i - 1)%&gt;T00:00:00Z&amp;q=values[Recipient Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)">&lt;%= #This node is not wrapped because we dont want an error here to stop the process. We just want to ignore that particular survey create request.
+%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="No error" type="Complete" value="@results['Check Freq for User']['Handler Error Message'].nil?">utilities_echo_v1_14</task>
+                    <task label="Skip entry if error" type="Complete" value="!@results['Check Freq for User']['Handler Error Message'].nil?">system_join_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_14" name="Get Frequency for user" x="452" y="798">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= response = JSON.parse(@results['Check Freq for User']['Response Body'])
+response['submissions'].length %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Too Many" type="Complete" value="@results['Get Frequency for user']['output'].to_i &gt;= @results['Check Max Freq Count']['output'].to_i">system_join_v1_3</task>
+                    <task label="Not Too Many" type="Complete" value="@results['Get Frequency for user']['output'].to_i &lt; @results['Check Max Freq Count']['output'].to_i">system_noop_v1_15</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_15" name="Handle Event Interval" x="10" y="927">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_16" name="Create Survey" x="12" y="1138">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp to create the submission in">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%= values = {}
+JSON.parse(@inputs['Data']).each do |key,value|
+if @results['Get Survey Details']['Fields JSON'].include?("d-#{key}")
+values["d-#{key}"] = value
+end
+end
+#need to set recipient value based on mapping to be determined
+values['Recipient Id'] = @inputs['User Id']
+values['Reference Id'] = @inputs['Reference Id']
+values['Observing Teams'] = []
+values['Observing Teams'].push(@results['Check Owning Team']['output'])
+values['Status'] = "Draft"
+values.to_json%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Origin Id" label="Origin Id" menu="" required="false" tooltip="Sets the submissions origin to another Kinetic Submission"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Parent Id" label="Parent Id" menu="" required="false" tooltip="Sets the submissions parent to another Kinetic Submission"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Submit Submission" label="Submit Submission" menu="" required="false" tooltip="True or False, if Submission should be Submitted when created"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_20</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_17" name="Check Owning Team" x="10" y="1030">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Owning Team"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_create_v1_16</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - No Survey" x="980" y="646">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Id" label="Survey Id" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_20" name="Completed" x="9.8" y="1249.4667">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Id" label="Survey Id" menu="" required="false" tooltip="">&lt;%= @results['Create Survey']['Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_27" name="any" x="8" y="577">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_11</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

@@ -1,0 +1,299 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Robot</sourceName>
+    <sourceGroup>Robots</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Remedy Poller</name>
+        <author></author>
+        <notes></notes>
+        <lastID>29</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Robot Initiated" type="Complete" value="if @source['Data']&#10;  JSON.parse(@source['Data']).has_key? ('Kinetic Robot Execution Record Id')&#10;else &#10;  false&#10;end">kinetic_core_api_v1_18</task>
+                    <task label="Not Robot" type="Complete" value="if !@source['Data']&#10;  true&#10;elsif !JSON.parse(@source['Data']).has_key? ('Kinetic Robot Execution Record Id')&#10;  true&#10;else&#10;  false&#10;end">system_junction_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_7" name="Get by Type and Trigger and Time" x="-41" y="855">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="form" label="Remedy Form:" menu="" required="true" tooltip="Remedy Form Name (not display name), eg. People is CTM:People">&lt;%= @results['Get Type']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="request_query" label="Query:" menu="" required="true" tooltip="Advanced Search Query of the record to retrieve">&lt;%=
+# Without replacement:
+# JSON.parse(@results['Retrieve Integration Config']['Values JSON'])['Qualification']
+
+# With replacement:
+# Parse query variable for {{Start Date}} and {{End Date}} and replace with calculated values.
+
+extracted_times = JSON.parse(@results['Determine Start and End Times']['output'])
+query_start_time = Time.parse( extracted_times['query_start_time'] )
+query_end_time = Time.parse( extracted_times['query_end_time'] )
+#formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
+#formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
+
+formatted_start_date = "#{query_start_time.strftime("%s")}"
+formatted_end_date = "#{query_end_time.strftime("%s")}"
+
+query = @results['Get Trigger']['output'] 
+
+#query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
+
+#query.gsub!( "{{Start Date}}", formatted_start_date )
+#query.gsub!( "{{End Date}}", formatted_end_date )
+
+query
+%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="return_type" label="Return Type:" menu="" required="true" tooltip="Valid Values: Single, All. This will determine what is returned. Defaults to Single">all</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="If successful" type="Complete" value="@results['Get by Type and Trigger and Time']['Handler Error Message'].nil?">system_loop_head_v1_12</task>
+                    <task label="error" type="Complete" value="!@results['Get by Type and Trigger and Time']['Handler Error Message'].nil?">routine_end_polling_tree_v1_24</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_12" name="Create Survey Loop" x="-41" y="1024">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;%= @results['Get by Type and Trigger and Time']['Results'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath or JSONPath statement to indicate what data records to process.">$.[*]</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">record</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_15</task>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_survey_create_v1_27</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_15" name="End Create Survey Loop" x="-44" y="1198">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_end_polling_tree_v1_28</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_17" name="Get Survey Slug" x="-34" y="262">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=runtime = JSON.parse(@source['Data'])['Runtime Inputs']['Survey Slug']%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_29</task>
+                </dependents>
+            </task>
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_18" name="Update Robot Status" x="185" y="81">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">PUT</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/datastore/submissions/&lt;%=JSON.parse(@source['Data'])['Kinetic Robot Execution Record Id']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)">&lt;%= data = {}
+data['values'] = {}
+data['values']['Status'] = "Running"
+data.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_19</task>
+                </dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_19" name="Ready" x="-33" y="155">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_17</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_20" name="Get Survey Details" x="-36" y="381">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @results['Get Kapp Slug']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%= @results['Get Survey Slug']['output'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_21</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_21" name="Get Trigger" x="-40" y="492">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Event Polling"]["Trigger"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_22</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_22" name="Get Type" x="-44" y="612">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Event Polling"]["Type"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_23</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_23" name="Determine Start and End Times" x="-45" y="721">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+# Determine start and end time to use in query. Store them as output for use in the Robot output trigger.
+# Probably using the output from the last execution run, with additional logic to use a the last x minutes if the last execution time is beyond some threshold.
+# An idea is below:
+
+# Evaluate previous run time.  If none, or if &gt; threshold between last run time and now, use current time (meaning the first run will probably find no records). 
+current_time = Time.now
+previous_run_data = JSON.parse(@source['Data'])['Kinetic Robot Previous Execution Output'] || {}
+previous_run_query_end_time = 
+begin
+  Time.parse(previous_run_data['end_query_time'] || current_time.to_s)
+rescue
+  current_time
+end
+
+# If (current_time - previous_run_query_end_time) &gt; 1 hour (60 min * 60 sec), use current time.
+if (current_time - previous_run_query_end_time).to_i &gt; (60*60)
+  previous_run_query_end_time = current_time
+end 
+
+# Set up new query start and end times, ignoring seconds / milliseconds
+query_start_time = Time.new(previous_run_query_end_time.year, previous_run_query_end_time.month, previous_run_query_end_time.day, previous_run_query_end_time.hour, previous_run_query_end_time.min)
+query_end_time = Time.new(current_time.year, current_time.month, current_time.day, current_time.hour, current_time.min)
+
+output = {}
+output['query_start_time'] = query_start_time.iso8601
+output['query_end_time'] = query_end_time.iso8601
+output.to_json
+
+%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">remedy_generic_query_retrieve_v4_7</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_end_polling_tree_v1" id="routine_end_polling_tree_v1_24" name="Remedy Error" x="-348" y="861">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Robot Execution Id" label="Robot Execution Id" menu="" required="false" tooltip="">&lt;%= JSON.parse(@source['Data'])['Kinetic Robot Execution Record Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip="">&lt;%= results = %|&lt;results&gt;&lt;result name="outcome"&gt;Error&lt;/result&gt;&lt;result name="output"&gt;Remedy Search Failed&lt;/result&gt;&lt;/results&gt;|
+results %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferral Token" label="Deferral Token" menu="" required="false" tooltip="">&lt;%= JSON.parse(@source['Data'])['Kinetic Robot Deferral Token'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_survey_create_v1" id="routine_kinetic_solutions_survey_create_v1_27" name="Create Survey" x="227.57143" y="1113.1428">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="To store the slug for the survey form">&lt;%= @results['Get Survey Slug']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="true" tooltip="To store the data for the survey">&lt;%= @record %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= JSON.parse(@record)["Customer Login ID"] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="To store the kapp that contains the survey form">&lt;%= @results['Get Kapp Slug']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= JSON.parse(@record)["Incident Number"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_15</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_end_polling_tree_v1" id="routine_end_polling_tree_v1_28" name="End Poll Tree" x="-44" y="1398">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Robot Execution Id" label="Robot Execution Id" menu="" required="false" tooltip="">&lt;%=JSON.parse(@source['Data'])['Kinetic Robot Execution Record Id']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip=""></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferral Token" label="Deferral Token" menu="" required="false" tooltip="">&lt;%=JSON.parse(@source['Data'])['Kinetic Robot Deferral Token']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Run Id" label="Run Id" menu="" required="false" tooltip="ID of run that is calling this process">&lt;%= @run['Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_29" name="Get Kapp Slug" x="162" y="325">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=runtime = JSON.parse(@source['Data'])['Runtime Inputs']['Kapp Slug']%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_20</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

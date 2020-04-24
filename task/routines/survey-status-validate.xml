@@ -1,0 +1,319 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_kinetic_solutions_survey_status_validate_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Survey Status Validate</name>
+        <author></author>
+        <notes></notes>
+        <lastID>13</lastID>
+        <taskDefinition id="routine_kinetic_solutions_survey_status_validate_v1" name="Survey Status Validate" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip=""></parameter>
+                <parameter id="Kapp Slug" label="Kapp Slug" required="true" tooltip=""></parameter>
+                <parameter id="Previous Config" label="Previous Config" required="true" tooltip=""></parameter>
+                <parameter id="Current Config" label="Current Config" required="true" tooltip=""></parameter>
+                <parameter id="Current Status" label="Current Status" required="true" tooltip=""></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_1" name="Has start or end time changed" x="211" y="16">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+oldStart = "" 
+oldEnd = ""
+
+if !@inputs['Previous Config'].nil?
+config = JSON.parse(@inputs['Previous Config'] )
+oldStart = config["Survey Period"]['Start'] 
+oldEnd = config["Survey Period"]['Stop']
+end
+
+config = JSON.parse(@inputs['Current Config'] )
+newStart = config["Survey Period"]['Start'] 
+newEnd = config["Survey Period"]['Stop']
+
+theresult = true
+if (oldStart == newStart &amp;&amp; oldEnd == newEnd)
+  theresult = false
+end
+theresult %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Handle Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;true&quot;">utilities_echo_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Should status be active" x="211" y="216">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  config = JSON.parse(@inputs['Current Config'] )
+newStart = config["Survey Period"]['Start'] 
+newEnd = config["Survey Period"]['Stop']
+
+range = Date.parse(newStart)..Date.parse(newEnd)
+
+range.cover?(Date.today) %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="currently active" type="Complete" value="@inputs['Current Status'] == &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;true&quot;">system_join_v1_3</task>
+                    <task label="Needs to be active" type="Complete" value="@inputs['Current Status'] != &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_4</task>
+                    <task label="Needs to be inactive" type="Complete" value="@inputs['Current Status'] == &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;false&quot;">routine_kinetic_form_update_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_3" name="Ready for waits" x="208" y="516">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_6</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_update_v1" id="routine_kinetic_form_update_v1_4" name="Make Form Active" x="496" y="400">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Slug" label="Current Slug" menu="" required="true" tooltip="The forms current slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Name" label="Updated - Name" menu="" required="false" tooltip="The forms name"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Slug" label="Updated - Slug" menu="" required="false" tooltip="The forms slug"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Custom Head Content" label="Updated - Custom Head Content" menu="" required="false" tooltip="The forms custom head content"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="The forms description"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Fields JSON" label="Updated - Fields JSON" menu="" required="false" tooltip="JSON list of fields to add to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Notes" label="Updated - Notes" menu="" required="false" tooltip="The forms notes"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Pages JSON" label="Updated - Pages JSON" menu="" required="false" tooltip="JSON list the forms pages"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Security Policies JSON" label="Updated - Security Policies JSON" menu="" required="false" tooltip="JSON list the forms security policies"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Status" label="Updated - Status" menu="" required="false" tooltip="The forms status">Active</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Submission Label Expression" label="Updated - Submission Label Expression" menu="" required="false" tooltip="The forms submission label expression"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Type" label="Updated - Type" menu="" required="false" tooltip="The forms type"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_update_v1" id="routine_kinetic_form_update_v1_5" name="Make Form Inactive" x="-41" y="397">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Slug" label="Current Slug" menu="" required="true" tooltip="The forms current slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Name" label="Updated - Name" menu="" required="false" tooltip="The forms name"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Slug" label="Updated - Slug" menu="" required="false" tooltip="The forms slug"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Custom Head Content" label="Updated - Custom Head Content" menu="" required="false" tooltip="The forms custom head content"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="The forms description"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Fields JSON" label="Updated - Fields JSON" menu="" required="false" tooltip="JSON list of fields to add to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Notes" label="Updated - Notes" menu="" required="false" tooltip="The forms notes"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Pages JSON" label="Updated - Pages JSON" menu="" required="false" tooltip="JSON list the forms pages"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Security Policies JSON" label="Updated - Security Policies JSON" menu="" required="false" tooltip="JSON list the forms security policies"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Status" label="Updated - Status" menu="" required="false" tooltip="The forms status">Inactive</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Submission Label Expression" label="Updated - Submission Label Expression" menu="" required="false" tooltip="The forms submission label expression"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Type" label="Updated - Type" menu="" required="false" tooltip="The forms type"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_6" name="Create diff for wait node" x="210" y="624">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= config = JSON.parse(@inputs['Current Config'] )
+newStart = Date.parse(config["Survey Period"]['Start']) 
+newEnd = Date.parse(config["Survey Period"]['Stop'])
+today = Date.today 
+diff = newStart - today
+if (diff &lt; 0)
+diff = newEnd - today
+end
+diff.to_i%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_wait_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="system_wait_v1" id="system_wait_v1_7" name="Wait" x="210" y="743">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Time to wait" label="Wait time:" menu="" required="true" tooltip="Time you want to wait for deferred task">&lt;%= @results['Create diff for wait node']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Time unit" label="Time unit:" menu="Second,Minute,Hour,Day,Week" required="true" tooltip="Unit of measurement for time (Seconds, Minutes, Hours, Days, Weeks)">Day</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_8" name="Look Up Form" x="210" y="858">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Slug" label="Slug" menu="" required="true" tooltip="The Forms slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_9</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Should Status be Active - Update" x="211" y="986">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+newStart = config["Survey Period"]['Start']
+newEnd = config["Survey Period"]['Stop']
+
+range = Date.new(newStart)..Date.new(newEnd)
+
+range.cover?(Date.today) %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Needs to be active" type="Complete" value="@results['Look Up Form']['Status'] != &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_10</task>
+                    <task label="No update needed" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">system_join_v1_11</task>
+                    <task label="Needs to be inactive" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;false&quot;">routine_kinetic_form_update_v1_12</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_update_v1" id="routine_kinetic_form_update_v1_10" name="Make form Active - Update" x="493" y="1162">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Slug" label="Current Slug" menu="" required="true" tooltip="The forms current slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Name" label="Updated - Name" menu="" required="false" tooltip="The forms name"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Slug" label="Updated - Slug" menu="" required="false" tooltip="The forms slug"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Custom Head Content" label="Updated - Custom Head Content" menu="" required="false" tooltip="The forms custom head content"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="The forms description"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Fields JSON" label="Updated - Fields JSON" menu="" required="false" tooltip="JSON list of fields to add to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Notes" label="Updated - Notes" menu="" required="false" tooltip="The forms notes"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Pages JSON" label="Updated - Pages JSON" menu="" required="false" tooltip="JSON list the forms pages"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Security Policies JSON" label="Updated - Security Policies JSON" menu="" required="false" tooltip="JSON list the forms security policies"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Status" label="Updated - Status" menu="" required="false" tooltip="The forms status">Active</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Submission Label Expression" label="Updated - Submission Label Expression" menu="" required="false" tooltip="The forms submission label expression"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Type" label="Updated - Type" menu="" required="false" tooltip="The forms type"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_11</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_11" name="Done Updates" x="222" y="1265">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_13</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_form_update_v1" id="routine_kinetic_form_update_v1_12" name="Make Form Inactive - Update" x="-21" y="1147">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp the form exists in">&lt;%= @inputs['Kapp Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Slug" label="Current Slug" menu="" required="true" tooltip="The forms current slug">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Name" label="Updated - Name" menu="" required="false" tooltip="The forms name"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Slug" label="Updated - Slug" menu="" required="false" tooltip="The forms slug"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Attributes Map JSON" label="Updated - Attributes Map JSON" menu="" required="false" tooltip="JSON representation of the attributes associated to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Custom Head Content" label="Updated - Custom Head Content" menu="" required="false" tooltip="The forms custom head content"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Description" label="Updated - Description" menu="" required="false" tooltip="The forms description"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Fields JSON" label="Updated - Fields JSON" menu="" required="false" tooltip="JSON list of fields to add to the form"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Notes" label="Updated - Notes" menu="" required="false" tooltip="The forms notes"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Pages JSON" label="Updated - Pages JSON" menu="" required="false" tooltip="JSON list the forms pages"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Security Policies JSON" label="Updated - Security Policies JSON" menu="" required="false" tooltip="JSON list the forms security policies"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Status" label="Updated - Status" menu="" required="false" tooltip="The forms status">Inactive</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Submission Label Expression" label="Updated - Submission Label Expression" menu="" required="false" tooltip="The forms submission label expression"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Type" label="Updated - Type" menu="" required="false" tooltip="The forms type"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_11</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_13" name="Complete" x="222" y="1465">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

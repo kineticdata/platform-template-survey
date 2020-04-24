@@ -1,0 +1,17 @@
+{
+  "name": "Survey",
+  "description": "Survey Module routines",
+  "type": "Stored",
+  "handlers": [
+
+  ],
+  "policyRules": [
+
+  ],
+  "trees": [
+    "routine_kinetic_solutions_survey_create_v1",
+    "routine_kinetic_solutions_survey_invitation_send_v1",
+    "routine_kinetic_solutions_survey_reminder_send_v1",
+    "routine_kinetic_solutions_survey_status_validate_v1"
+  ]
+}

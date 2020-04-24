@@ -1,0 +1,109 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > survey</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Submitted</name>
+        <author></author>
+        <notes>Processes survey once it has been submitted, and runs the Survey&amp;apos;s custom workflow if defined.</notes>
+        <lastID>5</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_1" name="Score Survey - Placeholder" x="99" y="97">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%
+# Eventually we'll be scoring the survey submission here
+%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_retrieve_v1" id="routine_kinetic_workflow_retrieve_v1_2" name="Retrieve Custom Workflow Process" x="431" y="323">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Title" label="Title" menu="" required="true" tooltip="The title of the workflow (tree / routine) which is a concatenation of&#10;the source name :: source group :: workflow name">&lt;%= "#{@source['Name']} :: Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']} :: Submitted" %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Workflow Active" type="Complete" value="@results['Retrieve Custom Workflow Process']['Exists'] == &quot;true&quot;">routine_kinetic_workflow_run_create_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_3" name="Custom Workflow" x="242" y="200">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
+config = JSON.parse(@form_attributes['Survey Configuration'])
+config.has_key?("Use Custom Workflow") &amp;&amp; config["Use Custom Workflow"].to_s.downcase == "true" ? true : false %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Has Custom Workflow" type="Complete" value="@results['Custom Workflow']['output'] == &quot;true&quot;">routine_kinetic_workflow_retrieve_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_workflow_run_create_v1" id="routine_kinetic_workflow_run_create_v1_4" name="Run Tree" x="653" y="480">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Source" label="Source" menu="" required="true" tooltip="Use '-' for a global routine.">&lt;%= @source['Name'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Group" label="Group" menu="" required="true" tooltip="Use '-' for any routine.">&lt;%= "Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']}" %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Name" label="Name" menu="" required="true" tooltip="The workflow (tree/routine) name to run.">Submitted</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Body" label="Body" menu="" required="false" tooltip="A JSON string of name/value pairs that will be passed to the tree as body content.">&lt;%= @source['Data'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_5" name="Create Custom Tree Run Activity Record" x="805" y="603">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Submission Id" label="Submission Id" menu="" required="true" tooltip="Id of the submission to create the activity record for">&lt;%=  @submission['Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="false" tooltip="Data to store in the submission activity">&lt;%= {"runId" =&gt; @results['Run Tree']['Run Id']}.to_json %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">Custom Workflow Ran Successfully</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">Custom Workflow</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

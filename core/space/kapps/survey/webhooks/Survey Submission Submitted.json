@@ -1,0 +1,8 @@
+{
+  "event": "Submitted",
+  "filter": "form('type') === \"Survey\"",
+  "name": "Survey Submission Submitted",
+  "type": "Submission",
+  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Submissions%20%3E%20${kapp('slug')}/Submitted",
+  "attributes": null
+}
