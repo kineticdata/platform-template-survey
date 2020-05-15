@@ -7,9 +7,9 @@
         <name>Updated</name>
         <author></author>
         <notes></notes>
-        <lastID>44</lastID>
+        <lastID>45</lastID>
         <request>
-            <task definition_id="system_start_v1" id="start" name="Start" x="550" y="-35">
+            <task definition_id="system_start_v1" id="start" name="Start" x="198" y="23">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -18,10 +18,10 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Is Survey" type="Complete" value="@form_attributes.has_key?('Survey Configuration') &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].empty?">system_noop_v1_31</task>
+                    <task label="Is Survey" type="Complete" value=" @form['Type'] == &quot;Survey&quot;">system_noop_v1_31</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_31" name="Is Survey" x="1299" y="-31">
+            <task definition_id="system_noop_v1" id="system_noop_v1_31" name="Is Survey" x="517" y="23">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -30,14 +30,11 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Has new polling" type="Complete" value="(@form_attributes_previous['Survey Configuration'].nil? || @form_attributes_previous['Survey Configuration'].empty? || !JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') || JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] != &quot;true&quot;) &amp;&amp; JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot;">system_noop_v1_32</task>
-                    <task label="Removed Polling" type="Complete" value=" (!@form_attributes_previous['Survey Configuration'].nil? &amp;&amp; !@form_attributes_previous['Survey Configuration'].empty? &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot;) &amp;&amp; (!JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') || JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] != &quot;true&quot;)">system_noop_v1_33</task>
-                    <task label="Adjusted Polling" type="Complete" value="!@form_attributes_previous['Survey Configuration'].nil? &amp;&amp; !@form_attributes_previous['Survey Configuration'].empty? &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot;&amp;&amp;JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot; &amp;&amp; ((JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Source&quot;] != JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Source&quot;]) || (JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Type&quot;] != JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Type&quot;]) || (JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Trigger&quot;] != JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Trigger&quot;]) || (JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Interval&quot;] != JSON.parse(@form_attributes_previous['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Interval&quot;])) ">system_noop_v1_34</task>
+                    <task label="" type="Complete" value="">utilities_echo_v1_44</task>
                     <task label="" type="Complete" value="">routine_kinetic_solutions_survey_status_validate_v1_43</task>
-                    <task label="has or had polling" type="Complete" value="!@form_attributes['Survey Configuration'].to_s.empty? &amp;&amp; (JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') || JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling'))">utilities_echo_v1_44</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_32" name="Has new polling" x="1782" y="166">
+            <task definition_id="system_noop_v1" id="system_noop_v1_32" name="Has new polling" x="220" y="245">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -49,7 +46,7 @@
                     <task label="" type="Complete" value="">system_join_v1_42</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_33" name="Removed Polling" x="1300" y="237">
+            <task definition_id="system_noop_v1" id="system_noop_v1_33" name="Removed Polling" x="836.7118" y="257.14536">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -61,7 +58,7 @@
                     <task label="" type="Complete" value="">routine_datastore_submission_retrieve_by_query_v1_35</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_34" name="Adjusted Polling" x="1549" y="224">
+            <task definition_id="system_noop_v1" id="system_noop_v1_34" name="Adjusted Polling" x="517" y="256">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -73,7 +70,7 @@
                     <task label="" type="Complete" value="">routine_datastore_submission_retrieve_by_query_v1_37</task>
                 </dependents>
             </task>
-            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="1300" y="437">
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="837.9824000000001" y="371.2456">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -89,7 +86,7 @@
                     <task label="Found robot definition" type="Complete" value="!@results['Get Poller to Delete']['Id'].nil?">routine_kinetic_datastore_submission_delete_v1_36</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="1300" y="637">
+            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="842.0226" y="514.25815">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -101,7 +98,7 @@
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_37" name="Get Poller to Update" x="1554" y="416">
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_37" name="Get Poller to Update" x="522" y="361">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -118,7 +115,7 @@
                     <task label="None Found" type="Complete" value="@results['Get Poller to Update']['Id'].nil?">system_join_v1_42</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_datastore_submission_update_v1" id="routine_kinetic_datastore_submission_update_v1_38" name="Update Poller" x="1559" y="818">
+            <task definition_id="routine_kinetic_datastore_submission_update_v1" id="routine_kinetic_datastore_submission_update_v1_38" name="Update Poller" x="530" y="598">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -151,7 +148,7 @@ values.to_json %&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_39" name="Get Polling Info-New" x="1555" y="605">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_39" name="Get Polling Info-New" x="527" y="484">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -166,7 +163,7 @@ output.to_json %&gt;</parameter>
                     <task label="" type="Complete" value="">routine_kinetic_datastore_submission_update_v1_38</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_40" name="Get Polling Info" x="1821" y="477">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_40" name="Get Polling Info" x="230" y="467">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -181,7 +178,7 @@ output.to_json %&gt;</parameter>
                     <task label="" type="Complete" value="">routine_kinetic_datastore_submission_create_v1_41</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_41" name="Create Poller" x="1826" y="801">
+            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_41" name="Create Poller" x="230" y="582">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -214,7 +211,7 @@ values.to_json %&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="system_join_v1" id="system_join_v1_42" name="None Found-Create New" x="1812" y="327">
+            <task definition_id="system_join_v1" id="system_join_v1_42" name="None Found-Create New" x="221" y="362">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -229,7 +226,7 @@ values.to_json %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_40</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_43" name="Handle Survey Status" x="1054" y="224">
+            <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_43" name="Handle Survey Status" x="865.3243" y="27.639809">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -245,27 +242,45 @@ values.to_json %&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_44" name="check polling" x="1767" y="-11">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_44" name="Check Polling" x="513" y="127">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>true</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= polling = ""
-if (@form_attributes_previous['Survey Configuration'].nil? || !JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') || JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Poll"] != "true") &amp;&amp; JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Poll"] == "true" 
-polling = "new"
-elsif !@form_attributes_previous['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Poll"] == "true" &amp;&amp; JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Poll"] == "true" &amp;&amp; ((JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Source"] != JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Source"]) || (JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Type"] != JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Type"]) || (JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Trigger"] != JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Trigger"]) || (JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Interval"] != JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Interval"])) 
-polling = "update"
-elsif (!@form_attributes_previous['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes_previous['Survey Configuration'])["Event Polling"]["Poll"] == "true") &amp;&amp; (!JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') || JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]["Poll"] != "true")
-polling = "remove"
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+# Parse the current and previous configs
+current_config = @form_attributes['Survey Configuration'].to_s.empty? ? {} : JSON.parse(@form_attributes['Survey Configuration'])
+prev_config = @form_attributes_previous['Survey Configuration'].to_s.empty? ? {} : JSON.parse(@form_attributes_previous['Survey Configuration'])
+
+# Determine if polling is enabled
+current_has_polling = current_config.has_key?('Event Polling') &amp;&amp; current_config["Event Polling"]["Poll"].to_s.downcase == "true" 
+prev_has_polling = prev_config.has_key?('Event Polling') &amp;&amp; prev_config["Event Polling"]["Poll"].to_s.downcase == "true"
+
+# Calculate polling values
+current_polling_values = current_has_polling ? current_config["Event Polling"] : {}
+prev_polling_values = prev_has_polling ? prev_config["Event Polling"] : {}
+
+# Build variable to store result
+polling = ""
+if (!prev_has_polling &amp;&amp; current_has_polling)
+  polling = "new"
+elsif current_polling_values != prev_polling_values 
+  polling = "update"
+elsif prev_has_polling &amp;&amp; !current_has_polling
+  polling = "remove"
 else
-polling = "none"
+  polling = "none"
 end
-%&gt;</parameter>
+polling %&gt;</parameter>
                 </parameters>
                 <messages></messages>
-                <dependents></dependents>
+                <dependents>
+                    <task label="Has new polling" type="Complete" value="@results['Check Polling']['output'] == &quot;new&quot;">system_noop_v1_32</task>
+                    <task label="Removed Polling" type="Complete" value="@results['Check Polling']['output'] == &quot;remove&quot;">system_noop_v1_33</task>
+                    <task label="Adjusted Polling" type="Complete" value="@results['Check Polling']['output'] == &quot;update&quot;">system_noop_v1_34</task>
+                </dependents>
             </task>
         </request>
     </taskTree>

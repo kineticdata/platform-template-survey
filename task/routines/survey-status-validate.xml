@@ -43,24 +43,17 @@
                 <visible>true</visible>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
-oldStart = "" 
-oldEnd = ""
+# Parse the current and previous configs
+current_config = @inputs['Current Config'].to_s.empty? ? {} : JSON.parse(@inputs['Current Config'])
+prev_config = @inputs['Previous Config'].to_s.empty? ? {} : JSON.parse(@inputs['Previous Config'])
 
-if !@inputs['Previous Config'].to_s.empty?
-config = JSON.parse(@inputs['Previous Config'] )
-oldStart = config["Survey Period"]['Start'] 
-oldEnd = config["Survey Period"]['Stop']
-end
+# Calculate the Current / Prev Start &amp; End Dates
+current_start = current_config.has_key?('Survey Period') ? current_config["Survey Period"]['Start'] : ""
+current_end = current_config.has_key?('Survey Period') ? current_config["Survey Period"]['End'] : ""
+prev_start = prev_config.has_key?('Survey Period') ? prev_config["Survey Period"]['Start'] : ""
+prev_end = prev_config.has_key?('Survey Period') ? prev_config["Survey Period"]['End'] : ""
 
-config = JSON.parse(@inputs['Current Config'] )
-newStart = config["Survey Period"]['Start'] 
-newEnd = config["Survey Period"]['Stop']
-
-theresult = true
-if (oldStart == newStart &amp;&amp; oldEnd == newEnd)
-  theresult = false
-end
-theresult %&gt;</parameter>
+current_start != current_end || prev_start != prev_end %&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
@@ -158,7 +151,7 @@ range.cover?(Date.today) %&gt;</parameter>
                     <task label="" type="Complete" value="">system_join_v1_3</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_6" name="Create diff for wait node" x="210" y="624">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_6" name="Create diff for wait node" x="210" y="609">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -177,7 +170,7 @@ diff.to_i%&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="" type="Complete" value="">system_wait_v1_7</task>
+                    <task label="Should Wait" type="Complete" value="@results['Create diff for wait node']['output'] != &quot;0&quot;">system_wait_v1_7</task>
                 </dependents>
             </task>
             <task definition_id="system_wait_v1" id="system_wait_v1_7" name="Wait" x="210" y="743">
@@ -226,9 +219,7 @@ range = Date.parse(newStart)..Date.parse(newEnd)
 
 range.cover?(Date.today) %&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="Needs to be active" type="Complete" value="@results['Look Up Form']['Status'] != &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_10</task>
                     <task label="No update needed" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">system_join_v1_11</task>

@@ -94,10 +94,12 @@ config["Allow Opt-out"] %&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/kapp/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/survey-opt-out/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;limit=1&amp;q=values[Survey Slug]="&lt;%= @inputs['Survey Slug'] %&gt;" AND values[User Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/survey-opt-out/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;limit=1&amp;q=values[Survey Slug]="&lt;%= @inputs['Survey Slug'] %&gt;" AND values[User Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_8</task>
                 </dependents>
@@ -202,9 +204,7 @@ config["Maximum Survey Frequency"]["Count"] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)">&lt;%= #This node is not wrapped because we dont want an error here to stop the process. We just want to ignore that particular survey create request.
 %&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="No error" type="Complete" value="@results['Check Freq for User']['Handler Error Message'].nil?">utilities_echo_v1_14</task>
                     <task label="Skip entry if error" type="Complete" value="!@results['Check Freq for User']['Handler Error Message'].nil?">system_join_v1_3</task>

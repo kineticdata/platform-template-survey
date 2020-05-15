@@ -83,20 +83,6 @@
       "name": "Status"
     }
   ],
-  "formTypes": [
-    {
-      "name": "Survey"
-    },
-    {
-      "name": "Survey Action"
-    },
-    {
-      "name": "Template"
-    },
-    {
-      "name": "Utility"
-    }
-  ],
   "loginPage": null,
   "name": "Survey",
   "resetPasswordPage": null,

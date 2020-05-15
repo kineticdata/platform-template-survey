@@ -95,44 +95,6 @@
       "name": "Status"
     }
   ],
-  "formTypes": [
-    {
-      "name": "Approval"
-    },
-    {
-      "name": "Automated"
-    },
-    {
-      "name": "Console"
-    },
-    {
-      "name": "Content"
-    },
-    {
-      "name": "Service"
-    },
-    {
-      "name": "Service Description"
-    },
-    {
-      "name": "Subservice"
-    },
-    {
-      "name": "Subtask"
-    },
-    {
-      "name": "Task"
-    },
-    {
-      "name": "Template"
-    },
-    {
-      "name": "Work Item"
-    },
-    {
-      "name": "Work Order"
-    }
-  ],
   "loginPage": "",
   "name": "Queue",
   "resetPasswordPage": "",
