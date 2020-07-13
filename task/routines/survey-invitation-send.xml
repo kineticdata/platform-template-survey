@@ -14,7 +14,7 @@
             <deferrable>true</deferrable>
             <parameters>
                 <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip="To store the slug for the survey form"></parameter>
-                <parameter id="User Id" label="User Id" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
+                <parameter id="recipientEmail" label="recipientEmail" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
                 <parameter id="Submission Id" label="Submission Id" required="true" tooltip=""></parameter>
                 <parameter id="Survey Kapp Slug" label="Survey Kapp Slug" required="true" tooltip=""></parameter>
             </parameters>
@@ -143,7 +143,7 @@ config["Owning Team"] %&gt;</parameter>
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['recipientEmail'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%= @results['Check Invitation']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages."></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: services, queue, etc.)">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
@@ -151,7 +151,11 @@ config["Owning Team"] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Form Slug Initiating Notification" label="Form Slug Initiating Notification" menu="" required="false" tooltip="The slug of the Form sending the notification (ex: work-order, cleaning, etc.)">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Is Datastore" label="Is Datastore" menu="" required="false" tooltip="If the Related Submission Id, or Form Slug is a datastore form."></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_tree_return_v1_30</task>
                 </dependents>

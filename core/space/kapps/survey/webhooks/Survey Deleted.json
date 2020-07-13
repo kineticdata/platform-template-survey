@@ -1,0 +1,8 @@
+{
+  "event": "Deleted",
+  "filter": "form('type') === \"Survey\"",
+  "name": "Survey Deleted",
+  "type": "Form",
+  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Forms%20%3E%20${kapp('slug')}/Deleted",
+  "attributes": null
+}

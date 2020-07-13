@@ -124,7 +124,7 @@
     {
       "name": "Task Server Host",
       "values": [
-        "survey.kinops.io"
+        "survey-template.kinops.io"
       ]
     },
     {
@@ -136,13 +136,13 @@
     {
       "name": "Task Server Space Slug",
       "values": [
-        "survey"
+        "survey-template"
       ]
     },
     {
       "name": "Task Server Url",
       "values": [
-        "https://survey.kinops.io/kinetic-task"
+        "https://survey-template.kinops.io/kinetic-task"
       ]
     },
     {
@@ -154,7 +154,7 @@
     {
       "name": "Web Server Url",
       "values": [
-        "https://survey.kinops.io"
+        "https://survey-template.kinops.io"
       ]
     }
   ],
@@ -167,12 +167,12 @@
   "defaultLocale": "en",
   "defaultTimezone": "America/Chicago",
   "displayType": "Single Page App",
-  "displayValue": "https://s3.amazonaws.com/kinops.io/bundles/kinetic/branches/feature/survey/index.html",
+  "displayValue": "https://s3.amazonaws.com/kinops.io/bundles/kinetic/branches/develop/index.html",
   "enabledLocales": [
     "en"
   ],
   "loginPage": null,
-  "name": "Survey Testing Prod",
+  "name": "Kinetic Data",
   "platformComponents": {
     "agents": [
 
@@ -219,7 +219,7 @@
   ],
   "sessionInactiveLimitInSeconds": 2592000,
   "sharedBundleBase": "hydrogen-v1",
-  "slug": "survey",
+  "slug": "survey-template",
   "trustedFrameDomains": [
     "localhost:3000"
   ],

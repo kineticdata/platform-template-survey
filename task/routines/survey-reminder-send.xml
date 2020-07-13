@@ -15,7 +15,7 @@
             <parameters>
                 <parameter id="Reminder Email Template" label="Reminder Email Template" required="true" tooltip=""></parameter>
                 <parameter id="Reminder Count" label="Reminder Count" required="true" tooltip=""></parameter>
-                <parameter id="User Id" label="User Id" required="true" tooltip=""></parameter>
+                <parameter id="recipientEmail" label="recipientEmail" required="true" tooltip=""></parameter>
                 <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip=""></parameter>
                 <parameter id="Survey Submission Id" label="Survey Submission Id" required="true" tooltip=""></parameter>
                 <parameter id="Wait Days" label="Wait Days" required="true" tooltip=""></parameter>
@@ -45,7 +45,7 @@
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Recipient List" label="Recipient List" menu="" required="true" tooltip="Comma separated list of recipients (Usernames, SMTP Addresses, and/or Team Names)">&lt;%= @inputs['recipientEmail'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Notification Template Name" label="Notification Template Name" menu="" required="true" tooltip="Name of the notification template to use when sending this email">&lt;%= @inputs['Reminder Email Template'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="JSON Variables" label="JSON Variables" menu="" required="false" tooltip="JSON input of miscellaneous values.  These values are used to replace placeholder content in notification messages."></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: services, queue, etc.)">&lt;%= @inputs['Survey Kapp Slug'] %&gt;</parameter>
@@ -108,7 +108,7 @@
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Reminder Email Template" label="Reminder Email Template" menu="" required="true" tooltip="">&lt;%= @inputs['Reminder Email Template'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Reminder Count" label="Reminder Count" menu="" required="true" tooltip="">&lt;%= @inputs['Reminder Count'].to_i - 1 %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="">&lt;%= @inputs['User Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="">&lt;%= @inputs['recipientEmail'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Submission Id" label="Survey Submission Id" menu="" required="true" tooltip="">&lt;%= @inputs['Survey Submission Id'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Wait Days" label="Wait Days" menu="" required="true" tooltip="">&lt;%= @inputs['Wait Days'] %&gt;</parameter>

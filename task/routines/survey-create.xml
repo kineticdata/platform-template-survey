@@ -15,7 +15,7 @@
             <parameters>
                 <parameter id="Survey Slug" label="Survey Slug" required="true" tooltip="To store the slug for the survey form"></parameter>
                 <parameter id="Data" label="Data" required="true" tooltip="To store the data for the survey"></parameter>
-                <parameter id="User Id" label="User Id" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
+                <parameter id="recipientEmail" label="recipientEmail" required="true" tooltip="To store the user who is to be the recipient of the survey"></parameter>
                 <parameter id="Survey Kapp Slug" label="Survey Kapp Slug" required="true" tooltip="To store the kapp that contains the survey form"></parameter>
                 <parameter id="Reference Id" label="Reference Id" required="true" tooltip="ID of the ticket in the system creating the survey"></parameter>
             </parameters>
@@ -94,12 +94,10 @@ config["Allow Opt-out"] %&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/survey-opt-out/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;limit=1&amp;q=values[Survey Slug]="&lt;%= @inputs['Survey Slug'] %&gt;" AND values[User Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">/kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/survey-opt-out/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;limit=1&amp;q=values[Survey Slug]="&lt;%= @inputs['Survey Slug'] %&gt;" AND values[recipientEmail]="&lt;%= @inputs['recipientEmail'] %&gt;"</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_8</task>
                 </dependents>
@@ -200,7 +198,7 @@ config["Maximum Survey Frequency"]["Count"] %&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">GET</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/&lt;%= @inputs['Survey Slug'] %&gt;/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;timeline=createdAt&amp;limit=1000&amp;start=&lt;%= Date.today - (@results['Check Maximum Freq Days']['output'].to_i - 1)%&gt;T00:00:00Z&amp;q=values[Recipient Id]="&lt;%= @inputs['User Id'] %&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /kapps/:kappSlug/forms/:formSlug">kapps/&lt;%= @inputs['Survey Kapp Slug'] %&gt;/forms/&lt;%= @inputs['Survey Slug'] %&gt;/submissions?include=details,origin,parent,values,children,form,form.kapp&amp;timeline=createdAt&amp;limit=1000&amp;start=&lt;%= Date.today - (@results['Check Maximum Freq Days']['output'].to_i - 1)%&gt;T00:00:00Z&amp;q=values[recipientEmail]="&lt;%= @inputs['recipientEmail'] %&gt;"</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)">&lt;%= #This node is not wrapped because we dont want an error here to stop the process. We just want to ignore that particular survey create request.
 %&gt;</parameter>
                 </parameters>
@@ -256,7 +254,7 @@ values["d-#{key}"] = value
 end
 end
 #need to set recipient value based on mapping to be determined
-values['Recipient Id'] = @inputs['User Id']
+values['recipientEmail'] = @inputs['recipientEmail']
 values['Reference Id'] = @inputs['Reference Id']
 values['Observing Teams'] = []
 values['Observing Teams'].push(@results['Check Owning Team']['output'])
@@ -266,7 +264,11 @@ values.to_json%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Parent Id" label="Parent Id" menu="" required="false" tooltip="Sets the submissions parent to another Kinetic Submission"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Submit Submission" label="Submit Submission" menu="" required="false" tooltip="True or False, if Submission should be Submitted when created"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_tree_return_v1_20</task>
                 </dependents>

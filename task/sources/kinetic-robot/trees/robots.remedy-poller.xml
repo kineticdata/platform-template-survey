@@ -7,7 +7,7 @@
         <name>Remedy Poller</name>
         <author></author>
         <notes></notes>
-        <lastID>29</lastID>
+        <lastID>31</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
                 <version>1</version>
@@ -170,7 +170,7 @@ config["Event Polling"]["Trigger"] %&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="" type="Complete" value="">utilities_echo_v1_22</task>
+                    <task label="" type="Complete" value="">utilities_echo_v1_30</task>
                 </dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_22" name="Get Type" x="-44" y="612">
@@ -256,11 +256,15 @@ results %&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="To store the slug for the survey form">&lt;%= @results['Get Survey Slug']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="true" tooltip="To store the data for the survey">&lt;%= @record %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= JSON.parse(@record)["Customer Login ID"] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="recipientEmail" label="recipientEmail" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= JSON.parse(@record)[@results['Get Recipient Email Field']['output']] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="To store the kapp that contains the survey form">&lt;%= @results['Get Kapp Slug']['output'] %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= JSON.parse(@record)["Incident Number"] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= JSON.parse(@record)[@results['Get Reference Id Field']['output']] %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_15</task>
                 </dependents>
@@ -292,6 +296,38 @@ results %&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_20</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_30" name="Get Reference Id Field" x="177" y="489">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Event Polling"]["Reference Id"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_31" name="Get Recipient Email Field" x="181" y="619">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+config["Event Polling"]["Email Address"] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_22</task>
                 </dependents>
             </task>
         </request>

@@ -2,51 +2,9 @@
   "anonymous": false,
   "attributes": [
     {
-      "name": "Datastore Hidden",
-      "values": [
-        "true"
-      ]
-    },
-    {
-      "name": "Icon",
-      "values": [
-        "fa-desktop"
-      ]
-    },
-    {
-      "name": "Owning Team",
-      "values": [
-        "IT"
-      ]
-    },
-    {
-      "name": "Survey",
-      "values": [
-        "true"
-      ]
-    },
-    {
       "name": "Survey Configuration",
       "values": [
         ""
-      ]
-    },
-    {
-      "name": "Survey Source",
-      "values": [
-        "Remedy"
-      ]
-    },
-    {
-      "name": "Survey Type",
-      "values": [
-        "Incident"
-      ]
-    },
-    {
-      "name": "Task Assignee Team",
-      "values": [
-        "IT"
       ]
     }
   ],
@@ -352,10 +310,10 @@
             },
             {
               "type": "field",
-              "name": "Recipient Id",
-              "label": "Recipient Id",
+              "name": "recipientEmail",
+              "label": "recipientEmail",
               "key": "f908",
-              "defaultValue": "${identity('username')}",
+              "defaultValue": "",
               "defaultResourceName": null,
               "visible": true,
               "enabled": true,
@@ -478,6 +436,6 @@
   ],
   "slug": "survey-template-scale",
   "status": "Inactive",
-  "submissionLabelExpression": "${values('Recipient Id')}",
+  "submissionLabelExpression": "${form('name')} for ${values('recipientEmail')}",
   "type": "Template"
 }
