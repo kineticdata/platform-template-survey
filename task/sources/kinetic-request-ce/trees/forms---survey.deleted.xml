@@ -1,0 +1,66 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Forms > survey</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Deleted</name>
+        <author></author>
+        <notes></notes>
+        <lastID>44</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="550" y="-35">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Is Survey" type="Complete" value="@form_attributes.has_key?('Survey Configuration') &amp;&amp; !@form_attributes['Survey Configuration'].nil? &amp;&amp; !@form_attributes['Survey Configuration'].empty?">system_noop_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_31" name="Is Survey" x="814" y="-28">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Had Polling" type="Complete" value="!@form_attributes['Survey Configuration'].to_s.empty? &amp;&amp; JSON.parse(@form_attributes['Survey Configuration']).has_key?('Event Polling') &amp;&amp; JSON.parse(@form_attributes['Survey Configuration'])[&quot;Event Polling&quot;][&quot;Poll&quot;] == &quot;true&quot;">routine_datastore_submission_retrieve_by_query_v1_35</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="1173" y="-20">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Datastore Form Slug" label="Datastore Form Slug" menu="" required="true" tooltip="">robot-definitions</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Index To Search" label="Index To Search" menu="" required="true" tooltip="">values[Robot Name]</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Query" label="Query" menu="" required="true" tooltip="">values[Robot Name] = "&lt;%= @form['Slug'] %&gt; poller"</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Found robot definition" type="Complete" value="!@results['Get Poller to Delete']['Id'].nil?">routine_kinetic_datastore_submission_delete_v1_36</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="1502" y="-17">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to delete">&lt;%= @results['Get Poller to Delete']['Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

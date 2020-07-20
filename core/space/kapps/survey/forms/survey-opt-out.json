@@ -51,7 +51,7 @@
         },
         {
           "type": "field",
-          "name": "User Id",
+          "name": "recipientEmail",
           "label": "Email Address",
           "key": "f2",
           "defaultValue": null,
@@ -155,6 +155,6 @@
   ],
   "slug": "survey-opt-out",
   "status": "Active",
-  "submissionLabelExpression": "${values('User Id')} opted out for ${values('Survey Slug')}",
+  "submissionLabelExpression": "${values('recipientEmail')} opted out for ${values('Survey Slug')}",
   "type": "Survey Action"
 }

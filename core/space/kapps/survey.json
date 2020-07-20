@@ -29,7 +29,7 @@
   "bundlePath": null,
   "defaultFormConfirmationPage": null,
   "defaultFormDisplayPage": null,
-  "defaultSubmissionLabelExpression": "${values('Recipient Id')}",
+  "defaultSubmissionLabelExpression": "${values('recipientEmail')}",
   "displayType": "Display Page",
   "displayValue": null,
   "fields": [
