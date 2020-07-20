@@ -1,8 +1,0 @@
-{
-  "event": "Updated",
-  "filter": "",
-  "name": "Team Updated",
-  "type": "Team",
-  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Teams/Updated",
-  "attributes": null
-}

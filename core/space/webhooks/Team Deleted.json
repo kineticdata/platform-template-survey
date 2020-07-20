@@ -1,8 +1,0 @@
-{
-  "event": "Deleted",
-  "filter": "",
-  "name": "Team Deleted",
-  "type": "Team",
-  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Teams/Deleted",
-  "attributes": null
-}

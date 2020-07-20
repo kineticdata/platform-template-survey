@@ -1,8 +1,0 @@
-{
-  "event": "Notification",
-  "filter": "",
-  "name": "Discussion Notification Created",
-  "type": "Discussion",
-  "url": "/app/api/v1/run-tree/Kinetic%20Discussions/Discussion%20%3E%20Notification/Created",
-  "attributes": null
-}
