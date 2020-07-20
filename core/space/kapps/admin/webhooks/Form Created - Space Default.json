@@ -1,8 +1,0 @@
-{
-  "event": "Created",
-  "filter": "kapp('attribute:Custom Form Workflow').indexOf('Created') === -1",
-  "name": "Form Created - Space Default",
-  "type": "Form",
-  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Forms/Created",
-  "attributes": null
-}

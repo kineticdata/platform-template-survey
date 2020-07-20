@@ -1,8 +1,0 @@
-{
-  "event": "Created",
-  "filter": "form('attribute:Custom Submission Workflow').indexOf('Created') > -1",
-  "name": "Submission Created - Custom Form",
-  "type": "Submission",
-  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Submissions%20%3E%20${kapp('slug')}%20%3E%20${form('slug')}/Created",
-  "attributes": null
-}

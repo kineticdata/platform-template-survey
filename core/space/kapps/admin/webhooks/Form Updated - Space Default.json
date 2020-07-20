@@ -1,8 +1,0 @@
-{
-  "event": "Updated",
-  "filter": "kapp('attribute:Custom Form Workflow').indexOf('Updated') === -1",
-  "name": "Form Updated - Space Default",
-  "type": "Form",
-  "url": "/app/api/v1/run-tree/${space('attribute:Task Source Name')}/Forms/Updated",
-  "attributes": null
-}
