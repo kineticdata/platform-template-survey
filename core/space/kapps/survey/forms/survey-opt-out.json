@@ -1,12 +1,7 @@
 {
   "anonymous": true,
   "attributes": [
-    {
-      "name": "Datastore Configuration",
-      "values": [
-        "{\"columns\":[{\"name\":\"Survey Slug\",\"label\":\"Survey Slug\",\"type\":\"value\",\"visible\":false},{\"name\":\"User Id\",\"label\":\"User Id\",\"type\":\"value\",\"visible\":false},{\"name\":\"handle\",\"label\":\"Handle\",\"type\":\"system\",\"visible\":true},{\"name\":\"label\",\"label\":\"Label\",\"type\":\"system\",\"visible\":true},{\"name\":\"createdAt\",\"label\":\"Created At\",\"type\":\"system\",\"visible\":false},{\"name\":\"createdBy\",\"label\":\"Created By\",\"type\":\"system\",\"visible\":false},{\"name\":\"updatedAt\",\"label\":\"Updated At\",\"type\":\"system\",\"visible\":false},{\"name\":\"updatedBy\",\"label\":\"Updated By\",\"type\":\"system\",\"visible\":false},{\"name\":\"id\",\"label\":\"Id\",\"type\":\"system\",\"visible\":false}],\"defaultSearchIndex\":null}"
-      ]
-    }
+
   ],
   "bridgedResources": [
 
