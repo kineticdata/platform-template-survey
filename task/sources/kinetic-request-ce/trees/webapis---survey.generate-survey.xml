@@ -30,7 +30,7 @@
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="To store the slug for the survey form">&lt;%= @results['Survey Slug']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Data" label="Data" menu="" required="true" tooltip="To store the data for the survey">&lt;%= @results['Data']['output'] %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= @results['User Id']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="recipientEmail" label="recipientEmail" menu="" required="true" tooltip="To store the user who is to be the recipient of the survey">&lt;%= @results['Recipient Email']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="To store the kapp that contains the survey form">&lt;%= @source['Group'].gsub("WebApis &gt; ","") %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= @results['Reference Id']['output'] %&gt;</parameter>
                 </parameters>
@@ -56,7 +56,7 @@ end%&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_3</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_3" name="User Id" x="224" y="134">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_3" name="Recipient Email" x="224" y="134">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -65,7 +65,7 @@ end%&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  
 begin
-  JSON.parse(@request['Body'])['userId'] 
+  JSON.parse(@request['Body'])['recipientEmail'] 
 rescue
   ""
 end%&gt;</parameter>
@@ -85,13 +85,15 @@ end%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
 
 surveySlug = @results['Survey Slug']['output']
-userId = @results['User Id']['output']
+recipientEmail = @results['Recipient Email']['output']
 referenceId = @results['Reference Id']['output']
 data = @results['Data']['output']
 # Validate Call
-(surveySlug.to_s.empty? || userId.to_s.empty? || referenceId.to_s.empty? || data.to_s.empty?) ? "false" : "true" %&gt;</parameter>
+(surveySlug.to_s.empty? || recipientEmail.to_s.empty? || referenceId.to_s.empty? || data.to_s.empty?) ? "false" : "true" %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Valid Call" type="Complete" value="@results['Validate Call']['output'].to_s.strip == &quot;true&quot;">system_tree_return_v1_6</task>
                     <task label="Invalid Call" type="Complete" value="@results['Validate Call']['output'].to_s.strip == &quot;false&quot;">system_tree_return_v1_7</task>
@@ -144,7 +146,7 @@ end%&gt;
                     <parameter dependsOnId="" dependsOnValue="" id="content" label="Content" menu="" required="false" tooltip="">&lt;%= 
 errors = []
 errors.push "Invalid surveySlug" if @results['Survey Slug']['output'].to_s.empty?
-errors.push "Invalid userId" if @results['User Id']['output'].to_s.empty?
+errors.push "Invalid recipientEmail" if @results['Recipient Email']['output'].to_s.empty?
 errors.push "Invalid data" if @results['Data']['output'].to_s.empty?
 
 {
@@ -157,7 +159,9 @@ errors.push "Invalid data" if @results['Data']['output'].to_s.empty?
                     <parameter dependsOnId="" dependsOnValue="" id="headers_json" label="Headers (JSON)" menu="" required="false" tooltip="">{}</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="response_code" label="Response Code" menu="" required="false" tooltip="">400</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents></dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_8" name="DEVELOPER NOTES" x="370" y="78">
@@ -189,9 +193,7 @@ rescue
   ""
 end%&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_5</task>
                 </dependents>
