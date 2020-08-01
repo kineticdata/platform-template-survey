@@ -78,7 +78,7 @@
                     <parameter dependsOnId="" dependsOnValue="" id="Reminder Count" label="Reminder Count" menu="" required="true" tooltip="">&lt;%= 
 config = JSON.parse(@form_attributes['Survey Configuration'])
 config["Reminders"]["Reminder Max"]%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="User Id" label="User Id" menu="" required="true" tooltip="">&lt;%=  @values['recipientEmail'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="recipientEmail" label="recipientEmail" menu="" required="true" tooltip="">&lt;%=  @values['recipientEmail'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%=  @form['Slug'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Submission Id" label="Survey Submission Id" menu="" required="true" tooltip="">&lt;%=  @submission['Id'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Wait Days" label="Wait Days" menu="" required="true" tooltip="">&lt;%=
