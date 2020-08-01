@@ -58,6 +58,7 @@ current_start != current_end || prev_start != prev_end %&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="Handle Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;true&quot;">utilities_echo_v1_2</task>
+                    <task label="No Handler Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;false&quot;">system_tree_return_v1_13</task>
                 </dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Should status be active" x="211" y="216">
@@ -295,7 +296,7 @@ range.cover?(Date.today) %&gt;</parameter>
                     <task label="" type="Complete" value="">system_join_v1_11</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_13" name="Complete" x="222" y="1465">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_13" name="Complete" x="1528" y="1248">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
