@@ -64,7 +64,7 @@
                 <dependents>
                     <task label="No Error" type="Complete" value="@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; JSON.parse(@results['API']['Response Body'])['submissions'] != []">system_tree_return_v1_2</task>
                     <task label="Has Error" type="Complete" value="!@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; @results['API']['Response Code'].to_i != 404">routine_handler_failure_error_process_v1_3</task>
-                    <task label="Has 404 Error" type="Complete" value="(!@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; @results['API']['Response Code'].to_i == 404) || (@results['API']['Response Code'].to_i == 200 &amp;&amp; JSON.parse(@results['API']['Response Body'])['submissions'] = [])">system_tree_return_v1_6</task>
+                    <task label="Has 404 Error" type="Complete" value="(!@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; @results['API']['Response Code'].to_i == 404) || (@results['API']['Response Code'].to_i == 200 &amp;&amp; JSON.parse(@results['API']['Response Body'])['submissions'] == [])">system_tree_return_v1_6</task>
                 </dependents>
             </task>
             <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="Return Results" x="264" y="198">
