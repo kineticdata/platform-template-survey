@@ -575,7 +575,7 @@ end
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=JSON.parse( @results['Find next execution record - Clear']['Submissions List JSON'] )[0][id]%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=JSON.parse( @results['Find next execution record - Clear']['Submissions List JSON'] )[0]['id']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
