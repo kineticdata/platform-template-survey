@@ -1,0 +1,18 @@
+---
+core:
+  # server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+  server_url: https://kineticdata.kinops.io
+  space_slug: 'kineticdata'
+  space_name: 'Kinetic Data'
+  service_user_username: brian.peterson@kineticdata.com
+  service_user_password: buddydog
+options:
+  delete: false
+task:
+  # server_url: https://<SPACE>.kinops.io/app/components/task   OR https://<SERVER_NAME>.com/kinetic/kinetic-task
+  server_url: https://kineticdata.kinops.io/app/components/task
+  service_user_username: brian.peterson@kineticdata.com
+  service_user_password: buddydog
+http_options:
+  log_level: info
+  log_output: stderr
