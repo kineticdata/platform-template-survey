@@ -7,7 +7,7 @@
         <name>Remedy Poller</name>
         <author></author>
         <notes></notes>
-        <lastID>31</lastID>
+        <lastID>33</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
                 <version>1</version>
@@ -22,7 +22,7 @@
                     <task label="Not Robot" type="Complete" value="if !@source['Data']&#10;  true&#10;elsif !JSON.parse(@source['Data']).has_key? ('Kinetic Robot Execution Record Id')&#10;  true&#10;else&#10;  false&#10;end">system_junction_v1_19</task>
                 </dependents>
             </task>
-            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_7" name="Get by Type and Trigger and Time" x="-41" y="855">
+            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_7" name="Get by Type and Trigger and Time" x="-44" y="858">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -41,18 +41,18 @@
 extracted_times = JSON.parse(@results['Determine Start and End Times']['output'])
 query_start_time = Time.parse( extracted_times['query_start_time'] )
 query_end_time = Time.parse( extracted_times['query_end_time'] )
-#formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
-#formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
+formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
+formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
 
 formatted_start_date = "#{query_start_time.strftime("%s")}"
 formatted_end_date = "#{query_end_time.strftime("%s")}"
 
 query = @results['Get Trigger']['output'] 
 
-#query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
+query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
 
-#query.gsub!( "{{Start Date}}", formatted_start_date )
-#query.gsub!( "{{End Date}}", formatted_end_date )
+query.gsub!( "{{Start Date}}", formatted_start_date )
+query.gsub!( "{{End Date}}", formatted_end_date )
 
 query
 %&gt;</parameter>
@@ -277,7 +277,19 @@ results %&gt;</parameter>
                 <visible>false</visible>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Robot Execution Id" label="Robot Execution Id" menu="" required="false" tooltip="">&lt;%=JSON.parse(@source['Data'])['Kinetic Robot Execution Record Id']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip=""></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip="">&lt;%=
+# Normal output
+outcome = "Successful"
+output = {
+  "message" =&gt; "#{JSON.parse(@results['Get by Type and Trigger and Time']['Results']).size} results returned",
+  "start_query_time" =&gt; JSON.parse(@results['Determine Start and End Times']['output'])['query_start_time'],
+  "end_query_time" =&gt; JSON.parse(@results['Determine Start and End Times']['output'])['query_end_time']  
+}.to_json
+
+
+results = %|&lt;results&gt;&lt;result name="outcome"&gt;#{outcome}&lt;/result&gt;&lt;result name="output"&gt;#{output}&lt;/result&gt;&lt;/results&gt;|
+results
+%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Deferral Token" label="Deferral Token" menu="" required="false" tooltip="">&lt;%=JSON.parse(@source['Data'])['Kinetic Robot Deferral Token']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Run Id" label="Run Id" menu="" required="false" tooltip="ID of run that is calling this process">&lt;%= @run['Id'] %&gt;</parameter>
                 </parameters>
@@ -329,6 +341,45 @@ config["Event Polling"]["Email Address"] %&gt;</parameter>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_22</task>
                 </dependents>
+            </task>
+            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_32" name="Ignore Start and End Time - Get by Type and Trigger and Time" x="86" y="847">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="form" label="Remedy Form:" menu="" required="true" tooltip="Remedy Form Name (not display name), eg. People is CTM:People">&lt;%= @results['Get Type']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="request_query" label="Query:" menu="" required="true" tooltip="Advanced Search Query of the record to retrieve">&lt;%=
+# Without replacement:
+# JSON.parse(@results['Retrieve Integration Config']['Values JSON'])['Qualification']
+
+# With replacement:
+# Parse query variable for {{Start Date}} and {{End Date}} and replace with calculated values.
+
+extracted_times = JSON.parse(@results['Determine Start and End Times']['output'])
+query_start_time = Time.parse( extracted_times['query_start_time'] )
+query_end_time = Time.parse( extracted_times['query_end_time'] )
+#formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
+#formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
+
+formatted_start_date = "#{query_start_time.strftime("%s")}"
+formatted_end_date = "#{query_end_time.strftime("%s")}"
+
+query = @results['Get Trigger']['output'] 
+
+#query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
+
+#query.gsub!( "{{Start Date}}", formatted_start_date )
+#query.gsub!( "{{End Date}}", formatted_end_date )
+
+query
+%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="return_type" label="Return Type:" menu="" required="true" tooltip="Valid Values: Single, All. This will determine what is returned. Defaults to Single">all</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
             </task>
         </request>
     </taskTree>
