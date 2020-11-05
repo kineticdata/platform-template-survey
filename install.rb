@@ -162,26 +162,26 @@ task_source_properties = {
 smtp = vars["data"]["smtp"] || {}
 task_handler_configurations = {
   "smtp_email_send" => {
-    "server" => smtp["server"] || "mysmtp.com",
+    "server" => smtp["server"] || smtp["host"] || "mysmtp.com",
     "port" => (smtp["port"] || "25").to_s,
-    "tls" => (smtp["tls"] || "true").to_s,
+    "tls" => (smtp["tls"] || smtp["tlsEnabled"] || "true").to_s,
     "username" => smtp["username"] || "joe.blow",
-    "password" => smtp["password"] || "password",
+    "password" => smtp["password"] || "password"
   },
   "kinetic_request_ce_notification_template_send" => {
-    "smtp_server" => smtp["server"] || "mysmtp.com",
+    "smtp_server" => smtp["server"] || smtp["host"] || "mysmtp.com",
     "smtp_port" => (smtp["port"] || "25").to_s,
-    "smtp_tls" => (smtp["tls"] || "true").to_s,
+    "smtp_tls" => (smtp["tls"] || smtp["tlsEnabled"] || "true").to_s,
     "smtp_username" => smtp["username"] || "joe.blow",
     "smtp_password" => smtp["password"] || "password",
-    "smtp_from_address" => smtp["from_address"] || "j@j.com",
+    "smtp_from_address" => smtp["from_address"] || smtp["fromAddress"] || "j@j.com",
     "smtp_auth_type" => "plain",
     "api_server" => vars["core"]["server"],
     "api_username" => vars["core"]["service_user_username"],
     "api_password" => vars["core"]["service_user_password"],
     "space_slug" => nil,
-    "enable_debug_logging" => "No",
-  },
+    "enable_debug_logging" => "No"
+  }
 }
 task_handler_configurations = task_handler_configurations.merge(vars["data"]["handlers"] || {})
 
