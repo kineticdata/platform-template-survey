@@ -167,7 +167,7 @@
   "defaultLocale": "en",
   "defaultTimezone": "America/Chicago",
   "displayType": "Single Page App",
-  "displayValue": "https://s3.amazonaws.com/kinops.io/bundles/kinetic/branches/develop/index.html",
+  "displayValue": "https://s3.amazonaws.com/kinops.io/bundles/default/releases/5.x.x/index.html",
   "enabledLocales": [
     "en"
   ],
