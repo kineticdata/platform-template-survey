@@ -8,7 +8,7 @@
         <name>End Polling Tree</name>
         <author></author>
         <notes></notes>
-        <lastID>6</lastID>
+        <lastID>7</lastID>
         <taskDefinition id="routine_end_polling_tree_v1" name="End Polling Tree" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -61,35 +61,10 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="run id provided" type="Complete" value="!@inputs['Run Id'].nil?">routine_kinetic_datastore_submission_create_v1_4</task>
-                    <task label="run id not provided" type="Complete" value="@inputs['Run Id'].nil?">system_junction_v1_6</task>
+                    <task label="" type="Complete" value="">system_tree_return_v1_5</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_4" name="Create submission for this run" x="467" y="81">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>true</defers>
-                <deferrable>true</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">task-run-cleanup</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%={
-  "Task Run Id" =&gt; @inputs['Run Id'],
-  "Delete After Date Time" =&gt; (Time.now + (86400 * 180)).iso8601
-}.to_json%&gt;</parameter>
-                </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents>
-                    <task label="" type="Complete" value="">system_junction_v1_6</task>
-                </dependents>
-            </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_5" name="Return" x="467" y="281">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_5" name="Return" x="445.97897897897906" y="84.80380380380383">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -98,18 +73,6 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents></dependents>
-            </task>
-            <task definition_id="system_junction_v1" id="system_junction_v1_6" name="Handled add" x="467" y="198">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>false</defers>
-                <deferrable>false</deferrable>
-                <visible>false</visible>
-                <parameters></parameters>
-                <messages></messages>
-                <dependents>
-                    <task label="" type="Complete" value="">system_tree_return_v1_5</task>
-                </dependents>
             </task>
         </request>
     </taskTree>

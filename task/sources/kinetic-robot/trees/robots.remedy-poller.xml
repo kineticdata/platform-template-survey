@@ -7,7 +7,7 @@
         <name>Remedy Poller</name>
         <author></author>
         <notes></notes>
-        <lastID>33</lastID>
+        <lastID>31</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
                 <version>1</version>
@@ -22,7 +22,7 @@
                     <task label="Not Robot" type="Complete" value="if !@source['Data']&#10;  true&#10;elsif !JSON.parse(@source['Data']).has_key? ('Kinetic Robot Execution Record Id')&#10;  true&#10;else&#10;  false&#10;end">system_junction_v1_19</task>
                 </dependents>
             </task>
-            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_7" name="Get by Type and Trigger and Time" x="-44" y="858">
+            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_7" name="Get by Type and Trigger and Time" x="-41" y="855">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -32,25 +32,17 @@
                     <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="form" label="Remedy Form:" menu="" required="true" tooltip="Remedy Form Name (not display name), eg. People is CTM:People">&lt;%= @results['Get Type']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="request_query" label="Query:" menu="" required="true" tooltip="Advanced Search Query of the record to retrieve">&lt;%=
-# Without replacement:
-# JSON.parse(@results['Retrieve Integration Config']['Values JSON'])['Qualification']
-
-# With replacement:
-# Parse query variable for {{Start Date}} and {{End Date}} and replace with calculated values.
-
 extracted_times = JSON.parse(@results['Determine Start and End Times']['output'])
 query_start_time = Time.parse( extracted_times['query_start_time'] )
 query_end_time = Time.parse( extracted_times['query_end_time'] )
-formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
-formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
 
+# Format dates into epoch time for Remedy query
 formatted_start_date = "#{query_start_time.strftime("%s")}"
 formatted_end_date = "#{query_end_time.strftime("%s")}"
 
 query = @results['Get Trigger']['output'] 
 
-query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
-
+# Replace any {{Start Date}} or {{Stop Date}} in the qualification with the actual qualifications from the criteria
 query.gsub!( "{{Start Date}}", formatted_start_date )
 query.gsub!( "{{End Date}}", formatted_end_date )
 
@@ -58,7 +50,9 @@ query
 %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="return_type" label="Return Type:" menu="" required="true" tooltip="Valid Values: Single, All. This will determine what is returned. Defaults to Single">all</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="If successful" type="Complete" value="@results['Get by Type and Trigger and Time']['Handler Error Message'].nil?">system_loop_head_v1_12</task>
                     <task label="error" type="Complete" value="!@results['Get by Type and Trigger and Time']['Handler Error Message'].nil?">routine_end_polling_tree_v1_24</task>
@@ -197,11 +191,17 @@ config["Event Polling"]["Type"] %&gt;</parameter>
                 <visible>true</visible>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
-# Determine start and end time to use in query. Store them as output for use in the Robot output trigger.
-# Probably using the output from the last execution run, with additional logic to use a the last x minutes if the last execution time is beyond some threshold.
-# An idea is below:
+# Determine start and end time to use in query. 
+# These values are also passed to the Robot execution output to be used as input during the next execution
 
-# Evaluate previous run time.  If none, or if &gt; threshold between last run time and now, use current time (meaning the first run will probably find no records). 
+# Get survey configuration data and extract polling interval
+attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+polling_interval_minutes = config["Event Polling"]["Interval"].to_i
+
+# Evaluate previous run time.  
+# If no previous run data, or if last successful poll is &gt; 3 interval lengths, 
+# use current time (which means the first run will probably find no records). 
 current_time = Time.now
 previous_run_data = JSON.parse(@source['Data'])['Kinetic Robot Previous Execution Output'] || {}
 previous_run_query_end_time = 
@@ -211,8 +211,8 @@ rescue
   current_time
 end
 
-# If (current_time - previous_run_query_end_time) &gt; 1 hour (60 min * 60 sec), use current time.
-if (current_time - previous_run_query_end_time).to_i &gt; (60*60)
+# If (current_time - previous_run_query_end_time) &gt; 3 times the internal lenth (&lt;interval&gt; * 60 sec), use current time.
+if (current_time - previous_run_query_end_time).to_i &gt; 3*(polling_interval_minutes*60)
   previous_run_query_end_time = current_time
 end 
 
@@ -227,7 +227,9 @@ output.to_json
 
 %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">remedy_generic_query_retrieve_v4_7</task>
                 </dependents>
@@ -240,8 +242,21 @@ output.to_json
                 <visible>false</visible>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Robot Execution Id" label="Robot Execution Id" menu="" required="false" tooltip="">&lt;%= JSON.parse(@source['Data'])['Kinetic Robot Execution Record Id'] %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip="">&lt;%= results = %|&lt;results&gt;&lt;result name="outcome"&gt;Error&lt;/result&gt;&lt;result name="output"&gt;Remedy Search Failed&lt;/result&gt;&lt;/results&gt;|
-results %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Deferred Results" label="Deferred Results" menu="" required="false" tooltip="">&lt;%=
+previous_run_data = JSON.parse(@source['Data'])['Kinetic Robot Previous Execution Output'] || {}
+
+# Handler errored
+  outcome = "Error"
+  output = {
+    "message" =&gt; "Remedy Search Failed",
+    "start_query_time" =&gt; previous_run_data['start_query_time'],
+    "end_query_time" =&gt; previous_run_data['end_query_time']  
+  }.to_json
+end
+
+results = %|&lt;results&gt;&lt;result name="outcome"&gt;#{outcome}&lt;/result&gt;&lt;result name="output"&gt;#{output}&lt;/result&gt;&lt;/results&gt;|
+results
+%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Deferral Token" label="Deferral Token" menu="" required="false" tooltip="">&lt;%= JSON.parse(@source['Data'])['Kinetic Robot Deferral Token'] %&gt;</parameter>
                 </parameters>
                 <messages></messages>
@@ -260,16 +275,12 @@ results %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Kapp Slug" label="Survey Kapp Slug" menu="" required="true" tooltip="To store the kapp that contains the survey form">&lt;%= @results['Get Kapp Slug']['output'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Reference Id" label="Reference Id" menu="" required="true" tooltip="ID of the ticket in the system creating the survey">&lt;%= JSON.parse(@record)[@results['Get Reference Id Field']['output']] %&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_loop_tail_v1_15</task>
                 </dependents>
             </task>
-            <task definition_id="routine_end_polling_tree_v1" id="routine_end_polling_tree_v1_28" name="End Poll Tree" x="-44" y="1398">
+            <task definition_id="routine_end_polling_tree_v1" id="routine_end_polling_tree_v1_28" name="End Poll Tree" x="-42" y="1397">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -285,7 +296,6 @@ output = {
   "start_query_time" =&gt; JSON.parse(@results['Determine Start and End Times']['output'])['query_start_time'],
   "end_query_time" =&gt; JSON.parse(@results['Determine Start and End Times']['output'])['query_end_time']  
 }.to_json
-
 
 results = %|&lt;results&gt;&lt;result name="outcome"&gt;#{outcome}&lt;/result&gt;&lt;result name="output"&gt;#{output}&lt;/result&gt;&lt;/results&gt;|
 results
@@ -341,45 +351,6 @@ config["Event Polling"]["Email Address"] %&gt;</parameter>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_22</task>
                 </dependents>
-            </task>
-            <task definition_id="remedy_generic_query_retrieve_v4" id="remedy_generic_query_retrieve_v4_32" name="Ignore Start and End Time - Get by Type and Trigger and Time" x="86" y="847">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>false</defers>
-                <deferrable>false</deferrable>
-                <visible>true</visible>
-                <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Raise Error</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="form" label="Remedy Form:" menu="" required="true" tooltip="Remedy Form Name (not display name), eg. People is CTM:People">&lt;%= @results['Get Type']['output'] %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="request_query" label="Query:" menu="" required="true" tooltip="Advanced Search Query of the record to retrieve">&lt;%=
-# Without replacement:
-# JSON.parse(@results['Retrieve Integration Config']['Values JSON'])['Qualification']
-
-# With replacement:
-# Parse query variable for {{Start Date}} and {{End Date}} and replace with calculated values.
-
-extracted_times = JSON.parse(@results['Determine Start and End Times']['output'])
-query_start_time = Time.parse( extracted_times['query_start_time'] )
-query_end_time = Time.parse( extracted_times['query_end_time'] )
-#formatted_start_date = "#{query_start_time.strftime("%m/%d/%Y %H:%M:%S")}"
-#formatted_end_date = "#{query_end_time.strftime("%m/%d/%Y %H:%M:%S")}"
-
-formatted_start_date = "#{query_start_time.strftime("%s")}"
-formatted_end_date = "#{query_end_time.strftime("%s")}"
-
-query = @results['Get Trigger']['output'] 
-
-#query = query + " AND '6' &gt;= \"{{Start Date}}\" AND '6' &lt; \"{{End Date}}\""
-
-#query.gsub!( "{{Start Date}}", formatted_start_date )
-#query.gsub!( "{{End Date}}", formatted_end_date )
-
-query
-%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="return_type" label="Return Type:" menu="" required="true" tooltip="Valid Values: Single, All. This will determine what is returned. Defaults to Single">all</parameter>
-                </parameters>
-                <messages></messages>
-                <dependents></dependents>
             </task>
         </request>
     </taskTree>

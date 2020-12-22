@@ -70,7 +70,7 @@
                     <task label="" type="Complete" value="">routine_datastore_submission_retrieve_by_query_v1_37</task>
                 </dependents>
             </task>
-            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="837.9824000000001" y="371.2456">
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="837.9824" y="371.2456">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -86,7 +86,7 @@
                     <task label="Found robot definition" type="Complete" value="!@results['Get Poller to Delete']['Id'].nil?">routine_kinetic_datastore_submission_delete_v1_36</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="842.0226" y="514.25815">
+            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="842.0226" y="514.2582">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -229,7 +229,7 @@ values.to_json %&gt;</parameter>
             <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_43" name="Handle Survey Status" x="865.3243" y="27.639809">
                 <version>1</version>
                 <configured>true</configured>
-                <defers>true</defers>
+                <defers>false</defers>
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
@@ -239,7 +239,9 @@ values.to_json %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Config" label="Current Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Status" label="Current Status" menu="" required="true" tooltip="">&lt;%=  @form['Status'] %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents></dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_44" name="Check Polling" x="513" y="127">
@@ -262,17 +264,30 @@ prev_has_polling = prev_config.has_key?('Event Polling') &amp;&amp; prev_config[
 current_polling_values = current_has_polling ? current_config["Event Polling"] : {}
 prev_polling_values = prev_has_polling ? prev_config["Event Polling"] : {}
 
+# Determine Current Survey Status
+current_status = @form['Status']
+prev_status = @form_previous['Status']
+
 # Build variable to store result
 polling = ""
-if (!prev_has_polling &amp;&amp; current_has_polling)
-  polling = "new"
-elsif current_polling_values != prev_polling_values 
-  polling = "update"
-elsif prev_has_polling &amp;&amp; !current_has_polling
+if (current_status == "Active" &amp;&amp; prev_status == "Active")
+  if (!prev_has_polling &amp;&amp; current_has_polling)
+    polling = "new"
+  #elsif current_polling_values != prev_polling_values 
+  elsif current_has_polling &amp;&amp; current_polling_values != prev_polling_values 
+    polling = "update"
+  elsif prev_has_polling &amp;&amp; !current_has_polling
+    polling = "remove"
+  else
+    polling = "none"
+  end
+elsif current_status == "Inactive"
   polling = "remove"
-else
-  polling = "none"
+elsif current_status == "Active" &amp;&amp; prev_status == "Inactive" &amp;&amp; current_has_polling
+  polling = "new"
 end
+
+  
 polling %&gt;</parameter>
                 </parameters>
                 <messages></messages>
