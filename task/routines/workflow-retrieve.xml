@@ -26,6 +26,7 @@
                 <result name="Group" tooltip="The group of the workflow (tree / routine)"></result>
                 <result name="Status" tooltip="The status of the workflow (tree / routine)"></result>
                 <result name="Type" tooltip="The type of workflow (tree / global routine / local routine)"></result>
+                <result name="Exists" tooltip="true or false if the tree exists."></result>
             </results>
         </taskDefinition>
         <request>
@@ -53,36 +54,35 @@
                     <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /trees/:title">&lt;%="/trees/#{ERB::Util.url_encode(@inputs['Title'])}"%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)"></parameter>
                 </parameters>
-                <messages>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="No Error" type="Complete" value="@results['API']['Handler Error Message'].to_s.empty?">system_tree_return_v1_2</task>
                     <task label="Has Error" type="Complete" value="!@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; @results['API']['Response Code'].to_i != 404">routine_handler_failure_error_process_v1_3</task>
                     <task label="Has 404 Error" type="Complete" value="!@results['API']['Handler Error Message'].to_s.empty? &amp;&amp; @results['API']['Response Code'].to_i == 404">system_tree_return_v1_6</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="Return Results" x="229" y="212">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="Return Results" x="268" y="230">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
                 <deferrable>false</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="false" tooltip="The id of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['id']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Active" label="Active" menu="" required="false" tooltip="Whether the workflow (tree / routine) is active or disabled">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['active']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Definition Id" label="Definition Id" menu="" required="false" tooltip="The implicit handler definition id of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['definitionId']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Owner Email" label="Owner Email" menu="" required="false" tooltip="The owner's email of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['ownerEmail']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Name" label="Name" menu="" required="false" tooltip="The name of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['name']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Notes" label="Notes" menu="" required="false" tooltip="The notes of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['notes']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Group" label="Group" menu="" required="false" tooltip="The group of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['sourceGroup']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Status" label="Status" menu="" required="false" tooltip="The status of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['status']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="The type of workflow (tree / global routine / local routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['tree']['type']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="false" tooltip="The id of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['id']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Active" label="Active" menu="" required="false" tooltip="Whether the workflow (tree / routine) is active or disabled">&lt;%=JSON.parse(@results['API']['Response Body'])['active']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Definition Id" label="Definition Id" menu="" required="false" tooltip="The implicit handler definition id of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['definitionId']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Owner Email" label="Owner Email" menu="" required="false" tooltip="The owner's email of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['ownerEmail']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Name" label="Name" menu="" required="false" tooltip="The name of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['name']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Notes" label="Notes" menu="" required="false" tooltip="The notes of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['notes']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Group" label="Group" menu="" required="false" tooltip="The group of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['sourceGroup']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Status" label="Status" menu="" required="false" tooltip="The status of the workflow (tree / routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['status']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="The type of workflow (tree / global routine / local routine)">&lt;%=JSON.parse(@results['API']['Response Body'])['type']%&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Exists" label="Exists" menu="" required="false" tooltip="true or false if the tree exists.">true</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_6" name="Return - Does Not Exist" x="448" y="204">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_6" name="Return - Does Not Exist" x="558" y="227">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -98,11 +98,12 @@
                     <parameter dependsOnId="" dependsOnValue="" id="Group" label="Group" menu="" required="false" tooltip="The group of the workflow (tree / routine)"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Status" label="Status" menu="" required="false" tooltip="The status of the workflow (tree / routine)"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="The type of workflow (tree / global routine / local routine)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Exists" label="Exists" menu="" required="false" tooltip="true or false if the tree exists.">false</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="routine_handler_failure_error_process_v1" id="routine_handler_failure_error_process_v1_3" name="Error Process" x="517" y="66">
+            <task definition_id="routine_handler_failure_error_process_v1" id="routine_handler_failure_error_process_v1_3" name="Error Process" x="600" y="78">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -119,7 +120,7 @@
                     <task label="" type="Complete" value="">routine_kinetic_workflow_retrieve_v1_4</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_workflow_retrieve_v1" id="routine_kinetic_workflow_retrieve_v1_4" name="Retry" x="696" y="76">
+            <task definition_id="routine_kinetic_workflow_retrieve_v1" id="routine_kinetic_workflow_retrieve_v1_4" name="Retry" x="815" y="77">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -133,7 +134,7 @@
                     <task label="" type="Complete" value="">system_tree_return_v1_5</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_5" name="Return From Error" x="836" y="65">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_5" name="Return From Error" x="1048" y="79">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>

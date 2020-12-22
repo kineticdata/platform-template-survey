@@ -101,7 +101,7 @@ values.to_json %&gt;</parameter>
                 <parameters>
                     <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%=  @form['Slug'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="">&lt;%=  @kapp['Slug'] %&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Previous Config" label="Previous Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Previous Config" label="Previous Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes_previous['Survey Configuration'] if @form_attributes_previous.has_key?('Survey Configuration') %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Config" label="Current Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Status" label="Current Status" menu="" required="true" tooltip="">&lt;%=  @form['Status'] %&gt;</parameter>
                 </parameters>

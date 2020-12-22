@@ -8,7 +8,7 @@
         <name>Survey Create</name>
         <author></author>
         <notes></notes>
-        <lastID>30</lastID>
+        <lastID>33</lastID>
         <taskDefinition id="routine_kinetic_solutions_survey_create_v1" name="Survey Create" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -53,7 +53,7 @@
                     <task label="Not Active" type="Complete" value="@results['Get Survey Details']['Status'] != &quot;Active&quot;">system_join_v1_3</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Check Opt Out" x="10" y="410">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Check Opt Out" x="-19.346083" y="617.4914">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -70,7 +70,7 @@ config["Allow Opt-out"] %&gt;</parameter>
                     <task label="No Opt Out" type="Complete" value="@results['Check Opt Out']['output'] == &quot;false&quot;">system_join_v1_27</task>
                 </dependents>
             </task>
-            <task definition_id="system_join_v1" id="system_join_v1_3" name="handled checks" x="747" y="661">
+            <task definition_id="system_join_v1" id="system_join_v1_3" name="handled checks" x="915.7508" y="703.6156">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -85,7 +85,7 @@ config["Allow Opt-out"] %&gt;</parameter>
                     <task label="" type="Complete" value="">system_tree_return_v1_19</task>
                 </dependents>
             </task>
-            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_7" name="Get Opt Out" x="205" y="498">
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_7" name="Get Opt Out" x="305.28445" y="623.5953">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -102,7 +102,7 @@ config["Allow Opt-out"] %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_8</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_8" name="Get Opt Out Details" x="410" y="598">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_8" name="Get Opt Out Details" x="446.47415" y="736.80444">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -124,7 +124,7 @@ optedOut %&gt;</parameter>
                     <task label="Not Opted Out" type="Complete" value="@results['Get Opt Out Details']['output'] == &quot;false&quot;">system_join_v1_27</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Check Stop Date" x="-5" y="303">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_9" name="Check Stop Date" x="-23.209408" y="300.97675">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -138,10 +138,10 @@ config["Survey Period"]['Stop'] %&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="Survey inactive based on period" type="Complete" value="!((((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; @results['Check Stop Date']['output'].nil?) || (((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; ((Date.parse(@results['Check Stop Date']['output']) &lt;=&gt; Date.today) == 1)))">system_join_v1_3</task>
-                    <task label="Survey active" type="Complete" value="(((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; @results['Check Stop Date']['output'].nil?) || (((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; ((Date.parse(@results['Check Stop Date']['output']) &lt;=&gt; Date.today) == 1))">utilities_echo_v1_2</task>
+                    <task label="Survey active" type="Complete" value="(((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; @results['Check Stop Date']['output'].nil?) || (((Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == -1 || (Date.parse(@results['Check Start Date']['output']) &lt;=&gt; Date.today) == 0 ) &amp;&amp; ((Date.parse(@results['Check Stop Date']['output']) &lt;=&gt; Date.today) == 1))">utilities_echo_v1_33</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Start Date" x="-18" y="210">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Start Date" x="-24.069803" y="216.06981">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -157,7 +157,7 @@ config["Survey Period"]['Start'] %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_9</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_11" name="Check Maximum Freq Days" x="9" y="684">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_11" name="Check Maximum Freq Days" x="-13.242726" y="854.84106">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -173,7 +173,7 @@ config["Maximum Survey Frequency"]["Days"] %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_12</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_12" name="Check Max Freq Count" x="7" y="793">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_12" name="Check Max Freq Count" x="-9.239305" y="979.0267">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -189,7 +189,7 @@ config["Maximum Survey Frequency"]["Count"] %&gt;</parameter>
                     <task label="" type="Complete" value="">kinetic_core_api_v1_13</task>
                 </dependents>
             </task>
-            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_13" name="Check Freq for User" x="219" y="720">
+            <task definition_id="kinetic_core_api_v1" id="kinetic_core_api_v1_13" name="Check Freq for User" x="245.10442" y="870.6024">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -208,7 +208,7 @@ config["Maximum Survey Frequency"]["Count"] %&gt;</parameter>
                     <task label="Skip entry if error" type="Complete" value="!@results['Check Freq for User']['Handler Error Message'].nil?">system_join_v1_3</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_14" name="Get Frequency for user" x="452" y="798">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_14" name="Get Frequency for user" x="486.0511" y="951.22986">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -224,7 +224,7 @@ response['submissions'].length %&gt;</parameter>
                     <task label="Not Too Many" type="Complete" value="@results['Get Frequency for user']['output'].to_i &lt; @results['Check Max Freq Count']['output'].to_i">system_noop_v1_15</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_15" name="Handle Event Interval" x="10" y="927">
+            <task definition_id="system_noop_v1" id="system_noop_v1_15" name="Handle Event Interval" x="-3.1831377" y="1094.2203">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -236,7 +236,7 @@ response['submissions'].length %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_17</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_16" name="Create Survey" x="12" y="1138">
+            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_16" name="Create Survey" x="-0.16287304" y="1306.9651">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -259,21 +259,18 @@ values['Reference Id'] = @inputs['Reference Id']
 values['Observing Teams'] = []
 values['Observing Teams'].push(@results['Check Owning Team']['output'])
 values['Status'] = "Draft"
+values['Assigned Individual'] = @inputs['recipientEmail']
 values.to_json%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Origin Id" label="Origin Id" menu="" required="false" tooltip="Sets the submissions origin to another Kinetic Submission"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Parent Id" label="Parent Id" menu="" required="false" tooltip="Sets the submissions parent to another Kinetic Submission"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Submit Submission" label="Submit Submission" menu="" required="false" tooltip="True or False, if Submission should be Submitted when created"></parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_tree_return_v1_20</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_17" name="Check Owning Team" x="10" y="1030">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_17" name="Check Owning Team" x="-3.1512392" y="1197.117">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -289,7 +286,7 @@ config["Owning Team"] %&gt;</parameter>
                     <task label="" type="Complete" value="">routine_kinetic_submission_create_v1_16</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - No Survey" x="980" y="646">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - No Survey" x="1163.1057" y="685.45374">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -301,7 +298,7 @@ config["Owning Team"] %&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_20" name="Completed" x="9.8" y="1249.4667">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_20" name="Completed" x="3.637127" y="1428.9897">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -313,7 +310,7 @@ config["Owning Team"] %&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="system_join_v1" id="system_join_v1_27" name="any" x="8" y="577">
+            <task definition_id="system_join_v1" id="system_join_v1_27" name="any" x="-16.279211" y="754.0359">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -326,6 +323,70 @@ config["Owning Team"] %&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">utilities_echo_v1_11</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submissions_retrieve_list_v1" id="routine_kinetic_submissions_retrieve_list_v1_31" name="Unique Check" x="312.2926" y="519.3326">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp to find submissions in.">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="false" tooltip="The slug of the Form to find submissions in. If none provided, can only use Kapp Fields in search query">&lt;%= @inputs['Survey Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Type" label="Form Type" menu="" required="false" tooltip="The Type of Form to find submissions in."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Core State" label="Core State" menu="" required="false" tooltip="Searches for submissions that have a core state that matches this parameter. If no value is provided, the results will contain submissions in all core states."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Limit" label="Limit" menu="" required="false" tooltip="Limit the number of results returned. If not provided, the server will limit the results to 25 submissions. Maximum limit 1000">1</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Query" label="Query" menu="" required="false" tooltip="Query to use to fetch submissions. (i.e values[First Name]=&quot;Fred&quot;)">values['Reference Id']="&lt;%=@inputs['Reference Id']%&gt;" AND values[recipientEmail]="&lt;%=@inputs['recipientEmail']%&gt;"</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Timeline" label="Timeline" menu="" required="false" tooltip="Date property to search by. The default value is createdAt."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Direction" label="Direction" menu="" required="false" tooltip="Result Set sorting direction. The default value is descending."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Start Date/Time" label="Start Date/Time" menu="" required="false" tooltip="Start date/time of the timeline. This value should be used to both refine and limit the search results. Format should be yyyy-MM-dd'T'HH:mm:ss'Z'"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="End Date/Time" label="End Date/Time" menu="" required="false" tooltip="End date/time of the timeline. This value should be used to both refine and limit the search results. Formatshould be yyyy-MM-dd'T'HH:mm:ss'Z'"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Next Page Token" label="Next Page Token" menu="" required="false" tooltip="The value to use as the offset for the page of submissions to return. The submission that matches this value will not be included in the results."></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="No match" type="Complete" value="@results['Unique Check']['Count'].to_i == 0">system_join_v1_32</task>
+                    <task label="Match" type="Complete" value="@results['Unique Check']['Count'].to_i &gt; 0">system_join_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_32" name="Unique Join" x="-21.401375" y="533.6772">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_2</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_33" name="Unique Combinations Only" x="-23.170322" y="412.34348">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=
+attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+config = JSON.parse(attr['Survey Configuration'][0])
+
+require_unique = config.has_key?('Unique') &amp;&amp; (config['Unique'].to_s.downcase["true"] || config['Unique'].to_s.downcase["yes"])
+
+require_unique
+%&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Unique only" type="Complete" value="@results['Unique Combinations Only']['output'] == &quot;true&quot;">routine_kinetic_submissions_retrieve_list_v1_31</task>
+                    <task label="Non unique" type="Complete" value="@results['Unique Combinations Only']['output'] != &quot;true&quot;">system_join_v1_32</task>
                 </dependents>
             </task>
         </request>

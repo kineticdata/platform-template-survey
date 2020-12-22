@@ -8,7 +8,7 @@
         <name>Survey Status Validate</name>
         <author></author>
         <notes></notes>
-        <lastID>13</lastID>
+        <lastID>14</lastID>
         <taskDefinition id="routine_kinetic_solutions_survey_status_validate_v1" name="Survey Status Validate" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -47,18 +47,26 @@
 current_config = @inputs['Current Config'].to_s.empty? ? {} : JSON.parse(@inputs['Current Config'])
 prev_config = @inputs['Previous Config'].to_s.empty? ? {} : JSON.parse(@inputs['Previous Config'])
 
-# Calculate the Current / Prev Start &amp; End Dates
+# Calculate the Current / Prev Start &amp; Stop Dates
 current_start = current_config.has_key?('Survey Period') ? current_config["Survey Period"]['Start'] : ""
-current_end = current_config.has_key?('Survey Period') ? current_config["Survey Period"]['End'] : ""
+current_end = current_config.has_key?('Survey Period') ? current_config["Survey Period"]['Stop'] : ""
 prev_start = prev_config.has_key?('Survey Period') ? prev_config["Survey Period"]['Start'] : ""
-prev_end = prev_config.has_key?('Survey Period') ? prev_config["Survey Period"]['End'] : ""
+prev_end = prev_config.has_key?('Survey Period') ? prev_config["Survey Period"]['Stop'] : ""
 
-current_start != current_end || prev_start != prev_end %&gt;</parameter>
+today = Date.today 
+current_status = @inputs['Current Status']
+
+# Compare current/prev start dates and current/prev end dates or if 
+# current start = today and current_status = active (this last condition
+# handles the condition when the survey was created and both the start and stop
+# dates were in the future.  One pass through here will handle the wait for the
+# start, and once the status is Active, a second pass will trigger and generate
+# the wait for the stop period.
+current_start != prev_start || current_end != prev_end || (Date.parse(current_start) == today &amp;&amp; current_status == "Active")%&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
                     <task label="Handle Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;true&quot;">utilities_echo_v1_2</task>
-                    <task label="No Handler Update" type="Complete" value="@results['Has start or end time changed']['output'] == &quot;false&quot;">system_tree_return_v1_13</task>
                 </dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_2" name="Should status be active" x="211" y="216">
@@ -78,7 +86,7 @@ range.cover?(Date.today) %&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="currently active" type="Complete" value="@inputs['Current Status'] == &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;true&quot;">system_join_v1_3</task>
+                    <task label="No update needed" type="Complete" value="(@inputs['Current Status'] == &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;true&quot;) || (@inputs['Current Status'] == &quot;Inactive&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;false&quot;)">system_join_v1_3</task>
                     <task label="Needs to be active" type="Complete" value="@inputs['Current Status'] != &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_4</task>
                     <task label="Needs to be inactive" type="Complete" value="@inputs['Current Status'] == &quot;Active&quot; &amp;&amp; @results['Should status be active']['output'] == &quot;false&quot;">routine_kinetic_form_update_v1_5</task>
                 </dependents>
@@ -163,13 +171,30 @@ range.cover?(Date.today) %&gt;</parameter>
 newStart = Date.parse(config["Survey Period"]['Start']) 
 newEnd = Date.parse(config["Survey Period"]['Stop'])
 today = Date.today 
+
+# Find the number of days to wait to adjust status.
+# This handles enabling the start date if greather than today
 diff = newStart - today
+
+# If diff is less than zero, check against the end date
+# This handles if the end date is after today.  We add one
+# so that the end date is the day after then stop date meaning
+# the active dates listed on the survey are inclusive.
+# Based on when this fires and and timezone this could result in
+# later than expected execution.
+if (diff &lt;= 0)
+  diff = (newEnd - today) + 1
+end
+
+# This handles if both start and end happen to be before today.
 if (diff &lt; 0)
-diff = newEnd - today
+  diff = 0
 end
 diff.to_i%&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="Should Wait" type="Complete" value="@results['Create diff for wait node']['output'] != &quot;0&quot;">system_wait_v1_7</task>
                 </dependents>
@@ -223,7 +248,7 @@ range.cover?(Date.today) %&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="Needs to be active" type="Complete" value="@results['Look Up Form']['Status'] != &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">routine_kinetic_form_update_v1_10</task>
-                    <task label="No update needed" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;">system_join_v1_11</task>
+                    <task label="No update needed" type="Complete" value="(@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;true&quot;) || (@results['Look Up Form']['Status'] == &quot;Inactive&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;false&quot;)">system_join_v1_11</task>
                     <task label="Needs to be inactive" type="Complete" value="@results['Look Up Form']['Status'] == &quot;Active&quot; &amp;&amp; @results['Should Status be Active - Update']['output'] == &quot;false&quot;">routine_kinetic_form_update_v1_12</task>
                 </dependents>
             </task>
@@ -254,7 +279,7 @@ range.cover?(Date.today) %&gt;</parameter>
                     <task label="" type="Complete" value="">system_join_v1_11</task>
                 </dependents>
             </task>
-            <task definition_id="system_join_v1" id="system_join_v1_11" name="Done Updates" x="222" y="1265">
+            <task definition_id="system_join_v1" id="system_join_v1_11" name="Done Updates" x="211" y="1267">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -296,7 +321,7 @@ range.cover?(Date.today) %&gt;</parameter>
                     <task label="" type="Complete" value="">system_join_v1_11</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_13" name="Complete" x="1528" y="1248">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_13" name="Complete" x="210" y="1465">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
