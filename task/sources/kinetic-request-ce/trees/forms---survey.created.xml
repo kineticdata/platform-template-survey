@@ -73,23 +73,27 @@ output.to_json %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%=  values = {"Days"=&gt;[],"Discussion Id"=&gt;nil,"Embedded"=&gt;nil,"Embedded Display Mode"=&gt;nil,"End Date"=&gt;nil,"End Date Original"=&gt;nil,"Execution Hour"=&gt;nil,"Execution Minute"=&gt;"00","Friday Index"=&gt;[],"Interval"=&gt;"1","Monday Index"=&gt;[],"Months"=&gt;[],"Notify Upon Each Run Completion"=&gt;"No","Notify Upon Schedule Completion"=&gt;nil,"Run Completion Notification Message Template"=&gt;nil,"Run Completion Recipient"=&gt;nil,"Saturday Index"=&gt;[],"Schedule Completion Notification Message Template"=&gt;nil,"Schedule Completion Recipient"=&gt;nil,"Sunday Index"=&gt;[],"Thursday Index"=&gt;[],"Timing"=&gt;nil,"Tuesday Index"=&gt;[],"Wednesday Index"=&gt;[],"Weekdays"=&gt;[]}
 values["Robot Name"] = @form['Slug'] + " poller" 
-values["Interval"] = @results['Get Polling Info']['output']["Interval"]
+values["Interval"] = JSON.parse(@results['Get Polling Info']['output'])["Interval"]
 values["Description"] = "Used for polling source for survey"
 values["Recurrence"] = "minutely"
 values["Recurrence Label"] = "minutely"
-values["Recurrence Description"] = "Every #{@results['Get Polling Info']['output']["Interval"]} minutes"
+values["Recurrence Description"] = "Every #{JSON.parse(@results['Get Polling Info']['output'])["Interval"]} minutes"
 values["Notify Upon Each Run Completion"] = "No"
 values["Status"] = "Active"
 values["Start Date"] = DateTime.now
 values["Category"] = "Survey Poller"
-values["Task Tree"] = @results['Get Polling Info']['output']["Source"]
+values["Task Tree"] = JSON.parse(@results['Get Polling Info']['output'])["Source"]
 runtime = {}
 runtime["Survey Slug"] = @form['Slug']
 runtime["Kapp Slug"] = @kapp['Slug'] 
 values["Runtime Inputs"] = runtime.to_json
 values.to_json %&gt;</parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents></dependents>
             </task>
             <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_32" name="Update Status as Necessary" x="706" y="77.5">
@@ -105,11 +109,7 @@ values.to_json %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Config" label="Current Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Status" label="Current Status" menu="" required="true" tooltip="">&lt;%=  @form['Status'] %&gt;</parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents></dependents>
             </task>
         </request>
