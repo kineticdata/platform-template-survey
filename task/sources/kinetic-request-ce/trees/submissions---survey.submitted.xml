@@ -5,9 +5,9 @@
     <status>Active</status>
     <taskTree builder_version="" schema_version="1.0" version="">
         <name>Submitted</name>
-        <author></author>
+        <author>brian.peterson@kineticdata.com</author>
         <notes></notes>
-        <lastID>5</lastID>
+        <lastID>11</lastID>
         <request>
             <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
                 <version>1</version>
@@ -18,10 +18,11 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_6</task>
                     <task label="" type="Complete" value="">utilities_echo_v1_1</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_1" name="Score Survey - Placeholder" x="99" y="97">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_1" name="Score Survey - Placeholder" x="89" y="100">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -48,7 +49,7 @@
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Workflow Active" type="Complete" value="@results['Retrieve Custom Workflow Process']['Exists'] == &quot;true&quot;">routine_kinetic_workflow_run_create_v1_4</task>
+                    <task label="Workflow Active" type="Complete" value="@results['Retrieve Custom Workflow Process']['Exists'] == &quot;true&quot;">utilities_defer_v1_9</task>
                 </dependents>
             </task>
             <task definition_id="utilities_echo_v1" id="utilities_echo_v1_3" name="Custom Workflow" x="242" y="200">
@@ -65,9 +66,10 @@ config.has_key?("Use Custom Workflow") &amp;&amp; config["Use Custom Workflow"].
                 <messages></messages>
                 <dependents>
                     <task label="Has Custom Workflow" type="Complete" value="@results['Custom Workflow']['output'] == &quot;true&quot;">routine_kinetic_workflow_retrieve_v1_2</task>
+                    <task label="No Custom Workflow" type="Complete" value="@results['Custom Workflow']['output'] != &quot;true&quot;">system_junction_v1_8</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_workflow_run_create_v1" id="routine_kinetic_workflow_run_create_v1_4" name="Run Tree" x="653" y="480">
+            <task definition_id="routine_kinetic_workflow_run_create_v1" id="routine_kinetic_workflow_run_create_v1_4" name="Run Tree" x="950" y="449">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -77,12 +79,18 @@ config.has_key?("Use Custom Workflow") &amp;&amp; config["Use Custom Workflow"].
                     <parameter dependsOnId="" dependsOnValue="" id="Source" label="Source" menu="" required="true" tooltip="Use '-' for a global routine.">&lt;%= @source['Name'] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Group" label="Group" menu="" required="true" tooltip="Use '-' for any routine.">&lt;%= "Submissions &gt; #{@kapp['Slug']} &gt; #{@form['Slug']}" %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Name" label="Name" menu="" required="true" tooltip="The workflow (tree/routine) name to run.">Submitted</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Body" label="Body" menu="" required="false" tooltip="A JSON string of name/value pairs that will be passed to the tree as body content.">&lt;%= @source['Data'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Body" label="Body" menu="" required="false" tooltip="A JSON string of name/value pairs that will be passed to the tree as body content.">&lt;%= 
+data = JSON.parse(@source['Data'])
+data['Deferral Token']=@results['Defer Until Custom Process is Complete']['deferral_token']
+data.to_json
+%&gt;</parameter>
                 </parameters>
-                <messages></messages>
-                <dependents>
-                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_5</task>
-                </dependents>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
             </task>
             <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_5" name="Create Custom Tree Run Activity Record" x="805" y="603">
                 <version>1</version>
@@ -97,12 +105,73 @@ config.has_key?("Use Custom Workflow") &amp;&amp; config["Use Custom Workflow"].
                     <parameter dependsOnId="" dependsOnValue="" id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">Custom Workflow Ran Successfully</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">Custom Workflow</parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_6" name="Update Survey Status" x="244" y="12">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=  @submission['Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">{"Status":"Submitted"}</parameter>
+                </parameters>
+                <messages></messages>
                 <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_7" name="Update Submission Status" x="243" y="742">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%=  @submission['Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state">Closed</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">{"Status":"Complete"}</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_8" name="Junction" x="242" y="613">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_7</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_defer_v1" id="utilities_defer_v1_9" name="Defer Until Custom Process is Complete" x="630" y="451">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="deferral_value" label="Initial Deferral Value" menu="" required="false" tooltip=""></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Create" value="">routine_kinetic_workflow_run_create_v1_4</task>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_5</task>
+                </dependents>
             </task>
         </request>
     </taskTree>
