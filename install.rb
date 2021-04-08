@@ -130,7 +130,7 @@ oauth_client_dev_bundle = {
   "description" => "oAuth Client for client-side bundles in development mode",
   "clientId" => "kinetic-bundle-dev",
   "clientSecret" => KineticSdk::Utils::Random.simple(16),
-  "redirectUri" => "http://localhost:3000/#/OAuthCallback",
+  "redirectUri" => "http://localhost:3000/app/oauth/callback",
 }
 
 # oAuth client for service user
