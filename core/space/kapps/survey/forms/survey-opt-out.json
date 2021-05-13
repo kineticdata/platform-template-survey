@@ -11,6 +11,51 @@
   ],
   "customHeadContent": null,
   "description": "To store id & slug for opt outs for survey",
+  "indexDefinitions": [
+    {
+      "name": "closedBy",
+      "parts": [
+        "closedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "createdBy",
+      "parts": [
+        "createdBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "handle",
+      "parts": [
+        "handle"
+      ],
+      "unique": false
+    },
+    {
+      "name": "submittedBy",
+      "parts": [
+        "submittedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "updatedBy",
+      "parts": [
+        "updatedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "values[Survey Slug],values[recipientEmail]",
+      "parts": [
+        "values[Survey Slug]",
+        "values[recipientEmail]"
+      ],
+      "unique": false
+    }
+  ],
   "name": "Survey Opt Out",
   "notes": null,
   "pages": [
