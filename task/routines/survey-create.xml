@@ -236,7 +236,7 @@ response['submissions'].length %&gt;</parameter>
                     <task label="" type="Complete" value="">utilities_echo_v1_17</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_16" name="Create Survey" x="-0.16287304" y="1306.9651">
+            <task definition_id="routine_kinetic_submission_create_v1" id="routine_kinetic_submission_create_v1_16" name="Create Survey" x="1.837127" y="1306.9651">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -249,9 +249,9 @@ response['submissions'].length %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%= values = {}
 JSON.parse(@inputs['Data']).each do |key,value|
-if @results['Get Survey Details']['Fields JSON'].include?("d-#{key}")
-values["d-#{key}"] = value
-end
+  if @results['Get Survey Details']['Fields JSON'].include?("d-#{key}")
+    values["d-#{key}"] = value
+  end
 end
 #need to set recipient value based on mapping to be determined
 values['recipientEmail'] = @inputs['recipientEmail']
@@ -260,12 +260,28 @@ values['Observing Teams'] = []
 values['Observing Teams'].push(@results['Check Owning Team']['output'])
 values['Status'] = "Draft"
 values['Assigned Individual'] = @inputs['recipientEmail']
+
+# If form values include Due Date, populate the due date field
+if  @results['Get Survey Details']['Fields JSON'].include?("Due Date")
+  attr = JSON.parse(@results['Get Survey Details']['Attributes Map JSON'])
+  config = JSON.parse(attr['Survey Configuration'][0])
+  expiration = config["Expiration"].to_i || 0
+
+  #values['Due Date'] = (Time.now + (86400 * expiration)).strftime("%FT%T%Z")
+  values['Due Date'] = (Time.now + (86400 * expiration)).iso8601
+end
+
+
 values.to_json%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Origin Id" label="Origin Id" menu="" required="false" tooltip="Sets the submissions origin to another Kinetic Submission"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Parent Id" label="Parent Id" menu="" required="false" tooltip="Sets the submissions parent to another Kinetic Submission"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Submit Submission" label="Submit Submission" menu="" required="false" tooltip="True or False, if Submission should be Submitted when created"></parameter>
                 </parameters>
-                <messages></messages>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
                 <dependents>
                     <task label="" type="Complete" value="">system_tree_return_v1_20</task>
                 </dependents>
@@ -344,11 +360,7 @@ config["Owning Team"] %&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="End Date/Time" label="End Date/Time" menu="" required="false" tooltip="End date/time of the timeline. This value should be used to both refine and limit the search results. Formatshould be yyyy-MM-dd'T'HH:mm:ss'Z'"></parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Next Page Token" label="Next Page Token" menu="" required="false" tooltip="The value to use as the offset for the page of submissions to return. The submission that matches this value will not be included in the results."></parameter>
                 </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
+                <messages></messages>
                 <dependents>
                     <task label="No match" type="Complete" value="@results['Unique Check']['Count'].to_i == 0">system_join_v1_32</task>
                     <task label="Match" type="Complete" value="@results['Unique Check']['Count'].to_i &gt; 0">system_join_v1_3</task>

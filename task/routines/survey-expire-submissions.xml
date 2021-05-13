@@ -1,0 +1,171 @@
+<tree schema_version="1.0">
+    <sourceName>-</sourceName>
+    <sourceGroup>-</sourceGroup>
+    <definitionId>routine_routine_kinetic_solutions_survey_expire_submissions_v1</definitionId>
+    <type>Global Routine</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Survey Expire Submissions</name>
+        <author></author>
+        <notes></notes>
+        <lastID>8</lastID>
+        <taskDefinition id="routine_routine_kinetic_solutions_survey_expire_submissions_v1" name="Survey Expire Submissions" schema_version="1.0" version="1">
+            <visible>false</visible>
+            <deferrable>true</deferrable>
+            <parameters>
+                <parameter id="Form Slug" label="Form Slug" required="true" tooltip="The form slug of the survey to be searched for expired surveys"></parameter>
+                <parameter id="Expiration Days" label="Expiration Days" required="true" tooltip="Indicate the amount of days before a survey should expire"></parameter>
+                <parameter id="Page Token" label="Page Token" required="false" tooltip="Supplied by a Routine to identify the page token for the submission search and indicates there are more submssions"></parameter>
+            </parameters>
+            <handler name="system_tree_call" version="1"></handler>
+            <results format="xml"></results>
+        </taskDefinition>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="10" y="10">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_5</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submissions_retrieve_list_v1" id="routine_kinetic_submissions_retrieve_list_v1_1" name="Get Surveys" x="148" y="168">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="The slug of the Kapp to find submissions in.">survey</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="false" tooltip="The slug of the Form to find submissions in. If none provided, can only use Kapp Fields in search query">customer-feedback</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Type" label="Form Type" menu="" required="false" tooltip="The Type of Form to find submissions in."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Core State" label="Core State" menu="" required="false" tooltip="Searches for submissions that have a core state that matches this parameter. If no value is provided, the results will contain submissions in all core states."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Limit" label="Limit" menu="" required="false" tooltip="Limit the number of results returned. If not provided, the server will limit the results to 25 submissions. Maximum limit 1000">50</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Query" label="Query" menu="" required="false" tooltip="Query to use to fetch submissions. (i.e values[First Name]=&quot;Fred&quot;)">values[Status] IN ("", "Draft")</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Timeline" label="Timeline" menu="" required="false" tooltip="Date property to search by. The default value is createdAt.">createdAt</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Direction" label="Direction" menu="" required="false" tooltip="Result Set sorting direction. The default value is descending."></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Start Date/Time" label="Start Date/Time" menu="" required="false" tooltip="Start date/time of the timeline. This value should be used to both refine and limit the search results. Format should be yyyy-MM-dd'T'HH:mm:ss'Z'"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="End Date/Time" label="End Date/Time" menu="" required="false" tooltip="End date/time of the timeline. This value should be used to both refine and limit the search results. Formatshould be yyyy-MM-dd'T'HH:mm:ss'Z'">&lt;%= @results['Date']['output'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Next Page Token" label="Next Page Token" menu="" required="false" tooltip="The value to use as the offset for the page of submissions to return. The submission that matches this value will not be included in the results.">&lt;%= @inputs['Page Token'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_head_v1_3</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_update_v1" id="routine_kinetic_submission_update_v1_2" name="Close Surveys" x="454.89474" y="336.10526">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= JSON.parse(@submission)['id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Origin Id" label="Updated - Origin Id" menu="" required="false" tooltip="The Id of the submissions origin"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Parent Id" label="Updated - Parent Id" menu="" required="false" tooltip="The Id of the submissions parent"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">{"Status":"Expired"}</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_head_v1" id="system_loop_head_v1_3" name="Submissions Loop Head" x="147" y="338">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="data_source" label="Data Source:" menu="" required="true" tooltip="The source that contains the data to use to create each task in the loop.">&lt;%= @results['Get Surveys']['Submissions List JSON'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="loop_path" label="Loop Path:" menu="" required="true" tooltip="The XPath or JSONPath statement to indicate what data records to process.">$</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="var_name" label="Variable Name:" menu="" required="false" tooltip="The local variable name used to represent the data used in loop tasks.">submission</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_update_v1_2</task>
+                    <task label="" type="Complete" value="">system_loop_tail_v1_4</task>
+                </dependents>
+            </task>
+            <task definition_id="system_loop_tail_v1" id="system_loop_tail_v1_4" name="Submissions Loop Tail" x="147" y="538">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Some,Any" required="true" tooltip="How many loop processes must be completed before continuing?">All</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="More Submissions" type="Complete" value="@results['Get Surveys']['Next Page Token'].to_s != &quot;&quot;">routine_routine_kinetic_solutions_survey_expire_submissions_v1_6</task>
+                    <task label="No More Submissions" type="Complete" value="@results['Get Surveys']['Next Page Token'].to_s == &quot;&quot;">system_junction_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_5" name="Date" x="153" y="17">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+require 'date'
+expire_days = @inputs['Expiration Days'].to_i
+result = (DateTime.now - expire_days ).iso8601 
+%&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_submissions_retrieve_list_v1_1</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_routine_kinetic_solutions_survey_expire_submissions_v1" id="routine_routine_kinetic_solutions_survey_expire_submissions_v1_6" name="Next Chunk" x="147" y="738">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The form slug of the survey to be searched for expired surveys">&lt;%= @inputs['Form Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Expiration Days" label="Expiration Days" menu="" required="true" tooltip="Indicate the amount of days before a survey should expire">&lt;%= @inputs['Expiration Days'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Page Token" label="Page Token" menu="" required="false" tooltip="Supplied by a Routine to identify the page token for the submission search and indicates there are more submssions">&lt;%= @results['Get Surveys']['Next Page Token'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_junction_v1_8</task>
+                </dependents>
+            </task>
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_7" name="Return" x="449.10526" y="891.6842">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_junction_v1" id="system_junction_v1_8" name="Junction" x="450.1579" y="744.3158">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_7</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

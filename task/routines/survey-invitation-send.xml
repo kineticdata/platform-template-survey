@@ -8,7 +8,7 @@
         <name>Survey Invitation Send</name>
         <author></author>
         <notes></notes>
-        <lastID>30</lastID>
+        <lastID>32</lastID>
         <taskDefinition id="routine_kinetic_solutions_survey_invitation_send_v1" name="Survey Invitation Send" schema_version="1.0" version="1">
             <visible>false</visible>
             <deferrable>true</deferrable>
@@ -34,7 +34,7 @@
                     <task label="" type="Complete" value="">routine_kinetic_form_retrieve_v1_1</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_1" name="Get Survey Details" x="-24" y="117">
+            <task definition_id="routine_kinetic_form_retrieve_v1" id="routine_kinetic_form_retrieve_v1_1" name="Get Survey Details" x="-31.36842105263159" y="160.15789473684214">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -46,10 +46,10 @@
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Active" type="Complete" value="@results['Get Survey Details']['Status'] == &quot;Active&quot;">utilities_echo_v1_10</task>
+                    <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_31</task>
                 </dependents>
             </task>
-            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Invitation" x="-18" y="210">
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_10" name="Check Invitation" x="-32.73684210526317" y="487.8947368421047">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -66,11 +66,11 @@ name%&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="No invitation specified" type="Complete" value="@results['Check Invitation']['output'] == &quot;none&quot;">system_tree_return_v1_19</task>
+                    <task label="No invitation specified" type="Complete" value="@results['Check Invitation']['output'] == &quot;none&quot;">system_join_v1_32</task>
                     <task label="Invitation Specified" type="Complete" value="@results['Check Invitation']['output'] != &quot;none&quot;">routine_kinetic_email_template_notification_send_v1_29</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - Do Nothing" x="416.57144" y="211.71428">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_19" name="Done - Do Nothing" x="524.624071578947" y="397.50375368421027">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -80,7 +80,7 @@ name%&gt;</parameter>
                 <messages></messages>
                 <dependents></dependents>
             </task>
-            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_29" name="Send Invite" x="-16.857143" y="383.7143">
+            <task definition_id="routine_kinetic_email_template_notification_send_v1" id="routine_kinetic_email_template_notification_send_v1_29" name="Send Invite" x="-30.541353526315802" y="671.0827210526314">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -100,7 +100,7 @@ name%&gt;</parameter>
                     <task label="" type="Complete" value="">system_tree_return_v1_30</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_30" name="Return" x="-16.857143" y="583.7143">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_30" name="Return" x="-29.488721947368433" y="851.082721052631">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -109,6 +109,42 @@ name%&gt;</parameter>
                 <parameters></parameters>
                 <messages></messages>
                 <dependents></dependents>
+            </task>
+            <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_31" name="Get Submission Details" x="-31.473684210526336" y="306.63157894736787">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The Id of the submission to retrieve">&lt;%= @inputs['Submission Id'] %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Create"></message>
+                    <message type="Update"></message>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="Active" type="Complete" value="JSON.parse(@results['Get Submission Details']['Values JSON'])['Status'] != &quot;Expired&quot;">utilities_echo_v1_10</task>
+                    <task label="Expired" type="Complete" value="JSON.parse(@results['Get Submission Details']['Values JSON'])['Status'] == &quot;Expired&quot;">system_join_v1_32</task>
+                </dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_32" name="Join" x="259.1052631578948" y="406.36842105263133">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_tree_return_v1_19</task>
+                </dependents>
             </task>
         </request>
     </taskTree>

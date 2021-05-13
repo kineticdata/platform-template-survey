@@ -58,7 +58,7 @@
                     <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_7</task>
                 </dependents>
             </task>
-            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="No more to send" x="366.0425" y="17.0005">
+            <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="No more to send" x="379.0425" y="11.000499999999999">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -79,11 +79,11 @@
                 </parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Still have reminder to send" type="Complete" value="@results['Check Status']['Core State'] == &quot;Draft&quot;">routine_kinetic_email_template_notification_send_v1_1</task>
-                    <task label="Survey already done" type="Complete" value="@results['Check Status']['Core State'] != &quot;draft&quot;">system_junction_v1_4</task>
+                    <task label="Still have reminder to send" type="Complete" value="@results['Check Status']['Core State'] == &quot;Draft&quot; &amp;&amp; JSON.parse(@results['Check Status']['Values JSON'])['Status'] != &quot;Expired&quot;">routine_kinetic_email_template_notification_send_v1_1</task>
+                    <task label="Survey already done" type="Complete" value="@results['Check Status']['Core State'] != &quot;Draft&quot; || JSON.parse(@results['Check Status']['Values JSON'])['Status'] == &quot;Expired&quot;">system_junction_v1_4</task>
                 </dependents>
             </task>
-            <task definition_id="system_junction_v1" id="system_junction_v1_4" name="Done" x="371.04803" y="167.003">
+            <task definition_id="system_junction_v1" id="system_junction_v1_4" name="Done" x="378.04803" y="191.003">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
@@ -95,7 +95,7 @@
                     <task label="" type="Complete" value="">system_tree_return_v1_2</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_solutions_survey_reminder_send_v1" id="routine_kinetic_solutions_survey_reminder_send_v1_5" name="Call Self" x="375.03452" y="500">
+            <task definition_id="routine_kinetic_solutions_survey_reminder_send_v1" id="routine_kinetic_solutions_survey_reminder_send_v1_5" name="Call Self" x="375.03452" y="497">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -115,7 +115,7 @@
                     <task label="" type="Complete" value="">system_junction_v1_4</task>
                 </dependents>
             </task>
-            <task definition_id="system_wait_v1" id="system_wait_v1_6" name="Wait until next reminder" x="-36" y="180">
+            <task definition_id="system_wait_v1" id="system_wait_v1_6" name="Wait until next reminder" x="-33" y="180">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>true</defers>
@@ -130,7 +130,7 @@
                     <task label="" type="Complete" value="">routine_kinetic_submission_retrieve_v1_3</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_7" name="Reminder Submission Activity" x="160.9965" y="495.9795">
+            <task definition_id="routine_kinetic_submission_activity_create_v1" id="routine_kinetic_submission_activity_create_v1_7" name="Reminder Submission Activity" x="168.9965" y="496.9795">
                 <version>1</version>
                 <configured>true</configured>
                 <defers>false</defers>
