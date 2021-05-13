@@ -11,6 +11,43 @@
   ],
   "customHeadContent": null,
   "description": "Resends a survey invitation",
+  "indexDefinitions": [
+    {
+      "name": "closedBy",
+      "parts": [
+        "closedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "createdBy",
+      "parts": [
+        "createdBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "handle",
+      "parts": [
+        "handle"
+      ],
+      "unique": false
+    },
+    {
+      "name": "submittedBy",
+      "parts": [
+        "submittedBy"
+      ],
+      "unique": false
+    },
+    {
+      "name": "updatedBy",
+      "parts": [
+        "updatedBy"
+      ],
+      "unique": false
+    }
+  ],
   "name": "Resend Invitation",
   "notes": null,
   "pages": [
