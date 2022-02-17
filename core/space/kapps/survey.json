@@ -156,6 +156,15 @@
         "values[Assigned Individual]"
       ],
       "unique": false
+    },
+    {
+      "name": "coreState,type,values[Assigned Individual]",
+      "parts": [
+        "coreState",
+        "type",
+        "values[Assigned Individual]"
+      ],
+      "unique": false
     }
   ],
   "loginPage": null,
