@@ -28,7 +28,7 @@
           "structureField": "${fields('email')}"
         }
       ],
-      "bridgeSlug": "kinetic-core",
+      "bridgeSlug": "kinetic-platform",
       "name": "Person",
       "qualifications": [
         {
