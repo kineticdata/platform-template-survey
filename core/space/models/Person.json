@@ -33,15 +33,15 @@
       "qualifications": [
         {
           "name": "By Email",
-          "query": "email=%${parameters('Email')}%"
+          "query": "q=email=*\"${parameters('Email')}\""
         },
         {
           "name": "By Username",
-          "query": "username=%${parameters('Username')}%"
+          "query": "q=username=*\"${parameters('Username')}\""
         },
         {
           "name": "By Username Single",
-          "query": "username=${parameters('Username')}"
+          "query": "q=username=\"${parameters('Username')}\""
         },
         {
           "name": "All",
