@@ -14,16 +14,16 @@
           "structureField": "${fields('name')}"
         }
       ],
-      "bridgeSlug": "kinetic-core",
+      "bridgeSlug": "kinetic-platform",
       "name": "Team",
       "qualifications": [
         {
           "name": "All Roles",
-          "query": "name=Role::%"
+          "query": "q=name=*\"Role::\"&orderBy=name"
         },
         {
           "name": "All Teams",
-          "query": "exclude=Role"
+          "query": "q=name <= \"Role::\" OR name >= \"Role::zzz\"&orderBy=name&direction=ASC"
         }
       ],
       "structure": "Teams"

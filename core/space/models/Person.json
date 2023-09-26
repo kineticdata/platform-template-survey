@@ -28,20 +28,20 @@
           "structureField": "${fields('email')}"
         }
       ],
-      "bridgeSlug": "kinetic-core",
+      "bridgeSlug": "kinetic-platform",
       "name": "Person",
       "qualifications": [
         {
           "name": "By Email",
-          "query": "email=%${parameters('Email')}%"
+          "query": "q=email=*\"${parameters('Email')}\""
         },
         {
           "name": "By Username",
-          "query": "username=%${parameters('Username')}%"
+          "query": "q=username=*\"${parameters('Username')}\""
         },
         {
           "name": "By Username Single",
-          "query": "username=${parameters('Username')}"
+          "query": "q=username=\"${parameters('Username')}\""
         },
         {
           "name": "All",
