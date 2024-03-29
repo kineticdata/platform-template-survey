@@ -38,12 +38,7 @@
       ]
     }
   ],
-  "bundlePath": "webpack",
-  "defaultFormConfirmationPage": "space.jsp",
-  "defaultFormDisplayPage": "space.jsp",
   "defaultSubmissionLabelExpression": "${form('name')}",
-  "displayType": "Display Page",
-  "displayValue": "space.jsp",
   "fields": [
     {
       "dataType": "string",

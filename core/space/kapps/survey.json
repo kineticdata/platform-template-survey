@@ -26,12 +26,7 @@
       ]
     }
   ],
-  "bundlePath": null,
-  "defaultFormConfirmationPage": null,
-  "defaultFormDisplayPage": null,
   "defaultSubmissionLabelExpression": "${values('recipientEmail')}",
-  "displayType": "Display Page",
-  "displayValue": null,
   "fields": [
     {
       "name": "Assigned Individual",

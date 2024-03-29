@@ -50,12 +50,7 @@
       ]
     }
   ],
-  "bundlePath": "admin",
-  "defaultFormConfirmationPage": null,
-  "defaultFormDisplayPage": null,
   "defaultSubmissionLabelExpression": "",
-  "displayType": "Display Page",
-  "displayValue": null,
   "fields": [
     {
       "dataType": "string",
