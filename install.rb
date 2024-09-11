@@ -133,15 +133,6 @@ oauth_client_dev_bundle = {
   "redirectUri" => "http://localhost:3000/app/oauth/callback",
 }
 
-# oAuth client for service user
-oauth_client_service_user = {
-  "name" => vars["core"]["service_user_username"],
-  "description" => "oAuth Client for #{vars["core"]["service_user_username"]} user",
-  "clientId" => vars["core"]["service_user_username"],
-  "clientSecret" => vars["core"]["service_user_password"],
-  "redirectUri" => "#{vars["core"]["server"]}/#/OAuthCallback",
-}
-
 # task source configurations
 task_source_properties = {
   "Kinetic Request CE" => {
@@ -287,7 +278,7 @@ space_sdk.find_kapps.content["kapps"].each do |kapp|
 end
 
 # create or update oAuth clients
-[oauth_client_prod_bundle, oauth_client_dev_bundle, oauth_client_service_user].each do |client|
+[oauth_client_prod_bundle, oauth_client_dev_bundle].each do |client|
   if space_sdk.find_oauth_client(client["clientId"]).status == 404
     space_sdk.add_oauth_client(client)
   else
