@@ -61,27 +61,7 @@ JSON.parse(@results['Retrieve Parent']['Values JSON'])[key]%&gt;</parameter>
                     <message type="Complete"></message>
                 </messages>
                 <dependents>
-                    <task label="Has Origin" type="Complete" value="!@submission['Origin Id'].to_s.empty?">routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19</task>
                     <task label="Has Parent" type="Complete" value="!@submission['Parent Id'].to_s.empty?">routine_kinetic_submission_retrieve_v1_21</task>
-                    <task label="" type="Complete" value="">system_junction_v1_23</task>
-                </dependents>
-            </task>
-            <task definition_id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19" name="Relate to Origin Discussion" x="292" y="198">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>true</defers>
-                <deferrable>true</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter id="Origin Submission Id" label="Origin Submission Id" menu="" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission">&lt;%= @submission['Origin Id']%&gt;</parameter>
-                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists">&lt;%= @submission['Id']%&gt;</parameter>
-                </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents>
                     <task label="" type="Complete" value="">system_junction_v1_23</task>
                 </dependents>
             </task>

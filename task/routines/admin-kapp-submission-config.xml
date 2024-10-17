@@ -278,7 +278,6 @@ ommitted_fields = [
   'Requested For',
   'Requested For Display Name',
   'Status',
-  'Discussion Id',
   'Observing Teams',
   'Observing Individuals'
 ]

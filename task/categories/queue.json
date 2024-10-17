@@ -12,7 +12,6 @@
   "trees": [
     "routine_kinetic_queue_submission_config_v1",
     "routine_kinetic_queue_task_create_v1",
-    "routine_kinetic_queue_task_relate_origin_submission_discussion_v1",
     "routine_kinetic_queue_task_update_origin_submission_activity_v1"
   ]
 }

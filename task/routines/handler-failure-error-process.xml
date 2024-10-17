@@ -81,8 +81,7 @@
     "Error Message" =&gt; @inputs['Error Message'],
     "Run Id" =&gt; @inputs['Run Id'],
     "Handler Name" =&gt; @inputs['Handler Name'],
-    "Inputs JSON" =&gt; inputsJSON.to_json,
-    "Discussion Id" =&gt; ""
+    "Inputs JSON" =&gt; inputsJSON.to_json
   }.to_json
 %&gt;</parameter>
                 </parameters>

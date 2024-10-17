@@ -120,8 +120,7 @@ values = {
   'Originating Id' =&gt; @inputs['Originating Id'],
   'Originating System' =&gt; @inputs['Originating System'],
   'Summary' =&gt; @inputs['Summary'],
-  'System Input' =&gt; @inputs['System Input'],
-  'Discussion Id' =&gt; ''
+  'System Input' =&gt; @inputs['System Input']
 }
 
 # Extract Form Fields
@@ -168,7 +167,6 @@ values.to_json%&gt;</parameter>
                 <messages></messages>
                 <dependents>
                     <task label="" type="Complete" value="">routine_kinetic_submission_activity_create_v1_145</task>
-                    <task label="" type="Complete" value="">routine_kinetic_queue_task_relate_origin_submission_discussion_v1_146</task>
                 </dependents>
             </task>
             <task definition_id="routine_kinetic_submission_retrieve_v1" id="routine_kinetic_submission_retrieve_v1_136" name="Retrieve Fulfillment Values" x="275" y="451">
@@ -272,19 +270,6 @@ note = JSON.parse(@results['Retrieve Fulfillment Values']['Values JSON'])[key]
                     <parameter dependsOnId="" dependsOnValue="" id="Description" label="Description" menu="" required="false" tooltip="Description of the submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'An Approval was Created' : 'A Fulfillment Task was Created'%</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Label" label="Label" menu="" required="false" tooltip="Label for the submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'Approval Created' : 'Fulfillment Task Created'%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Type" label="Type" menu="" required="false" tooltip="Type of submission activity">&lt;%=@inputs['Task Form Slug'].to_s.downcase.include?('approval') ? 'Approval' : 'Task'%&gt;</parameter>
-                </parameters>
-                <messages></messages>
-                <dependents></dependents>
-            </task>
-            <task definition_id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1_146" name="Relate Origin Submission Discussion" x="1005" y="176">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>true</defers>
-                <deferrable>true</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Origin Submission Id" label="Origin Submission Id" menu="" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission">&lt;%=@inputs['Originating Id']%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists">&lt;%=@results['Create Fulfillment Record']['Id']%&gt;</parameter>
                 </parameters>
                 <messages></messages>
                 <dependents></dependents>

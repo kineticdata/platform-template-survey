@@ -79,7 +79,6 @@ JSON.parse(@results['Get Parent Submission']['Values JSON'])[key]%&gt;</paramete
                 <dependents>
                     <task label="Open" type="Complete" value="!['Complete','Closed','Cancelled'].include?(@values['Status'].to_s)">system_noop_v1_15</task>
                     <task label="Parent != Origin" type="Complete" value="!@submission['Parent Id'].to_s.empty? &amp;&amp; !@submission['Origin Id'].to_s.empty? &amp;&amp; @submission['Parent Id'] != @submission['Origin Id']">system_noop_v1_16</task>
-                    <task label="Has Origin" type="Complete" value="!@submission['Origin Id'].to_s.empty?">routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19</task>
                 </dependents>
             </task>
             <task definition_id="system_noop_v1" id="system_noop_v1_15" name="Notification" x="257" y="113">
@@ -151,23 +150,6 @@ JSON.parse(@results['Get Parent Submission']['Values JSON'])[key]%&gt;</paramete
 }.to_json%&gt;</parameter>
                     <parameter id="Kapp Slug Initiating Notification" label="Kapp Slug Initiating Notification" menu="" required="true" tooltip="The slug of the Kapp sending the notification (ex: catalog, queue, etc.)">&lt;%= @kapp['Slug']%&gt;</parameter>
                     <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="Id of the submission to get values for, required if using those or attachments in the message">&lt;%= @submission['Id']%&gt;</parameter>
-                </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents></dependents>
-            </task>
-            <task definition_id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1" id="routine_kinetic_queue_task_relate_origin_submission_discussion_v1_19" name="Relate to Origin Discussion" x="528" y="209">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>true</defers>
-                <deferrable>true</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter id="Origin Submission Id" label="Origin Submission Id" menu="" required="false" tooltip="The Id of the Origin Submission. If the origin's submission has a discussion,  a discussion relationship will be created to the provided related submission">&lt;%= @submission['Origin Id']%&gt;</parameter>
-                    <parameter id="Related Submission Id" label="Related Submission Id" menu="" required="false" tooltip="The Id of the Submission to Relate to the Origins Discussion, if it exists">&lt;%= @submission['Id']%&gt;</parameter>
                 </parameters>
                 <messages>
                     <message type="Create"></message>

@@ -13,7 +13,6 @@
             <visible>false</visible>
             <deferrable>true</deferrable>
             <parameters>
-                <parameter id="Discussion Id" label="Discussion Id" required="true" tooltip="The id of the discussion"></parameter>
                 <parameter id="Current Email" label="Current Email" required="false" tooltip="Email address the invitation was sent to (blank for existing User invitation)"></parameter>
                 <parameter id="Current Key" label="Current Key" required="true" tooltip="The value used to send the invitation (email or username)"></parameter>
                 <parameter id="Update - Message" label="Update - Message" required="false" tooltip="Message to include in the resent email"></parameter>
@@ -35,34 +34,6 @@
                     <message type="Complete"></message>
                 </messages>
                 <dependents>
-                    <task label="" type="Complete" value="">kinetic_discussions_api_v1_1</task>
-                </dependents>
-            </task>
-            <task definition_id="kinetic_discussions_api_v1" id="kinetic_discussions_api_v1_1" name="API" x="269" y="77">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>false</defers>
-                <deferrable>false</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="error_handling" label="Error Handling" menu="Error Message,Raise Error" required="true" tooltip="Determine what to return if an error is encountered.">Error Message</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="method" label="Method" menu="GET,POST,PUT,PATCH,DELETE" required="true" tooltip="GET,POST,PUT,PATCH,DELETE (Defaults to GET)">PUT</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="path" label="Path" menu="" required="true" tooltip="Example: /discussions/:discussionsId/messages/:messageId">&lt;%="/discussions/#{@inputs['Discussion Id']}/invitations/#{ERB::Util.url_encode(@inputs['Current Key'])}?email=#{ERB::Util.url_encode(@inputs['Current Email'])}"%&gt;</parameter>
-                    <parameter dependsOnId="" dependsOnValue="" id="body" label="Body" menu="" required="false" tooltip="JSON body if applicable (POST,PUT,PATCH)">&lt;%= 
- data = {} 
- data.tap do |json| 
- 	 json['message'] = @inputs['Updated - Message'] if !@inputs['Updated - Message'].to_s.empty? 
- end 
- data.to_json%&gt;</parameter>
-                </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents>
-                    <task label="No Error" type="Complete" value="@results['API']['Handler Error Message'].to_s.empty?">system_tree_return_v1_2</task>
-                    <task label="Has Error" type="Complete" value="!@results['API']['Handler Error Message'].to_s.empty?">routine_handler_failure_error_process_v1_3</task>
                 </dependents>
             </task>
             <task definition_id="system_tree_return_v1" id="system_tree_return_v1_2" name="Return Results" x="264" y="198">
@@ -107,7 +78,6 @@
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter dependsOnId="" dependsOnValue="" id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%=@results['Error Process']['Discussion Id']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Email" label="Current Email" menu="" required="false" tooltip="Email address the invitation was sent to (blank for existing User invitation)">&lt;%=@results['Error Process']['Current Email']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Current Key" label="Current Key" menu="" required="true" tooltip="The value used to send the invitation (email or username)">&lt;%=@results['Error Process']['Current Key']%&gt;</parameter>
                     <parameter dependsOnId="" dependsOnValue="" id="Update - Message" label="Update - Message" menu="" required="false" tooltip="Message to include in the resent email">&lt;%=@results['Error Process']['Update - Message']%&gt;</parameter>

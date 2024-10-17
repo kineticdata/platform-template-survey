@@ -18,7 +18,6 @@
                 <parameters></parameters>
                 <messages></messages>
                 <dependents>
-                    <task label="Has Discussion Id" type="Complete" value="!@team_attributes['Discussion Id'].to_s.empty?">system_noop_v1_19</task>
                 </dependents>
             </task>
             <task definition_id="system_loop_head_v1" id="system_loop_head_v1_4" name="Users Removed Loop Head" x="475" y="69">
@@ -93,24 +92,6 @@
                     <task label="" type="Complete" value="">system_junction_v1_12</task>
                 </dependents>
             </task>
-            <task definition_id="system_noop_v1" id="system_noop_v1_19" name="Has Discussion Id" x="-10" y="55">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>false</defers>
-                <deferrable>false</deferrable>
-                <visible>false</visible>
-                <parameters></parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents>
-                    <task label="Team is Role" type="Complete" value="@team['Name'] .start_with?('Role::')">system_noop_v1_14</task>
-                    <task label="Users Removed" type="Complete" value="!@team['Name'] .start_with?('Role::') &amp;&amp; @team_membership['Users Removed'].size &gt; 0">system_loop_head_v1_4</task>
-                    <task label="Users Added" type="Complete" value="!@team['Name'] .start_with?('Role::') &amp;&amp; @team_membership['Users Added'].size &gt; 0">system_loop_head_v1_20</task>
-                </dependents>
-            </task>
             <task definition_id="system_loop_head_v1" id="system_loop_head_v1_20" name="Users Added Loop Head" x="176" y="135">
                 <version>1</version>
                 <configured>true</configured>
@@ -151,25 +132,6 @@
                     <task label="" type="Complete" value="">system_junction_v1_12</task>
                 </dependents>
             </task>
-            <task definition_id="routine_kinetic_participant_delete_v1" id="routine_kinetic_participant_delete_v1_24" name="Uninvite User from Team Discussiona" x="715" y="121">
-                <version>1</version>
-                <configured>true</configured>
-                <defers>true</defers>
-                <deferrable>true</deferrable>
-                <visible>false</visible>
-                <parameters>
-                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%= @team_attributes['Discussion Id']%&gt;</parameter>
-                    <parameter id="Username" label="Username" menu="" required="true" tooltip="Username of the participant user">&lt;%=@results['Users Removed Loop Head']['Value']%&gt;</parameter>
-                </parameters>
-                <messages>
-                    <message type="Create"></message>
-                    <message type="Update"></message>
-                    <message type="Complete"></message>
-                </messages>
-                <dependents>
-                    <task label="" type="Complete" value="">system_loop_tail_v1_5</task>
-                </dependents>
-            </task>
             <task definition_id="routine_kinetic_participant_create_v1" id="routine_kinetic_participant_create_v1_25" name="Invite New Members" x="329" y="174">
                 <version>1</version>
                 <configured>true</configured>
@@ -177,7 +139,6 @@
                 <deferrable>true</deferrable>
                 <visible>false</visible>
                 <parameters>
-                    <parameter id="Discussion Id" label="Discussion Id" menu="" required="true" tooltip="The id of the discussion">&lt;%= @team_attributes['Discussion Id']%&gt;</parameter>
                     <parameter id="Username" label="Username" menu="" required="true" tooltip="Username of an existing User">&lt;%=@results['Users Added Loop Head']['Value']%&gt;</parameter>
                     <parameter id="Muted" label="Muted" menu="" required="false" tooltip="(true | false) When muted, notifications for this discussion are not sent to the user"></parameter>
                 </parameters>
