@@ -16,16 +16,6 @@
   },
   {
     "allowsMultiple": false,
-    "description": "The Discussion Id related to this kapp",
-    "name": "Discussion Id"
-  },
-  {
-    "allowsMultiple": false,
-    "description": null,
-    "name": "Discussion Server Url"
-  },
-  {
-    "allowsMultiple": false,
     "description": null,
     "name": "Icon"
   },

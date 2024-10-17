@@ -1,8 +1,0 @@
-{
-  "event": "Invitation Updated",
-  "filter": "",
-  "name": "Discussion Invitation Updated",
-  "type": "Discussion",
-  "url": "/app/api/v1/run-tree/Kinetic%20Discussions/Discussion%20%3E%20Invitation/Created",
-  "attributes": null
-}

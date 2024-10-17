@@ -84,13 +84,6 @@
       "unique": false
     },
     {
-      "name": "values[Discussion Id]",
-      "parts": [
-        "values[Discussion Id]"
-      ],
-      "unique": false
-    },
-    {
       "name": "values[Embedded Display Mode]",
       "parts": [
         "values[Embedded Display Mode]"
@@ -349,31 +342,6 @@
               },
               "dataType": "string",
               "renderType": "datetime"
-            },
-            {
-              "type": "field",
-              "name": "Discussion Id",
-              "label": "Discussion Id",
-              "key": "f39",
-              "defaultValue": null,
-              "defaultResourceName": null,
-              "visible": false,
-              "enabled": true,
-              "required": false,
-              "requiredMessage": null,
-              "omitWhenHidden": false,
-              "pattern": null,
-              "constraints": [
-
-              ],
-              "events": [
-
-              ],
-              "renderAttributes": {
-              },
-              "dataType": "string",
-              "renderType": "text",
-              "rows": 1
             },
             {
               "type": "field",

@@ -26,11 +26,6 @@
   },
   {
     "allowsMultiple": false,
-    "description": "The Discussion Id related to this kapp",
-    "name": "Discussion Id"
-  },
-  {
-    "allowsMultiple": false,
     "description": "Icon that represents this Kapp",
     "name": "Icon"
   },

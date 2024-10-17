@@ -36,16 +36,6 @@
   },
   {
     "allowsMultiple": false,
-    "description": "The Discussion Id related to this space",
-    "name": "Discussion Id"
-  },
-  {
-    "allowsMultiple": false,
-    "description": "Url of this spaces response server",
-    "name": "Discussion Server Url"
-  },
-  {
-    "allowsMultiple": false,
     "description": "Form used for collecting feedback about the kinops portal.",
     "name": "Feedback Form Slug"
   },

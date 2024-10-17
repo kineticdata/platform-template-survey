@@ -44,12 +44,6 @@
       ]
     },
     {
-      "name": "Discussion Server Url",
-      "values": [
-        "Not used with Kinetic Discussions"
-      ]
-    },
-    {
       "name": "Feedback Form Slug",
       "values": [
         "feedback"
@@ -180,10 +174,6 @@
   },
   "resetPasswordPage": null,
   "securityPolicies": [
-    {
-      "endpoint": "Discussion Creation",
-      "name": "Authenticated Users"
-    },
     {
       "endpoint": "Display",
       "name": "Authenticated Users"

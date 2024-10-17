@@ -21,11 +21,6 @@
   },
   {
     "allowsMultiple": false,
-    "description": "The Discussion Id related to this form",
-    "name": "Discussion Id"
-  },
-  {
-    "allowsMultiple": false,
     "description": null,
     "name": "Form Configuration"
   },
