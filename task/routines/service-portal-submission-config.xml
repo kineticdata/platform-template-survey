@@ -308,13 +308,25 @@ data.each do |k, v|
       end
   # If the field is for a date/time
   elsif v =~ /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00$/
-    result[k] = DateTime.parse(v).strftime('%c')
+    begin
+      result[k] = DateTime.parse(v).strftime('%c')
+    rescue
+      result[k] = v
+    end
   # If the field is for a date
   elsif v =~ /^\d\d\d\d-\d\d-\d\d$/
-    result[k] = DateTime.parse(v).strftime('%D')
+    begin
+      result[k] = DateTime.parse(v).strftime('%D')
+    rescue
+      result[k] = v
+    end
   # If the field is for a time
   elsif v =~ /^\d\d:\d\d$/
-    result[k] = DateTime.parse(v).strftime('%r')
+    begin
+      result[k] = DateTime.parse(v).strftime('%r')
+    rescue
+      result[k] = v
+    end
   # If the field is a normal field
   else
     result[k] = v
